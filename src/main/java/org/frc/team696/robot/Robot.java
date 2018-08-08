@@ -54,8 +54,7 @@ public class Robot extends TimedRobot {
     }
 
     @Override
-    public void disabledPeriodic() 
-    {
+    public void disabledPeriodic() {
         Scheduler.getInstance().run();
     }
 
@@ -91,8 +90,7 @@ public class Robot extends TimedRobot {
      * This function is called periodically during autonomous.
      */
     @Override
-    public void autonomousPeriodic() 
-    {
+    public void autonomousPeriodic() {
         Scheduler.getInstance().run();
     }
 
@@ -111,8 +109,7 @@ public class Robot extends TimedRobot {
      * This function is called periodically during operator control.
      */
     @Override
-    public void teleopPeriodic() 
-    {
+    public void teleopPeriodic() {
         Scheduler.getInstance().run();
     }
 

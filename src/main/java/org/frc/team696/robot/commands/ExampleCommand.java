@@ -91,8 +91,7 @@ public class ExampleCommand extends Command {
      * </p>
      */
     @Override
-    protected void interrupted()
-    {
+    protected void interrupted() {
         super.interrupted();
     }
 }

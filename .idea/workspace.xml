@@ -2,11 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="377f144d-be85-4a11-b46c-fae5da01b67c" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/frc/team696/robot/OI.java" afterPath="$PROJECT_DIR$/src/main/java/org/frc/team696/robot/OI.java" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/frc/team696/robot/Robot.java" afterPath="$PROJECT_DIR$/src/main/java/org/frc/team696/robot/Robot.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/frc/team696/robot/RobotMap.java" afterPath="$PROJECT_DIR$/src/main/java/org/frc/team696/robot/RobotMap.java" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/frc/team696/robot/commands/ExampleCommand.java" afterPath="$PROJECT_DIR$/src/main/java/org/frc/team696/robot/commands/ExampleCommand.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/frc/team696/robot/subsystems/ExampleSubsystem.java" afterPath="$PROJECT_DIR$/src/main/java/org/frc/team696/robot/subsystems/ExampleSubsystem.java" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -21,9 +18,16 @@
       <file leaf-file-name="Robot.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/org/frc/team696/robot/Robot.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="408">
-              <caret line="115" column="17" lean-forward="false" selection-start-line="115" selection-start-column="17" selection-end-line="115" selection-end-column="17" />
-              <folding />
+            <state relative-caret-position="1">
+              <caret line="89" column="49" lean-forward="false" selection-start-line="89" selection-start-column="49" selection-end-line="89" selection-end-column="49" />
+              <folding>
+                <element signature="e#2268#2269#0" expanded="true" />
+                <element signature="e#2313#2314#0" expanded="true" />
+                <element signature="e#3647#3648#0" expanded="true" />
+                <element signature="e#3692#3693#0" expanded="true" />
+                <element signature="e#4205#4206#0" expanded="true" />
+                <element signature="e#4250#4251#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -48,17 +52,19 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ExampleCommand.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="ExampleCommand.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/org/frc/team696/robot/commands/ExampleCommand.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1139">
-              <caret line="73" column="24" lean-forward="false" selection-start-line="73" selection-start-column="24" selection-end-line="73" selection-end-column="24" />
-              <folding />
+            <state relative-caret-position="491">
+              <caret line="93" column="33" lean-forward="false" selection-start-line="93" selection-start-column="33" selection-end-line="93" selection-end-column="33" />
+              <folding>
+                <element signature="e#3279#3280#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ExampleSubsystem.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="ExampleSubsystem.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/org/frc/team696/robot/subsystems/ExampleSubsystem.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="272">
@@ -81,11 +87,11 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/main/java/org/frc/team696/robot/Robot.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/frc/team696/robot/OI.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/frc/team696/robot/RobotMap.java" />
-        <option value="$PROJECT_DIR$/src/main/java/org/frc/team696/robot/commands/ExampleCommand.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/frc/team696/robot/subsystems/ExampleSubsystem.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/frc/team696/robot/Robot.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/frc/team696/robot/commands/ExampleCommand.java" />
       </list>
     </option>
   </component>
@@ -298,14 +304,6 @@
     </buildFile>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/frc/team696/robot/Robot.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="408">
-          <caret line="115" column="17" lean-forward="false" selection-start-line="115" selection-start-column="17" selection-end-line="115" selection-end-column="17" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/org/frc/team696/robot/OI.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="14">
@@ -322,19 +320,36 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/frc/team696/robot/commands/ExampleCommand.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1139">
-          <caret line="73" column="24" lean-forward="false" selection-start-line="73" selection-start-column="24" selection-end-line="73" selection-end-column="24" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/org/frc/team696/robot/subsystems/ExampleSubsystem.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="272">
           <caret line="21" column="5" lean-forward="true" selection-start-line="21" selection-start-column="5" selection-end-line="21" selection-end-column="5" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/frc/team696/robot/Robot.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1">
+          <caret line="89" column="49" lean-forward="false" selection-start-line="89" selection-start-column="49" selection-end-line="89" selection-end-column="49" />
+          <folding>
+            <element signature="e#2268#2269#0" expanded="true" />
+            <element signature="e#2313#2314#0" expanded="true" />
+            <element signature="e#3647#3648#0" expanded="true" />
+            <element signature="e#3692#3693#0" expanded="true" />
+            <element signature="e#4205#4206#0" expanded="true" />
+            <element signature="e#4250#4251#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/frc/team696/robot/commands/ExampleCommand.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="491">
+          <caret line="93" column="33" lean-forward="false" selection-start-line="93" selection-start-column="33" selection-end-line="93" selection-end-column="33" />
+          <folding>
+            <element signature="e#3279#3280#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
