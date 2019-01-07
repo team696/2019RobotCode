@@ -1,0 +1,100 @@
+import org.apache.tools.ant.filters.*
+
+buildscript {
+
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        // Add dependency for build script,
+        // so we can access Git from our
+        // build script.
+        classpath 'org.ajoberstar:grgit:1.1.0'
+    }
+
+}
+
+plugins {
+    id "java"
+    id "eclipse"
+    id "idea"
+    id "jaci.openrio.gradle.GradleRIO" version "2018.01.22"
+}
+
+apply plugin: 'checkstyle'
+
+checkstyle {
+    toolVersion "8.11"
+    configFile rootProject.file('config/checkstyle/checkstyle.xml')
+}
+
+def TEAM = 696
+def ROBOT_CLASS = "frc.team696.robot.Robot"
+
+ext {
+    // Open the Git repository in the current directory.
+    git = org.ajoberstar.grgit.Grgit.open(file('.'))
+    // Get commit id of HEAD.
+    revision = git.head().id
+}
+
+logger.info("Building with commit ID " + revision)
+
+processResources {
+    filter ReplaceTokens, tokens: [
+        "commitHash": revision
+    ]
+}
+
+// Define my targets (RoboRIO) and artifacts (deployable files)
+// This is added by GradleRIO's backing project EmbeddedTools.
+deploy {
+    targets {
+        target("roborio", jaci.openrio.gradle.frc.RoboRIO) {
+            team = TEAM
+        }
+    }
+    artifacts {
+        artifact('frcJava', jaci.openrio.gradle.frc.FRCJavaArtifact) {
+            targets << "roborio"
+        }
+    }
+}
+
+// Defining my dependencies. In this case, WPILib (+ friends), CTRE Phoenix (Talon SRX)
+// and NavX.
+dependencies {
+    compile wpilib()
+    compile ctre()
+    compile navx()
+    compile openrio.powerup.matchData()
+}
+
+repositories{
+    mavenCentral()
+}
+
+// Setting up my Jar File. In this case, adding all libraries into the main jar ('fat jar')
+// in order to make them all available at runtime. Also adding the manifest so WPILib
+// knows where to look for our Robot Class.
+jar {
+    from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    manifest jaci.openrio.gradle.GradleRIOPlugin.javaManifest(ROBOT_CLASS)
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '4.4'
+}
+
+tasks.withType(Checkstyle) {
+ ignoreFailures = true
+ exclude '**/com/**'
+ exclude '**/frc/team696/autonomousCommands/**'
+ reports {
+    html.enabled = true
+    html.destination rootProject.file("build/reports/checkstyle.html")
+    xml.enabled = true
+    xml.destination rootProject.file("build/reports/checkstyle-result.xml")
+ }
+}
