@@ -1,25 +1,7 @@
-import org.apache.tools.ant.filters.*
-
-buildscript {
-
-    repositories {
-        jcenter()
-    }
-
-    dependencies {
-        // Add dependency for build script,
-        // so we can access Git from our
-        // build script.
-        classpath 'org.ajoberstar:grgit:1.1.0'
-    }
-
-}
 
 plugins {
     id "java"
-    id "eclipse"
-    id "idea"
-    id "jaci.openrio.gradle.GradleRIO" version "2018.01.22"
+    id "edu.wpi.first.GradleRIO" version "2019.1.1"
 }
 
 apply plugin: 'checkstyle'
@@ -30,34 +12,33 @@ checkstyle {
 }
 
 def TEAM = 696
-def ROBOT_CLASS = "frc.team696.robot.Robot"
-
-ext {
-    // Open the Git repository in the current directory.
-    git = org.ajoberstar.grgit.Grgit.open(file('.'))
-    // Get commit id of HEAD.
-    revision = git.head().id
-}
-
-logger.info("Building with commit ID " + revision)
-
-processResources {
-    filter ReplaceTokens, tokens: [
-        "commitHash": revision
-    ]
-}
+def ROBOT_MAIN_CLASS = "org.frc.team696.robot.Main"
 
 // Define my targets (RoboRIO) and artifacts (deployable files)
 // This is added by GradleRIO's backing project EmbeddedTools.
 deploy {
     targets {
-        target("roborio", jaci.openrio.gradle.frc.RoboRIO) {
-            team = TEAM
+        roboRIO("roborio") {
+            // Team number is loaded either from the .wpilib/wpilib_preferences.json
+            // or from command line. If not found an exception will be thrown.
+            // You can use getTeamOrDefault(team) instead of getTeamNumber if you
+            // want to store a team number in this file.
+            team = frc.getTeamNumber()
         }
     }
     artifacts {
-        artifact('frcJava', jaci.openrio.gradle.frc.FRCJavaArtifact) {
+        frcJavaArtifact('frcJava') {
             targets << "roborio"
+            // Debug can be overridden by command line, for use with VSCode
+            debug = frc.getDebugOrDefault(false)
+        }
+        // Built in artifact to deploy arbitrary files to the roboRIO.
+        fileTreeArtifact('frcStaticFileDeploy') {
+            // The directory below is the local directory to deploy
+            files = fileTree(dir: 'src/main/deploy')
+            // Deploy to RoboRIO target, into /home/lvuser/deploy
+            targets << "roborio"
+            directory = '/home/lvuser/deploy'
         }
     }
 }
@@ -65,10 +46,11 @@ deploy {
 // Defining my dependencies. In this case, WPILib (+ friends), CTRE Phoenix (Talon SRX)
 // and NavX.
 dependencies {
-    compile wpilib()
-    compile ctre()
-    compile navx()
-    compile openrio.powerup.matchData()
+    compile wpi.deps.wpilib()
+    compile wpi.deps.vendor.java()
+    nativeZip wpi.deps.vendor.jni(wpi.platforms.roborio)
+    nativeDesktopZip wpi.deps.vendor.jni(wpi.platforms.desktop)
+    testCompile 'junit:junit:4.12'
 }
 
 repositories{
@@ -79,12 +61,8 @@ repositories{
 // in order to make them all available at runtime. Also adding the manifest so WPILib
 // knows where to look for our Robot Class.
 jar {
-    from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
-    manifest jaci.openrio.gradle.GradleRIOPlugin.javaManifest(ROBOT_CLASS)
-}
-
-task wrapper(type: Wrapper) {
-    gradleVersion = '4.4'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    manifest edu.wpi.first.gradlerio.GradleRIOPlugin.javaManifest(ROBOT_MAIN_CLASS)
 }
 
 tasks.withType(Checkstyle) {
