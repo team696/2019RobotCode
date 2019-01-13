@@ -1,10 +1,8 @@
 package org.frc.team696.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
-import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -53,8 +51,9 @@ public class DriveTrainSubsystem extends Subsystem {
     public void tankDrive(double leftDrive, double rightDrive) {
 
         drive.tankDrive(leftDrive, rightDrive);
-
     }
+    
+
 
     @Override
     public void initDefaultCommand() {

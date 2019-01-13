@@ -7,12 +7,16 @@
 
 package org.frc.team696.robot;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+import org.frc.team696.robot.autonomousCommands.Default;
 import org.frc.team696.robot.commands.ExampleCommand;
+import org.frc.team696.robot.subsystems.DriveTrainSubsystem;
 import org.frc.team696.robot.subsystems.ExampleSubsystem;
 
 /**
@@ -31,6 +35,17 @@ public class Robot extends TimedRobot {
     private Command autonomousCommand;
     private SendableChooser<Command> chooser = new SendableChooser<>();
 
+    DigitalInput IR = new DigitalInput(0);
+  public static DriveTrainSubsystem drive = new DriveTrainSubsystem(RobotMap.lRear, RobotMap.lMid,RobotMap.lFront, RobotMap.rRear, RobotMap.rMid, RobotMap.rFront);
+
+
+    double speed;
+    double turn;
+    double leftSide;
+    double rightSide;
+    double speedMultiplier;
+
+
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
@@ -38,7 +53,7 @@ public class Robot extends TimedRobot {
     @Override
     public void robotInit() {
         oi = new OI();
-        chooser.addDefault("Default Auto", new ExampleCommand());
+        chooser.setDefaultOption("DriveCommand", new Default());
         // chooser.addObject("My Auto", new MyAutoCommand());
         SmartDashboard.putData("Auto mode", chooser);
     }
@@ -111,6 +126,19 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
+
+
+        speed = -OI.stick.getRawAxis(1);
+    turn = OI.stick.getRawAxis(4);
+
+    leftSide = speed + turn;
+    rightSide = speed - turn;
+    
+    System.out.println(IR.get());
+    
+    Robot.drive.tankDrive(leftSide, rightSide);
+
+
     }
 
     /**
