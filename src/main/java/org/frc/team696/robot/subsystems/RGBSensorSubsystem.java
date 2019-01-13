@@ -66,7 +66,7 @@ public class RGBSensorSubsystem extends Subsystem {
         Instance Variables
     */
 
-    private double whiteThreshold = 10;
+    private double whiteThreshold = 5;
 
 
     /**

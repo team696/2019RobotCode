@@ -36,6 +36,15 @@ public class RobotMap {
     public static byte blueDataL = 0x1A;
     public static byte blueDataH = 0x1B;
 
+    // Drive Train Talon IDs
+
+    public static int lFront = 14;
+    public static int lMid = 15;
+    public static int lRear = 16;
+    public static int rFront = 1;
+    public static int rMid = 2;
+    public static int rRear = 3;
+
     // For example to map the left and right motors, you could define the
     // following variables to use with your drivetrain subsystem.
     // public static int leftMotor = 1;

@@ -8,12 +8,14 @@
 package org.frc.team696.robot;
 
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.frc.team696.robot.commands.ExampleCommand;
+import org.frc.team696.robot.subsystems.DriveTrainSubsystem;
 import org.frc.team696.robot.subsystems.ExampleSubsystem;
 import org.frc.team696.robot.subsystems.RGBSensorSubsystem;
 
@@ -29,10 +31,18 @@ public class Robot extends TimedRobot {
 
     public static final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
     public static final RGBSensorSubsystem rgbSensorSubsystem = new RGBSensorSubsystem(RobotMap.deviceAddress);
+    public static final DriveTrainSubsystem driveTrainSubsystem = new DriveTrainSubsystem(RobotMap.lRear, RobotMap.lMid, RobotMap.lFront, 
+                                                                                        RobotMap.rRear, RobotMap.rMid, RobotMap.rFront);
     public static OI oi;
 
     private Command autonomousCommand;
     private SendableChooser<Command> chooser = new SendableChooser<>();
+
+    public Joystick joy = new Joystick(0);
+    private double speed;
+    private double wheel;
+    private double leftDrive = 0;
+    private double rightDrive = 0;
 
     /**
      * This function is run when the robot is first started up and should be
@@ -122,8 +132,22 @@ public class Robot extends TimedRobot {
 
 
         rgbSensorSubsystem.rgbGetLux();
-        System.out.println(rgbSensorSubsystem.onWhiteLine());
-        // System.out.println(rgbSensorSubsystem.rgbSensor.verifySensor(RobotMap., count, expected));
+        System.out.println(rgbSensorSubsystem.onWhiteLine() + " " + rgbSensorSubsystem.getWhite());
+
+        
+
+        if(rgbSensorSubsystem.onWhiteLine()){
+            leftDrive = 0;
+            rightDrive = 0;
+        }else{
+            speed = joy.getRawAxis(4);
+            wheel = joy.getRawAxis(1);
+        }
+
+        leftDrive = speed - wheel;
+        rightDrive = speed + wheel;
+
+        driveTrainSubsystem.tankDrive(-leftDrive, rightDrive);
 
     }
 
