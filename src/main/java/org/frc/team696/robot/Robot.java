@@ -7,6 +7,7 @@
 
 package org.frc.team696.robot;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -14,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.frc.team696.robot.commands.ExampleCommand;
 import org.frc.team696.robot.subsystems.ExampleSubsystem;
+import org.frc.team696.robot.subsystems.RGBSensorSubsystem;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -26,6 +28,7 @@ import org.frc.team696.robot.subsystems.ExampleSubsystem;
 public class Robot extends TimedRobot {
 
     public static final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
+    public static final RGBSensorSubsystem rgbSensorSubsystem = new RGBSensorSubsystem(RobotMap.deviceAddress);
     public static OI oi;
 
     private Command autonomousCommand;
@@ -41,6 +44,7 @@ public class Robot extends TimedRobot {
         chooser.addDefault("Default Auto", new ExampleCommand());
         // chooser.addObject("My Auto", new MyAutoCommand());
         SmartDashboard.putData("Auto mode", chooser);
+        
     }
 
     /**
@@ -103,6 +107,10 @@ public class Robot extends TimedRobot {
         if (autonomousCommand != null) {
             autonomousCommand.cancel();
         }
+
+        rgbSensorSubsystem.rgbSensor.write(0xC0, 1); // set Integration Time
+        rgbSensorSubsystem.rgbSensor.write(0x02, 1); // set Gain
+
     }
 
     /**
@@ -111,6 +119,12 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
+
+
+        rgbSensorSubsystem.rgbGetLux();
+        System.out.println(rgbSensorSubsystem.getWhite());
+        // System.out.println(rgbSensorSubsystem.rgbSensor.verifySensor(RobotMap., count, expected));
+
     }
 
     /**
