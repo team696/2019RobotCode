@@ -27,41 +27,46 @@ public class RGBSensorSubsystem extends Subsystem {
 
     private double luminance;
 
-    private double gbAverage;
+    private double rgbAverage;
     private double redNoLuminance;
     private double greenNoLuminance;
     private double blueNoLuminance;
-    private double rgbLoopNumber = 0;
-    double difference;
+    private double difference;
 
     /*
         Addresses
      */
 
-    byte commandBit = (byte) 0x80;
-    byte sensorWaitTime = 0x03;
-    byte aTimeAddress = (byte) 0x81;
+    private byte commandBit = (byte) 0x80;
+    private byte sensorWaitTime = 0x03;
+    private byte aTimeAddress = (byte) 0x81;
 
     /*
         Integration Times for RGB Sensor
      */
 
-    byte integrationTime_2_4ms = (byte) 0xFF;
-    byte integrationTime_14ms = (byte) 256 - 6;
-    byte integrationTime_24ms = (byte) 0xF6;
-    byte integrationTime_50ms = (byte) 0xEB;
-    byte integrationTime_101ms = (byte) 0xD5;
-    byte integrationTime_154ms = (byte) 0xC0;
-    byte integrationTime_700ms = (byte) 0x00;
+    private byte integrationTime_2_4ms = (byte) 0xFF;
+    private byte integrationTime_14ms = (byte) 256 - 6;
+    private byte integrationTime_24ms = (byte) 0xF6;
+    private byte integrationTime_50ms = (byte) 0xEB;
+    private byte integrationTime_101ms = (byte) 0xD5;
+    private byte integrationTime_154ms = (byte) 0xC0;
+    private byte integrationTime_700ms = (byte) 0x00;
 
     /*
         Gain Addresses
      */
 
-    byte gain_x1 = (byte) 0x00;
-    byte gain_x4 = (byte) 0x01;
-    byte gain_x16 = (byte) 0x02;
-    byte gain_x60 = (byte) 0x03;
+    private byte gain_x1 = (byte) 0x00;
+    private byte gain_x4 = (byte) 0x01;
+    private byte gain_x16 = (byte) 0x02;
+    private byte gain_x60 = (byte) 0x03;
+
+    /*
+        Instance Variables
+    */
+
+    private double whiteThreshold = 10;
 
 
     /**
@@ -123,26 +128,15 @@ public class RGBSensorSubsystem extends Subsystem {
 
         luminance = (-0.32466 * red) + (1.57837 * green) + (-0.73191 * blue);
 
+
         /*
-            Data Output
-//         */
+            No Luminance Calculation
+        */
 
-    //    System.out.printf("Red Color Luminance   : %d lux %n", red); // no u
-    //    System.out.printf("Green Color Luminance : %d lux %n", green);
-    //    System.out.printf("Blue Color Luminance  : %d lux %n", blue);
-    //    System.out.printf("IR Luminance          : %d lux %n", cData);
-    //    System.out.printf("Ambient Light Luminance : %d lux %n", luminance);
-
-        gbAverage = ((blue + green) / 3);
+        rgbAverage = ((red + blue + green) / 3);
         redNoLuminance = (red / luminance);
         blueNoLuminance = (blue / luminance);
         greenNoLuminance = (green / luminance);
-        
-        // System.out.printf("gbAverage: %d \n", gbAverage);
-        // System.out.printf("redNoLum: %d \n", redNoLuminance);
-        // System.out.printf("blueNoLum: %d \n", blueNoLuminance);
-        // System.out.printf("greenNoLumm: %d \n", greenNoLuminance);
-
 
     }
 
@@ -173,11 +167,24 @@ public class RGBSensorSubsystem extends Subsystem {
         return greenNoLuminance;
     }
     
+    /**
+     * Accessor method for gbAverage
+     * @return the gbAverage value, giving us the white value of the RGB sensor 
+     */
+
     public double getWhite() {
-        return gbAverage;
+        return rgbAverage;
     }
 
+    /**
+     * Algorithm to detect whether ot not the RGB sensor is over the white line or not.
+     * @return true if sensor is over white line, false if not
+     */
+
     public boolean onWhiteLine() {
+        if(rgbAverage > whiteThreshold){
+            return true;
+        }
         return false;
     }
 

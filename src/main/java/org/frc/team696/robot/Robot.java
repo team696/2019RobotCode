@@ -122,7 +122,7 @@ public class Robot extends TimedRobot {
 
 
         rgbSensorSubsystem.rgbGetLux();
-        System.out.println(rgbSensorSubsystem.getWhite());
+        System.out.println(rgbSensorSubsystem.onWhiteLine());
         // System.out.println(rgbSensorSubsystem.rgbSensor.verifySensor(RobotMap., count, expected));
 
     }
