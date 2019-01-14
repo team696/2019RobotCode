@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.frc.team696.robot.autonomousCommands.Default;
-import org.frc.team696.robot.commands.ExampleCommand;
+import org.frc.team696.robot.commands.CorrectDriveLeft;
 import org.frc.team696.robot.subsystems.DriveTrainSubsystem;
 import org.frc.team696.robot.subsystems.ExampleSubsystem;
 
@@ -41,10 +41,19 @@ public class Robot extends TimedRobot {
 
     double speed;
     double turn;
-    double leftSide;
-    double rightSide;
+    public static double leftSide;
+    public static double rightSide;
     double speedMultiplier;
 
+    int loopNumber = 0;
+
+    boolean isCorrecting;
+
+
+    Command correctLeft = new CorrectDriveLeft(2);
+    Command normal = new CorrectDriveLeft(0);
+
+    boolean isAdjusting = false;
 
     /**
      * This function is run when the robot is first started up and should be
@@ -128,16 +137,32 @@ public class Robot extends TimedRobot {
         Scheduler.getInstance().run();
 
 
-        speed = -OI.stick.getRawAxis(1);
+
+    speed = -OI.stick.getRawAxis(1);
     turn = OI.stick.getRawAxis(4);
 
     leftSide = speed + turn;
     rightSide = speed - turn;
-    
-    System.out.println(IR.get());
-    
-    Robot.drive.tankDrive(leftSide, rightSide);
 
+
+    System.out.println("isCorrecting:   " + isCorrecting);
+    System.out.println("On line   " + IR.get() );
+
+    if(OI.stick.getRawButton(1)){
+        isCorrecting = true;
+    }
+
+    if(IR.get() && isCorrecting){
+        leftSide+=0.8;
+    }
+
+    else{
+        leftSide = speed+turn;
+    }
+
+
+     Robot.drive.tankDrive(leftSide * 0.8 + 0.02, rightSide * 0.8);
+  
 
     }
 
