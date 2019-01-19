@@ -15,8 +15,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.frc.team696.robot.autonomousCommands.Default;
+import org.frc.team696.robot.commands.BooleanTest;
 import org.frc.team696.robot.commands.CorrectDriveLeft;
+import org.frc.team696.robot.commands.Elevator;
 import org.frc.team696.robot.subsystems.DriveTrainSubsystem;
+import org.frc.team696.robot.subsystems.ElevatorCommand;
 import org.frc.team696.robot.subsystems.ExampleSubsystem;
 
 /**
@@ -31,12 +34,18 @@ public class Robot extends TimedRobot {
 
     public static final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
     public static OI oi;
+    public static final ElevatorCommand elevatorSubsystem = new ElevatorCommand(RobotMap.elevatorSol);
 
     private Command autonomousCommand;
     private SendableChooser<Command> chooser = new SendableChooser<>();
 
-    DigitalInput IR = new DigitalInput(0);
-  public static DriveTrainSubsystem drive = new DriveTrainSubsystem(RobotMap.lRear, RobotMap.lMid,RobotMap.lFront, RobotMap.rRear, RobotMap.rMid, RobotMap.rFront);
+    // DigitalInput leftIR = new DigitalInput(0);
+    // DigitalInput rightIR = new DigitalInput(1);
+
+    DigitalInput leftIR = new DigitalInput(1);
+    DigitalInput rightIR = new DigitalInput(0);
+
+    public static DriveTrainSubsystem drive = new DriveTrainSubsystem(RobotMap.lRear, RobotMap.lMid,RobotMap.lFront, RobotMap.rRear, RobotMap.rMid, RobotMap.rFront);
 
 
     double speed;
@@ -47,7 +56,7 @@ public class Robot extends TimedRobot {
 
     int loopNumber = 0;
 
-    boolean isCorrecting;
+   public static boolean isCorrecting;
 
 
     Command correctLeft = new CorrectDriveLeft(2);
@@ -139,29 +148,34 @@ public class Robot extends TimedRobot {
 
 
     speed = -OI.stick.getRawAxis(1);
-    turn = OI.stick.getRawAxis(4);
+    turn = OI.stick.getRawAxis(4) * 0.5;
 
     leftSide = speed + turn;
     rightSide = speed - turn;
 
 
     System.out.println("isCorrecting:   " + isCorrecting);
-    System.out.println("On line   " + IR.get() );
+    System.out.println("           Left :         " + leftIR.get() + "           Right:  " + !rightIR.get() );
 
-    if(OI.stick.getRawButton(1)){
-        isCorrecting = true;
-    }
 
-    if(IR.get() && isCorrecting){
-        leftSide+=0.8;
+   OI.toggle.toggleWhenPressed(new Elevator(true));
+   OI.toggle.toggleWhenPressed(new Elevator(false));
+
+
+    
+    if(leftIR.get() && isCorrecting){
+        leftSide+=0.2;
     }
 
     else{
         leftSide = speed+turn;
     }
+    if(!rightIR.get() && isCorrecting){
+        rightSide+=0.2;
+    }
 
 
-     Robot.drive.tankDrive(leftSide * 0.8 + 0.02, rightSide * 0.8);
+     Robot.drive.tankDrive(leftSide * 0.8 , rightSide * 0.8);
   
 
     }
