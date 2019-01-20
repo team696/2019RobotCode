@@ -32,14 +32,14 @@ public class DriveCommand extends Command {
   double tankRight;
 
   /*P, I, and D values for Distance(How far the robot will drive)*/
-  double pDistance = 0.0005;
-  double iDistance = 0.0;
-  double dDistance = 0.0;
+  double pDistance = 0.00009;
+  double iDistance = 0.00;
+  double dDistance = 0.000;
 
   /*P, I, and D values for Direction(Angle the robot will turn)*/
-  double pDirection = 0.01;
-  double iDirection = 0;
-  double dDirection = 0.000;
+  double pDirection = 0.015;
+  double iDirection = 0.00;
+  double dDirection = 0.07;
 
 
   /* Doubles that are set to the output that the pidController gives.
@@ -64,6 +64,8 @@ public class DriveCommand extends Command {
   PIDController PIDLeftDistance;
   PIDController PIDRightDistance;
   PIDController PIDGyro;
+
+  double speedFactor = 0.6;
 
 
   public DriveCommand(double distance, double direction) {
@@ -161,6 +163,9 @@ public class DriveCommand extends Command {
     PIDLeftDistance.setPercentTolerance(10);
     PIDGyro.setPercentTolerance(10);
 
+    // PIDRightDistance.setOutputRange(-1, 1); 
+    // PIDLeftDistance.setOutputRange(-1,1);
+
 
   }
 
@@ -188,11 +193,15 @@ public class DriveCommand extends Command {
 
     
 
+    
+
   }
 
   @Override
   protected void execute() {
 
+
+    // System.out.println(Robot.driveTrainSubsystem.leftRear.getSelectedSensorPosition(0));
     /*Tank Drive Code */
 
     double speed = (rightPidOutput + leftPidOutput) / 2 ;
@@ -204,15 +213,18 @@ public class DriveCommand extends Command {
 
 
 
-    // System.out.println("Still Running");
-    System.out.println("NavX Reading   :" + Robot.navX.getYaw());
-    System.out.println("RIGHT PID IS ENABLED     " + PIDRightDistance.isEnabled() );
-    // System.out.println("Gyro OUTPUT:    " + gyroPidOutput);
-    System.out.println(leftPidOutput);
 
+    // System.out.println("Still Running");
+    // System.out.println("NavX Reading   :" + Robot.navX.getYaw());
+    // System.out.println("RIGHT PID IS ENABLED     " + PIDRightDistance.isEnabled() );
+    // System.out.println("Gyro OUTPUT:    " + gyroPidOutput);
+    // System.out.println("LEFT OUTPUT:      " + leftPidOutput);
+       System.out.println("ANGLE    " + Robot.navX.getYaw());
+       System.out.println("Distance                     " + Robot.driveTrainSubsystem.leftRear.getSelectedSensorPosition());
   
-    Robot.driveTrainSubsystem.tankDrive(tankLeft, tankRight);
+    Robot.driveTrainSubsystem.tankDrive(tankLeft , tankRight);
   }
+
 
   @Override
   protected boolean isFinished() {

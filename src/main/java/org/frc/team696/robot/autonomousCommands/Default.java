@@ -17,7 +17,15 @@ public class Default extends CommandGroup {
    */
   public Default() {
 
-    addSequential(new DriveCommand(20000, 0));
+    // addSequential(new DriveCommand(15000, 0),4);
+    // addSequential(new DriveCommand(10000,0));
+    // addSequential(new DriveCommand(10000,0), 4);
+    // addSequential(new DriveCommand(-10000, 0), 4);
+      // addSequential(new DriveCommand(0, -90));
+      // addSequential(new DriveCommand(-30000,0));
+      addSequential(new DriveCommand(0,45));
+    
+    // addSequential(new DriveCommand(0,150));
 
     // Add Commands here:
     // e.g. addSequential(new Command1());

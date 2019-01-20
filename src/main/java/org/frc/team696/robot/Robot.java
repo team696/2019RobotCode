@@ -8,7 +8,6 @@
 package org.frc.team696.robot;
 
 import edu.wpi.first.wpilibj.SerialPort;
-import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -17,11 +16,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.kauailabs.navx.frc.AHRS.SerialDataType;
-
-// import com.kauailabs.nav6.frc.IMU;
-// import com.kauailabs.nav6.frc.IMUAdvanced;
-
-
 
 import org.frc.team696.robot.autonomousCommands.Default;
 import org.frc.team696.robot.subsystems.DriveTrainSubsystem;
@@ -52,6 +46,12 @@ public class Robot extends TimedRobot {
     public static AHRS navX;
     SerialPort port;
     byte UpdateRateHz;
+
+
+    double speed;
+    double turn;
+    double leftValue;
+    double rightValue;
     
 
 
@@ -153,7 +153,24 @@ public class Robot extends TimedRobot {
         Scheduler.getInstance().run();
 
 
-        System.out.println(navX.getYaw());
+        speed = -OI.stick.getRawAxis(1);
+        turn = -OI.stick.getRawAxis(4) * 0.5;
+
+        if(turn < 0.1 && turn > -0.1){
+            turn = 0;
+        }
+
+        leftValue = speed - turn;
+        rightValue = speed + turn;
+
+       
+
+        driveTrainSubsystem.tankDrive(leftValue, rightValue);
+
+
+        System.out.println("NAVX        " + navX.getYaw());
+        System.out.println("TURN   " + turn);
+        System.out.println(leftValue + "   " + rightValue);
 
     }  
 
