@@ -12,6 +12,10 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import org.frc.team696.robot.commands.ExampleCommand;
 import org.frc.team696.robot.subsystems.ExampleSubsystem;
 
@@ -30,6 +34,7 @@ public class Robot extends TimedRobot {
 
     private Command autonomousCommand;
     private SendableChooser<Command> chooser = new SendableChooser<>();
+    private static final Logger logger = LogManager.getLogger("HelloWorld");
 
     /**
      * This function is run when the robot is first started up and should be
@@ -111,6 +116,7 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
+        logger.info("Hello, World!");
     }
 
     /**
