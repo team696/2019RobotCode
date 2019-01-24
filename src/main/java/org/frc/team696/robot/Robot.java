@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.RobotController;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -32,6 +33,8 @@ public class Robot extends TimedRobot {
     public static final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
     public static OI oi;
 
+    public Integer loopCount = 0;
+    
     private Command autonomousCommand;
     private SendableChooser<Command> chooser = new SendableChooser<>();
     private static final Logger logger = LogManager.getLogger("Robot Main");
@@ -128,4 +131,14 @@ public class Robot extends TimedRobot {
     public void testPeriodic() {
         
     }
+
+    @Override
+    public void robotPeriodic() {
+        loopCount++;
+        if(loopCount % 50 == 0){
+            double voltage = RobotController.getBatteryVoltage();
+            logger.debug(String.format("Battery voltage: %.1f", voltage));
+        }
+    }
+
 }
