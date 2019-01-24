@@ -34,7 +34,7 @@ public class Robot extends TimedRobot {
 
     private Command autonomousCommand;
     private SendableChooser<Command> chooser = new SendableChooser<>();
-    private static final Logger logger = LogManager.getLogger("HelloWorld");
+    private static final Logger logger = LogManager.getLogger("Robot Main");
 
     /**
      * This function is run when the robot is first started up and should be
@@ -42,6 +42,7 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void robotInit() {
+        logger.info("Initializing robot...");
         oi = new OI();
         chooser.addDefault("Default Auto", new ExampleCommand());
         // chooser.addObject("My Auto", new MyAutoCommand());
@@ -55,7 +56,7 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void disabledInit() {
-        
+        logger.info("Entering disabled...");
     }
 
     @Override
@@ -76,6 +77,7 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void autonomousInit() {
+        logger.info("Entering autonomous...");
         autonomousCommand = chooser.getSelected();
 
         /*
@@ -101,6 +103,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
+        logger.info("Entering teleop...");
         // This makes sure that the autonomous stops running when
         // teleop starts running. If you want the autonomous to
         // continue until interrupted by another command, remove
@@ -116,7 +119,6 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
-        logger.info("Hello, World!");
     }
 
     /**
