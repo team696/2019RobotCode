@@ -14,6 +14,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.frc.team696.robot.commands.ExampleCommand;
 import org.frc.team696.robot.subsystems.ExampleSubsystem;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.ControlType;
+import com.revrobotics.CANPIDController;
+import com.revrobotics.CANEncoder;
+
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -30,6 +36,9 @@ public class Robot extends TimedRobot {
 
     private Command autonomousCommand;
     private SendableChooser<Command> chooser = new SendableChooser<>();
+    public CANSparkMax spark = new CANSparkMax(1, MotorType.kBrushless);
+    public CANPIDController sparkPID = new CANPIDController(spark);
+    public CANEncoder encoder = new CANEncoder(spark);
 
     /**
      * This function is run when the robot is first started up and should be
@@ -41,6 +50,8 @@ public class Robot extends TimedRobot {
         chooser.addDefault("Default Auto", new ExampleCommand());
         // chooser.addObject("My Auto", new MyAutoCommand());
         SmartDashboard.putData("Auto mode", chooser);
+        spark.setCANTimeout(10);
+        spark.setMotorType(MotorType.kBrushless);
     }
 
     /**
@@ -111,6 +122,15 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
+        //spark.set(0.05);
+        sparkPID.setFF(0);
+        sparkPID.setP(5e-5);
+        sparkPID.setD(0);
+        sparkPID.setI(1e-6);
+        sparkPID.setIZone(0);
+        sparkPID.setOutputRange(-0.05, 0.05);
+        sparkPID.setReference(200, ControlType.kVelocity);
+        System.out.println(encoder.getVelocity());
     }
 
     /**
