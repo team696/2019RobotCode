@@ -12,8 +12,11 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.frc.team696.robot.commands.ExampleCommand;
-import org.frc.team696.robot.subsystems.ExampleSubsystem;
+
+import org.frc.team696.robot.commands.TiltCommand;
+import org.frc.team696.robot.subsystems.DriveTrainSubsystem;
+import org.frc.team696.robot.subsystems.IntakeSubsystem;
+import org.frc.team696.robot.subsystems.TiltSubsystem;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -25,8 +28,17 @@ import org.frc.team696.robot.subsystems.ExampleSubsystem;
 // If you rename or move this class, update the build.properties file in the project root
 public class Robot extends TimedRobot {
 
-    public static final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
+   
     public static OI oi;
+public static IntakeSubsystem intake = new IntakeSubsystem(RobotMap.intakeAPort, RobotMap.intakeBPort, RobotMap.solPort);
+public static DriveTrainSubsystem drive = new DriveTrainSubsystem(RobotMap.leftFrontPort, RobotMap.leftMidPort, RobotMap.leftRearPort, RobotMap.rightFrontPort, RobotMap.rightMidPort, RobotMap.rightRearPort);
+public static TiltSubsystem tilt = new TiltSubsystem(RobotMap.solTiltBoo);
+//public static TiltCommand tiltCommand = new TiltCommand(solBool);
+double speed;
+double turn;
+double leftSpeed;
+double rightSpeed; 
+double speedFactor = 0.75;
 
     private Command autonomousCommand;
     private SendableChooser<Command> chooser = new SendableChooser<>();
@@ -37,9 +49,7 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void robotInit() {
-        oi = new OI();
-        chooser.addDefault("Default Auto", new ExampleCommand());
-        // chooser.addObject("My Auto", new MyAutoCommand());
+        oi = new OI();;
         SmartDashboard.putData("Auto mode", chooser);
     }
 
@@ -111,6 +121,45 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
+
+    speed =  OI.stick.getRawAxis(1);
+    turn = OI.wheel.getRawAxis(0);
+
+      
+    leftSpeed = speed + turn;
+    rightSpeed = speed - turn;
+
+    if (OI.controlPanel.getRawButton(2)){
+        speedFactor = 0.75;
+    }
+
+    if (OI.controlPanel.getRawButton(1)){
+        speedFactor = 0.5;
+    }
+
+    if (OI.controlPanel.getRawButton(7)){
+        intake.runIntake(0.5);
+    }
+
+   else if (OI.controlPanel.getRawButton(8)){
+        intake.runIntake(-0.5);
+    }
+        else{intake.runIntake(0);
+        }
+
+    if (OI.controlPanel.getRawButton(9)){
+        intake.solIntake(true);
+    }
+        else intake.solIntake(false);
+
+
+    OI.tilt.toggleWhenPressed(new TiltCommand(true));
+    OI.tilt.toggleWhenPressed(new TiltCommand(false));
+    
+
+  drive.execute(speedFactor*leftSpeed, speedFactor*rightSpeed);
+
+    // intake.solIntake(true);
     }
 
     /**
