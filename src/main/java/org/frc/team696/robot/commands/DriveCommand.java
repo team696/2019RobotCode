@@ -21,25 +21,21 @@ import edu.wpi.first.wpilibj.command.Command;
     ~Uses the WPIlib PIDController~
 
    ----------------------------------------------------------------------------------*/
-
-
-
-
 public class DriveCommand extends Command {
 
   /*Left and Right parameters of tank drive method*/
   double tankLeft;
   double tankRight;
-
+ 
   /*P, I, and D values for Distance(How far the robot will drive)*/
   double pDistance = 0.00009;
   double iDistance = 0.00;
   double dDistance = 0.000;
 
   /*P, I, and D values for Direction(Angle the robot will turn)*/
-  double pDirection = 0.015;
-  double iDirection = 0.00;
-  double dDirection = 0.07;
+  double pDirection = 0.015; //0.015
+  double iDirection = 0.0;
+  double dDirection = 0.07; //0.07
 
 
   /* Doubles that are set to the output that the pidController gives.
@@ -65,7 +61,16 @@ public class DriveCommand extends Command {
   PIDController PIDRightDistance;
   PIDController PIDGyro;
 
-  double speedFactor = 0.6;
+
+
+
+
+  
+
+
+
+
+  // double speedFactor = 0.6;
 
 
   public DriveCommand(double distance, double direction) {

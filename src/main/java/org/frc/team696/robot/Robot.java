@@ -7,6 +7,7 @@
 
 package org.frc.team696.robot;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
@@ -18,6 +19,9 @@ import com.kauailabs.navx.frc.AHRS;
 import com.kauailabs.navx.frc.AHRS.SerialDataType;
 
 import org.frc.team696.robot.autonomousCommands.Default;
+import org.frc.team696.robot.commands.DriveCommand;
+import org.frc.team696.robot.commands.DriveToAngleCommand;
+import org.frc.team696.robot.subsystems.DriveToAngle;
 import org.frc.team696.robot.subsystems.DriveTrainSubsystem;
 
 /**
@@ -30,18 +34,22 @@ import org.frc.team696.robot.subsystems.DriveTrainSubsystem;
 // If you rename or move this class, update the build.properties file in the project root
 public class Robot extends TimedRobot {
 
+
     public static OI oi;
 
+    public static final DriveTrainSubsystem driveTrainSubsystem = new DriveTrainSubsystem(RobotMap.lRear, RobotMap.lMid, RobotMap.lFront, 
+                                                                                          RobotMap.rRear, RobotMap.rMid, RobotMap.rFront);
     
-    
-    public static final DriveTrainSubsystem driveTrainSubsystem = new DriveTrainSubsystem(RobotMap.lRear, RobotMap.lMid, RobotMap.lFront, RobotMap.rRear, RobotMap.rMid, RobotMap.rFront);
-
+    public static DriveToAngle driveToAngleSubsystem;                                                                                  
 
     private Command autonomousCommand;
     private SendableChooser<Command> chooser = new SendableChooser<>();
 
 
-    // public static IMUProtocol navX;
+    public static DigitalInput leftIRSensor = new DigitalInput(0);
+    public static DigitalInput rightIRSensor = new DigitalInput(1);
+
+    //public static IMUProtocol navX;
 
     public static AHRS navX;
     SerialPort port;
@@ -52,7 +60,46 @@ public class Robot extends TimedRobot {
     double turn;
     double leftValue;
     double rightValue;
+
+    boolean gotLeft = false;
+    boolean gotRight = false;
+    boolean isReady = false;
+
+    double x =259.8; //2.273*218;
+    double y; 
     
+    double targetAngle;
+    static double targetAngleDegrees;
+    public static double finalTargetAngle;
+
+   public static double initialEncoder;
+   public static double leftEncoder;
+   public static double rightEncoder;
+
+   public static double finalEncoder;
+
+   public static double encoderDifference;
+
+   public boolean angleGot = false;
+
+   //public  DriveCommand DriveToAngle = new DriveCommand(0, targetAngleDegrees);
+
+   public DriveToAngleCommand driveToAngleCommand = new DriveToAngleCommand(45);
+
+
+
+   Command driveToAngle;
+
+   public Robot(){
+    driveToAngle = new DriveCommand(0,targetAngleDegrees);  
+    targetAngleDegrees = finalTargetAngle;
+    
+    
+
+
+
+
+   }
 
 
 
@@ -62,6 +109,10 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void robotInit() {
+
+        driveTrainSubsystem.leftRear.setSelectedSensorPosition(0);
+        driveTrainSubsystem.rightFront.setSelectedSensorPosition(0);
+
 
 
         
@@ -78,6 +129,11 @@ public class Robot extends TimedRobot {
             navX = new AHRS(SerialPort.Port.kMXP, SerialDataType.kProcessedData, UpdateRateHz);
 
         } catch(Exception ex){System.out.println("NavX not working");}
+
+
+        
+
+
     }
 
     /**
@@ -138,9 +194,8 @@ public class Robot extends TimedRobot {
         // continue until interrupted by another command, remove
         // this line or comment it out.
 
-        navX.zeroYaw();
 
-        if (autonomousCommand != null) {
+        if (autonomousCommand != null) { 
             autonomousCommand.cancel();
         }
     }
@@ -152,9 +207,42 @@ public class Robot extends TimedRobot {
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
 
+        
+        // System.out.println("Left:   " + leftIRSensor.get() + "     " + "Right:  " + !rightIRSensor.get());
+        
+        if (leftIRSensor.get() && !gotLeft){
+        gotLeft = true;
+        leftEncoder = (driveTrainSubsystem.rightFront.getSelectedSensorPosition()+driveTrainSubsystem.leftRear.getSelectedSensorPosition()/2);  
+        }
 
-        speed = -OI.stick.getRawAxis(1);
+        if (!rightIRSensor.get() && !gotRight){
+            gotRight = true;
+            rightEncoder = (driveTrainSubsystem.rightFront.getSelectedSensorPosition()+driveTrainSubsystem.leftRear.getSelectedSensorPosition()/2);  
+           // navX.zeroYaw();
+            }
+    
+        if(gotLeft && gotRight){
+            // finalEncoder = (driveTrainSubsystem.rightFront.getSelectedSensorPosition()+driveTrainSubsystem.leftRear.getSelectedSensorPosition())/2;
+            // encoderDifference=finalEncoder-initialEncoder;
+            encoderDifference = rightEncoder-leftEncoder;
+            isReady = true;
+            //navX.zeroYaw();
+
+        }
+        y = encoderDifference;
+        // System.out.println("y"+"    "+y);
+      //  System.out.println("Average Encoder:    " + (driveTrainSubsystem.rightFront.getSelectedSensorPosition()+driveTrainSubsystem.leftRear.getSelectedSensorPosition() / 2));
+        //System.out.println(leftEncoder + "            " + rightEncoder);
+
+        // OI.alignButton.whileHeld(new DriveCommand(0,targetAngle));
+
+
+       
+
+
+        speed = -OI.stick.getRawAxis(1) * 0.75;
         turn = -OI.stick.getRawAxis(4) * 0.5;
+
 
         if(turn < 0.1 && turn > -0.1){
             turn = 0;
@@ -163,14 +251,88 @@ public class Robot extends TimedRobot {
         leftValue = speed - turn;
         rightValue = speed + turn;
 
-       
-
-        driveTrainSubsystem.tankDrive(leftValue, rightValue);
 
 
-        System.out.println("NAVX        " + navX.getYaw());
-        System.out.println("TURN   " + turn);
-        System.out.println(leftValue + "   " + rightValue);
+
+
+        // if(!isReady){
+        // driveTrainSubsystem.tankDrive(leftValue, rightValue);
+
+
+        // }
+
+     
+
+       targetAngle = Math.atan(x/y);
+
+       targetAngleDegrees = Math.toDegrees(targetAngle);
+
+
+    //    if(!angleGot && gotLeft && gotRight ){
+    // //    driveToAngleSubsystem = new DriveToAngle(targetAngle);
+    //    System.out.println("Hello");
+    //       angleGot = true;
+    //    }
+
+       driveToAngleSubsystem = new DriveToAngle(targetAngleDegrees);
+
+
+       //driveToAngleCommand = new DriveToAngleCommand(45);
+
+       if (OI.stick.getRawButton(1)){
+    navX.zeroYaw();
+           driveToAngleSubsystem.goTargetAngle();
+        // driveToAngleCommand.start();
+       }else{
+           driveToAngleSubsystem.cancel();
+       }
+
+
+    //    System.out.println(leftEncoder+ "       " + rightEncoder);
+       System.out.println("Target Angle:   "  + targetAngleDegrees);
+      // System.out.println(driveTrainSubsystem.rightFront.getSelectedSensorPosition());
+
+    //    driveToAngle = new DriveCommand(0, targetAngleDegrees); 
+
+            
+
+    // if(OI.stick.getRawButton(1)){
+    //     driveToAngleSubsystem.getTargetAngle(targetAngleDegrees);   
+    // }
+    // else{
+    //     driveToAngleSubsystem.cancel();
+    // }
+
+
+    // if(OI.stick.getRawButton(1)){
+    //     DriveToAngle.start();
+    // }
+    // else {
+    //     driveToAngle.cancel();
+    // }
+    // System.out.println(DriveToAngle.isRunning());
+    // if(OI.stick.getRawButton(2)){
+    //     gotLeft=false;
+    //     gotRight=false;
+    // }
+    //    OI.alignButton.whenPressed(driveToAngle);
+
+    //    if(isReady){
+    //        driveToAngle.start();
+    //    }
+      
+
+
+
+
+
+
+
+        // System.out.println("NAVX        " + navX.getYaw());
+        // System.out.println("TURN   " + turn);
+        // System.out.println(leftValue + "   " + rightValue);
+
+        // System.out.println(Math.tan(45));
 
     }  
 
