@@ -7,12 +7,19 @@
 
 package org.frc.team696.robot.commands;
 
+import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.command.Command;
+import org.frc.team696.robot.OI;
 import org.frc.team696.robot.Robot;
+import org.frc.team696.robot.subsystems.Climber;
 
 public class ClimberManualControl extends Command {
+  Button isManual;
+
+
   public ClimberManualControl() {
-    //requires(Robot.climber);
+    requires(Robot.climber);
+    this.setInterruptible(false);
   }
 
   // Called just before this Command runs the first time
@@ -23,6 +30,7 @@ public class ClimberManualControl extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
+      Climber.setPower(OI.getClimberManual());
   }
 
   // Make this return true when this Command no longer needs to run execute()

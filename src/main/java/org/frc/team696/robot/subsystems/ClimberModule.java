@@ -95,6 +95,10 @@ public class ClimberModule extends Subsystem{
     this.talon.set(ControlMode.PercentOutput, 0);
   }
 
+  public void setPower(double power){
+    this.talon.set(ControlMode.PercentOutput, power);
+  }
+
   public boolean getFwdLimit(){
     return this.talon.getSensorCollection().isFwdLimitSwitchClosed();
   }

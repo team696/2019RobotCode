@@ -9,6 +9,8 @@ package org.frc.team696.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import org.frc.team696.robot.OI;
+import org.frc.team696.robot.commands.ClimberManualControl;
 import org.frc.team696.robot.states.ClimberState;
 import org.frc.team696.robot.subsystems.ClimberModule;
 
@@ -16,22 +18,50 @@ import org.frc.team696.robot.subsystems.ClimberModule;
  * Add your docs here.
  */
 public class Climber extends Subsystem {
-  ClimberModule fl;
-  ClimberModule fr; 
-  ClimberModule rl; 
-  ClimberModule rr;
-  ClimberState state = ClimberState.IDLE;
+  private static ClimberModule fl;
+  private static ClimberModule fr; 
+  private static ClimberModule rl; 
+  private static ClimberModule rr;
+  private static ClimberState state = ClimberState.IDLE;
   
+  public static boolean isManual = false;
 
-  Climber(TalonSRX fl, TalonSRX fr, TalonSRX rl, TalonSRX rr){
-    this.fl = new ClimberModule(fl);
-    this.fr = new ClimberModule(fr);
-    this.rl = new ClimberModule(rl);
-    this.rr = new ClimberModule(rr);
+  /**
+   * Set up ClimberModule instances with preexisting TalonSRXs.
+   * 
+   * @param fltalon Front-left TalonSRX
+   * @param frtalon Front-right TalonSRX
+   * @param rltalon Rear-left TalonSRX
+   * @param rrtalon Rear-right TalonSRX
+   */
+  public static void setControllers(TalonSRX fltalon, TalonSRX frtalon, TalonSRX rltalon, TalonSRX rrtalon){
+    fl = new ClimberModule(fltalon);
+    fr = new ClimberModule(frtalon);
+    rl = new ClimberModule(rltalon);
+    rr = new ClimberModule(rrtalon);
+  }
+
+  /**
+   * Manually sets power (percent output) of climber motors.
+   * 
+   * @param flp Front-left output
+   * @param frp Front-right output
+   * @param rlp Rear-left output
+   * @param rrp Rear-right output
+   */
+  public static void setPower(double flp, double frp, double rlp, double rrp){
+    fl.setPower(flp);
+    fr.setPower(frp);
+    rl.setPower(rlp);
+    rr.setPower(rrp);
+  }
+
+  public static void setPower(double power){
+    setPower(power, power, power, power);
   }
 
   public ClimberState getState(){
-    return this.state;
+    return state;
   }
 
   /**
@@ -41,14 +71,14 @@ public class Climber extends Subsystem {
    * it will not actually be implemented.
    * @param newState The requested climber state
    */
-  public void setState(ClimberState newState){
-    switch(this.state){
+  public static void setState(ClimberState newState){
+    switch(state){
       case IDLE:
         switch(newState){
           case IDLE:
             break;
           case MOVE_TO_ARMED:
-            this.state = newState;
+            state = newState;
             break;
           default:
             //Other transitions not allowed
@@ -58,7 +88,7 @@ public class Climber extends Subsystem {
       case MOVE_TO_ARMED:
         switch(newState){
           case MOVE_TO_STOWED:
-            this.state = newState;
+            state = newState;
             break;
           default:
             //Other transitions not allowed
@@ -68,10 +98,10 @@ public class Climber extends Subsystem {
       case ARMED:
         switch(newState){
           case CLIMBING:
-            this.state = newState;
+            state = newState;
             break;
           case MOVE_TO_STOWED:
-            this.state = newState;
+            state = newState;
             break;
           default:
             //Other transitions not allowed
@@ -84,6 +114,6 @@ public class Climber extends Subsystem {
   @Override
   public void initDefaultCommand() {
     // Set the default command for a subsystem here.
-    // setDefaultCommand(new MySpecialCommand());
+    setDefaultCommand(new ClimberManualControl());
   }
 }

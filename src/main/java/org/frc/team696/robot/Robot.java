@@ -7,6 +7,7 @@
 
 package org.frc.team696.robot;
 
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -27,7 +28,7 @@ import org.frc.team696.robot.subsystems.ExampleSubsystem;
 public class Robot extends TimedRobot {
 
     public static final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
-    //public static final Climber climber = new Climber();
+    public static final Climber climber = new Climber();
     public static OI oi;
     private Command autonomousCommand;
     private SendableChooser<Command> chooser = new SendableChooser<>();
@@ -42,6 +43,13 @@ public class Robot extends TimedRobot {
         chooser.addDefault("Default Auto", new ExampleCommand());
         // chooser.addObject("My Auto", new MyAutoCommand());
         SmartDashboard.putData("Auto mode", chooser);
+
+        //Quick-n-dirty initialization; just here to test climber modules
+        TalonSRX fl = new TalonSRX(0);
+        TalonSRX fr = new TalonSRX(0);
+        TalonSRX rl = new TalonSRX(0);
+        TalonSRX rr = new TalonSRX(0);
+        Climber.setControllers(fl, fr, rl, rr);
     }
 
     /**
