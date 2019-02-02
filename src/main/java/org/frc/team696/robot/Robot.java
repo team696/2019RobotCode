@@ -7,14 +7,27 @@
 
 package org.frc.team696.robot;
 
+import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.SerialPort.Port;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import jaci.pathfinder.Pathfinder;
+import jaci.pathfinder.PathfinderFRC;
+import jaci.pathfinder.Trajectory;
+import jaci.pathfinder.followers.EncoderFollower;
+
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.kauailabs.navx.frc.AHRS;
+import com.kauailabs.navx.frc.AHRS.SerialDataType;
+
 import org.frc.team696.robot.commands.ExampleCommand;
 import org.frc.team696.robot.subsystems.ExampleSubsystem;
-
 /**
  * The VM is configured to automatically run this class, and to call the
  * functions corresponding to each mode, as described in the TimedRobot
@@ -31,6 +44,31 @@ public class Robot extends TimedRobot {
     private Command autonomousCommand;
     private SendableChooser<Command> chooser = new SendableChooser<>();
 
+    AHRS ahrs = new AHRS(Port.kMXP, SerialDataType.kProcessedData, (byte)50);
+
+    private static final int k_ticks_per_rev = 1024;
+    private static final double k_wheel_diameter = 0.152;
+    private static final double k_max_velocity = 4.8768;
+
+    TalonSRX leftRear = new TalonSRX(16);
+    TalonSRX leftMid = new TalonSRX(15);
+    TalonSRX leftFront = new TalonSRX(14);
+
+    TalonSRX rightRear = new TalonSRX(3);
+    TalonSRX rightMid = new TalonSRX(2);
+    TalonSRX rightFront = new TalonSRX(1);
+
+
+    private static final String k_path_name = "Unnamed";
+
+    Trajectory leftTraj;
+    Trajectory rightTraj;
+
+    EncoderFollower leftFollower;
+    EncoderFollower rightFollower;
+
+    Notifier notifier;
+
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
@@ -41,6 +79,18 @@ public class Robot extends TimedRobot {
         chooser.addDefault("Default Auto", new ExampleCommand());
         // chooser.addObject("My Auto", new MyAutoCommand());
         SmartDashboard.putData("Auto mode", chooser);
+
+        rightFront.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, 20);
+        leftRear.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, 20);
+
+        leftRear.setSensorPhase(true);
+
+        // leftRear.setSensorPhase(true);
+        rightFront.setSelectedSensorPosition(0);
+        leftRear.setSelectedSensorPosition(0);
+
+
+
     }
 
     /**
@@ -84,6 +134,45 @@ public class Robot extends TimedRobot {
         if (autonomousCommand != null) {
             autonomousCommand.start();
         }
+
+        leftRear.setNeutralMode(NeutralMode.Coast);
+        rightFront.setNeutralMode(NeutralMode.Coast);
+        ahrs.zeroYaw();
+        rightTraj = PathfinderFRC.getTrajectory(k_path_name + ".left");
+        leftTraj = PathfinderFRC.getTrajectory(k_path_name + ".right");
+    
+        leftFollower = new EncoderFollower(leftTraj);
+        rightFollower = new EncoderFollower(rightTraj);
+        leftFollower.configureEncoder(leftRear.getSelectedSensorPosition(), k_ticks_per_rev, k_wheel_diameter);
+        rightFollower.configureEncoder(rightFront.getSelectedSensorPosition(), k_ticks_per_rev, k_wheel_diameter);
+        leftFollower.configurePIDVA(1, 0, 0.1, 1/k_max_velocity, 0.2);
+        rightFollower.configurePIDVA(1, 0, 0.1, 1/k_max_velocity, 0.2);
+        notifier = new Notifier(this::followPath);
+        notifier.startPeriodic(leftTraj.get(0).dt);
+
+    }
+
+    private void followPath(){
+        if(leftFollower.isFinished() || rightFollower.isFinished()){
+            notifier.stop();
+            leftRear.setNeutralMode(NeutralMode.Brake);
+            rightFront.setNeutralMode(NeutralMode.Brake);
+            leftRear.set(ControlMode.PercentOutput, 0);
+            rightFront.set(ControlMode.PercentOutput, 0);
+            System.out.println("bye");
+        }else{
+            double leftSpeed = leftFollower.calculate(leftRear.getSelectedSensorPosition());
+            double rightSpeed = rightFollower.calculate(rightFront.getSelectedSensorPosition());
+            double heading = ahrs.getYaw();
+            double desiredHeading = Pathfinder.r2d(leftFollower.getHeading());
+            double angleDiff = Pathfinder.boundHalfDegrees(desiredHeading - heading);
+            double turn = 0.8 * (-1.0/80.0) * angleDiff;
+            double leftDrive = (leftSpeed + turn);
+            double rightDrive = -(rightSpeed - turn);
+            leftRear.set(ControlMode.PercentOutput, leftDrive);
+            rightFront.set(ControlMode.PercentOutput, rightDrive);
+            System.out.println(leftSpeed + "   " + rightSpeed + "   " + turn);
+        }
     }
 
     /**
@@ -92,17 +181,23 @@ public class Robot extends TimedRobot {
     @Override
     public void autonomousPeriodic() {
         Scheduler.getInstance().run();
+        
     }
 
     @Override
     public void teleopInit() {
         // This makes sure that the autonomous stops running when
-        // teleop starts running. If you want the autonomous to
+        // teleop starts running. If you want the autonomous to%
         // continue until interrupted by another command, remove
         // this line or comment it out.
         if (autonomousCommand != null) {
             autonomousCommand.cancel();
         }
+
+        ahrs.zeroYaw();
+        leftRear.setNeutralMode(NeutralMode.Coast);
+        rightFront.setNeutralMode(NeutralMode.Coast);
+
     }
 
     /**
@@ -111,6 +206,8 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
+        System.out.println(leftRear.getSelectedSensorPosition() + " " + rightFront.getSelectedSensorPosition());
+        
     }
 
     /**
