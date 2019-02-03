@@ -19,7 +19,7 @@ import com.kauailabs.navx.frc.AHRS;
 import com.kauailabs.navx.frc.AHRS.SerialDataType;
 
 import org.frc.team696.robot.autonomousCommands.Default;
-import org.frc.team696.robot.commands.DriveCommand;
+import org.frc.team696.robot.commands.DriveBackCommand;
 import org.frc.team696.robot.commands.DriveToAngleCommand;
 import org.frc.team696.robot.subsystems.DriveToAngle;
 import org.frc.team696.robot.subsystems.DriveTrainSubsystem;
@@ -34,7 +34,6 @@ import org.frc.team696.robot.subsystems.DriveTrainSubsystem;
 // If you rename or move this class, update the build.properties file in the project root
 public class Robot extends TimedRobot {
 
-
     public static OI oi;
 
     public static final DriveTrainSubsystem driveTrainSubsystem = new DriveTrainSubsystem(RobotMap.lRear, RobotMap.lMid, RobotMap.lFront, 
@@ -48,6 +47,8 @@ public class Robot extends TimedRobot {
 
     public static DigitalInput leftIRSensor = new DigitalInput(0);
     public static DigitalInput rightIRSensor = new DigitalInput(1);
+
+    public static DriveBackCommand command = new DriveBackCommand(45);
 
     //public static IMUProtocol navX;
 
@@ -75,33 +76,11 @@ public class Robot extends TimedRobot {
    public static double initialEncoder;
    public static double leftEncoder;
    public static double rightEncoder;
-
    public static double finalEncoder;
-
    public static double encoderDifference;
-
    public boolean angleGot = false;
-
-   //public  DriveCommand DriveToAngle = new DriveCommand(0, targetAngleDegrees);
-
    public DriveToAngleCommand driveToAngleCommand = new DriveToAngleCommand(45);
-
-
-
    Command driveToAngle;
-
-   public Robot(){
-    driveToAngle = new DriveCommand(0,targetAngleDegrees);  
-    targetAngleDegrees = finalTargetAngle;
-    
-    
-
-
-
-
-   }
-
-
 
     /**
      * This function is run when the robot is first started up and should be
@@ -112,8 +91,6 @@ public class Robot extends TimedRobot {
 
         driveTrainSubsystem.leftRear.setSelectedSensorPosition(0);
         driveTrainSubsystem.rightFront.setSelectedSensorPosition(0);
-
-
 
         
         oi = new OI();
@@ -129,10 +106,6 @@ public class Robot extends TimedRobot {
             navX = new AHRS(SerialPort.Port.kMXP, SerialDataType.kProcessedData, UpdateRateHz);
 
         } catch(Exception ex){System.out.println("NavX not working");}
-
-
-        
-
 
     }
 
@@ -252,20 +225,12 @@ public class Robot extends TimedRobot {
         rightValue = speed + turn;
 
 
-
-
-
-        // if(!isReady){
-        // driveTrainSubsystem.tankDrive(leftValue, rightValue);
-
-
-        // }
-
      
 
        targetAngle = Math.atan(x/y);
 
-       targetAngleDegrees = Math.toDegrees(targetAngle);
+    //    targetAngleDegrees = Math.toDegrees(targetAngle);
+    targetAngleDegrees = 45;
 
 
     //    if(!angleGot && gotLeft && gotRight ){
@@ -279,17 +244,29 @@ public class Robot extends TimedRobot {
 
        //driveToAngleCommand = new DriveToAngleCommand(45);
 
-       if (OI.stick.getRawButton(1)){
-    navX.zeroYaw();
-           driveToAngleSubsystem.goTargetAngle();
-        // driveToAngleCommand.start();
-       }else{
-           driveToAngleSubsystem.cancel();
-       }
+    //    if (OI.alignButton.wh{
+    //         driveToAngleSubsystem.doAll();
+            
+    //     // driveToAngleCommand.start();
+    //    }else{
+    //         driveToAngleSubsystem.cancel();
+    //         // double manualSpeed = OI.stick.getRawAxis(1);
+    //         // double manualWheel = OI.stick.getRawAxis(4);
+    //         // double leftDrive = manualSpeed + manualWheel;
+    //         // double rightDrive = manualSpeed - manualWheel;
+    //         // driveTrainSubsystem.tankDrive(-leftDrive, rightDrive);
+    //         System.out.println("Target Angle:   "  + targetAngleDegrees);
+    //    }
+    // OI.alignButton.whileHeld(new DriveBackCommand(45));
+    // System.out.println("Target Angle:   "  + targetAngleDegrees);
+    if(OI.stick.getRawButton(1)){
+        command.start();
+    }
+
 
 
     //    System.out.println(leftEncoder+ "       " + rightEncoder);
-       System.out.println("Target Angle:   "  + targetAngleDegrees);
+        
       // System.out.println(driveTrainSubsystem.rightFront.getSelectedSensorPosition());
 
     //    driveToAngle = new DriveCommand(0, targetAngleDegrees); 

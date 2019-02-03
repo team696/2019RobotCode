@@ -7,6 +7,8 @@
 
 package org.frc.team696.robot.subsystems;
 
+import org.frc.team696.robot.Robot;
+import org.frc.team696.robot.commands.DriveBackCommand;
 import org.frc.team696.robot.commands.DriveCommand;
 import org.frc.team696.robot.commands.DriveToAngleCommand;
 
@@ -20,6 +22,7 @@ public class DriveToAngle extends Subsystem {
 
   public double targetAngle;
   public DriveToAngleCommand drivetoAngle;
+  public DriveBackCommand driveBack;
 
 
   
@@ -36,17 +39,31 @@ public class DriveToAngle extends Subsystem {
   public void goTargetAngle(){ 
 
     drivetoAngle = new DriveToAngleCommand(targetAngle);
-
     drivetoAngle.start();
-    
-    
 
   }
+
+  public void driveBack(){
+    driveBack = new DriveBackCommand(45);
+    driveBack.start();
+  }
+
 
 
   public void cancel(){
     // drivetoAngle.cancel();
     // driveToAngleSubsystem.cancel();
+  }
+
+  public void doAll(){
+    // RnavX.zeroYaw();
+    Robot.navX.zeroYaw();
+    driveBack();
+    if(driveBack.isCompleted()){
+      driveBack.close();
+      System.out.println("Hello");
+      goTargetAngle(); 
+    }
   }
 
   // Put methods for controlling this subsystem
