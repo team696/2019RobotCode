@@ -12,11 +12,13 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.RobotController;
+
+import java.util.Timer;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import org.frc.team696.robot.SysLog;
 import org.frc.team696.robot.commands.ExampleCommand;
 import org.frc.team696.robot.subsystems.ExampleSubsystem;
 
@@ -38,7 +40,7 @@ public class Robot extends TimedRobot {
     private Command autonomousCommand;
     private SendableChooser<Command> chooser = new SendableChooser<>();
     private static final Logger logger = LogManager.getLogger("Robot Main");
-
+    private static final SysLog syslog = new SysLog();
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
@@ -46,6 +48,12 @@ public class Robot extends TimedRobot {
     @Override
     public void robotInit() {
         logger.info("Initializing robot...");
+
+        //Initialize system logging
+        syslog.init();
+        Timer syslogtimer = new Timer();
+        syslogtimer.schedule(syslog, 0, 100);
+
         oi = new OI();
         chooser.addDefault("Default Auto", new ExampleCommand());
         // chooser.addObject("My Auto", new MyAutoCommand());
@@ -134,11 +142,6 @@ public class Robot extends TimedRobot {
 
     @Override
     public void robotPeriodic() {
-        loopCount++;
-        if(loopCount % 50 == 0){
-            double voltage = RobotController.getBatteryVoltage();
-            logger.debug(String.format("Battery voltage: %.1f", voltage));
-        }
     }
 
 }
