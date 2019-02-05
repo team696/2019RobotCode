@@ -7,6 +7,7 @@
 
 package org.frc.team696.robot;
 
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -21,8 +22,13 @@ import com.kauailabs.navx.frc.AHRS.SerialDataType;
 import org.frc.team696.robot.autonomousCommands.Default;
 import org.frc.team696.robot.commands.DriveBackCommand;
 import org.frc.team696.robot.commands.DriveToAngleCommand;
+import org.frc.team696.robot.subsystems.AlignPIDSubsystem;
+import org.frc.team696.robot.subsystems.AlignSubsystem;
 import org.frc.team696.robot.subsystems.DriveToAngle;
 import org.frc.team696.robot.subsystems.DriveTrainSubsystem;
+import org.frc.team696.robot.subsystems.LeftPIDSubsystem;
+import org.frc.team696.robot.subsystems.RightPIDSubsystem;
+import org.frc.team696.robot.subsystems.TurnPIDSubsystem;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -36,10 +42,18 @@ public class Robot extends TimedRobot {
 
     public static OI oi;
 
-    public static final DriveTrainSubsystem driveTrainSubsystem = new DriveTrainSubsystem(RobotMap.lRear, RobotMap.lMid, RobotMap.lFront, 
+    public static  DriveTrainSubsystem driveTrainSubsystem = new DriveTrainSubsystem(RobotMap.lRear, RobotMap.lMid, RobotMap.lFront, 
                                                                                           RobotMap.rRear, RobotMap.rMid, RobotMap.rFront);
     
-    public static DriveToAngle driveToAngleSubsystem;                                                                                  
+    public static DriveToAngle driveToAngleSubsystem;        
+    
+    public AlignSubsystem alignSubsystem = new AlignSubsystem();
+
+    public LeftPIDSubsystem leftPIDSubsystem = new LeftPIDSubsystem();
+    public RightPIDSubsystem rightPIDSubsystem = new RightPIDSubsystem();
+
+    public static AlignPIDSubsystem alignPIDSubsystem = new AlignPIDSubsystem();
+    public static TurnPIDSubsystem turnPIDSubsystem = new TurnPIDSubsystem();
 
     private Command autonomousCommand;
     private SendableChooser<Command> chooser = new SendableChooser<>();
@@ -49,6 +63,7 @@ public class Robot extends TimedRobot {
     public static DigitalInput rightIRSensor = new DigitalInput(1);
 
     public static DriveBackCommand command = new DriveBackCommand(45);
+
 
     //public static IMUProtocol navX;
 
@@ -79,8 +94,20 @@ public class Robot extends TimedRobot {
    public static double finalEncoder;
    public static double encoderDifference;
    public boolean angleGot = false;
-   public DriveToAngleCommand driveToAngleCommand = new DriveToAngleCommand(45);
-   Command driveToAngle;
+
+   boolean currentAlignState;
+   boolean oldAlignState;
+   boolean toggleAlignState;
+
+   double alignPos;
+
+   public Compressor comp = new Compressor();
+
+   //public  DriveCommand DriveToAngle = new DriveCommand(0, targetAngleDegrees);
+
+   public DriveToAngleCommand toAngle;
+  
+
 
     /**
      * This function is run when the robot is first started up and should be
@@ -88,10 +115,12 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void robotInit() {
-
+        comp.start();
+       // navX.zeroYaw();
         driveTrainSubsystem.leftRear.setSelectedSensorPosition(0);
         driveTrainSubsystem.rightFront.setSelectedSensorPosition(0);
 
+        alignPos = 0;
         
         oi = new OI();
         chooser.setDefaultOption("Default Auto", new Default());
@@ -207,11 +236,6 @@ public class Robot extends TimedRobot {
       //  System.out.println("Average Encoder:    " + (driveTrainSubsystem.rightFront.getSelectedSensorPosition()+driveTrainSubsystem.leftRear.getSelectedSensorPosition() / 2));
         //System.out.println(leftEncoder + "            " + rightEncoder);
 
-        // OI.alignButton.whileHeld(new DriveCommand(0,targetAngle));
-
-
-       
-
 
         speed = -OI.stick.getRawAxis(1) * 0.75;
         turn = -OI.stick.getRawAxis(4) * 0.5;
@@ -224,94 +248,86 @@ public class Robot extends TimedRobot {
         leftValue = speed - turn;
         rightValue = speed + turn;
 
-
      
 
        targetAngle = Math.atan(x/y);
 
-    //    targetAngleDegrees = Math.toDegrees(targetAngle);
-    targetAngleDegrees = 45;
+       targetAngleDegrees = Math.toDegrees(targetAngle);
 
 
-    //    if(!angleGot && gotLeft && gotRight ){
-    // //    driveToAngleSubsystem = new DriveToAngle(targetAngle);
-    //    System.out.println("Hello");
-    //       angleGot = true;
-    //    }
 
-       driveToAngleSubsystem = new DriveToAngle(targetAngleDegrees);
+       driveToAngleSubsystem = new DriveToAngle(45);
 
 
-       //driveToAngleCommand = new DriveToAngleCommand(45);
-
-    //    if (OI.alignButton.wh{
-    //         driveToAngleSubsystem.doAll();
-            
-    //     // driveToAngleCommand.start();
-    //    }else{
-    //         driveToAngleSubsystem.cancel();
-    //         // double manualSpeed = OI.stick.getRawAxis(1);
-    //         // double manualWheel = OI.stick.getRawAxis(4);
-    //         // double leftDrive = manualSpeed + manualWheel;
-    //         // double rightDrive = manualSpeed - manualWheel;
-    //         // driveTrainSubsystem.tankDrive(-leftDrive, rightDrive);
-    //         System.out.println("Target Angle:   "  + targetAngleDegrees);
-    //    }
-    // OI.alignButton.whileHeld(new DriveBackCommand(45));
-    // System.out.println("Target Angle:   "  + targetAngleDegrees);
-    if(OI.stick.getRawButton(1)){
-        command.start();
-    }
-
-
+        //OI.alignButton.whileHeld(new DriveCommand(-5000,0));
+ 
 
     //    System.out.println(leftEncoder+ "       " + rightEncoder);
-        
       // System.out.println(driveTrainSubsystem.rightFront.getSelectedSensorPosition());
 
     //    driveToAngle = new DriveCommand(0, targetAngleDegrees); 
+    //System.out.println(AlignSubsystem.driveBack.isCompleted());
+    currentAlignState = OI.stick.getRawButton(1);
+    alignPos = alignPIDSubsystem.getPosition();
 
-            
+    if(currentAlignState && !oldAlignState){
+      toggleAlignState = !toggleAlignState;
+    }
+    oldAlignState = currentAlignState;
 
-    // if(OI.stick.getRawButton(1)){
-    //     driveToAngleSubsystem.getTargetAngle(targetAngleDegrees);   
-    // }
-    // else{
-    //     driveToAngleSubsystem.cancel();
-    // }
-
-
-    // if(OI.stick.getRawButton(1)){
-    //     DriveToAngle.start();
-    // }
-    // else {
-    //     driveToAngle.cancel();
-    // }
-    // System.out.println(DriveToAngle.isRunning());
-    // if(OI.stick.getRawButton(2)){
-    //     gotLeft=false;
-    //     gotRight=false;
-    // }
-    //    OI.alignButton.whenPressed(driveToAngle);
-
-    //    if(isReady){
-    //        driveToAngle.start();
-    //    }
-      
+    if(toggleAlignState){
+        //navX.zeroYaw();
+        //alignPIDSubsystem.setSetpoint(500);
+        //alignPIDSubsystem.enable();
+        turnPIDSubsystem.enable();
+  }
+      System.out.println(alignPos);
+     
 
 
 
-
-
-
-
-        // System.out.println("NAVX        " + navX.getYaw());
-        // System.out.println("TURN   " + turn);
-        // System.out.println(leftValue + "   " + rightValue);
-
-        // System.out.println(Math.tan(45));
 
     }  
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     /**
      * This function is called periodically during test mode.

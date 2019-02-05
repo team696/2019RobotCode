@@ -9,6 +9,7 @@ package org.frc.team696.robot.autonomousCommands;
 
 import org.frc.team696.robot.commands.DriveCommand;
 
+
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class Default extends CommandGroup {
@@ -23,7 +24,13 @@ public class Default extends CommandGroup {
     // addSequential(new DriveCommand(-10000, 0), 4);
       // addSequential(new DriveCommand(0, -90));
       // addSequential(new DriveCommand(-30000,0));
-      addSequential(new DriveCommand(0,45));
+     
+     
+      addSequential(new DriveCommand(-7000, 0));
+    
+      // addSequential(new DriveToAngleCommand(-45),3);
+      // addSequential(new DriveCommand(5956,0),3);
+      // addSequential(new DriveToAngleCommand(90),3);
     
     // addSequential(new DriveCommand(0,150));
 

@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
 public class DriveTrainSubsystem extends Subsystem {
 
-    public WPI_TalonSRX leftRear;
+    public  WPI_TalonSRX leftRear;
     public  WPI_TalonSRX leftMid;
     public  WPI_TalonSRX leftFront;
 

@@ -61,7 +61,7 @@ public class DriveCommand extends Command {
   PIDController PIDRightDistance;
   PIDController PIDGyro;
 
-
+  int loopNumber;
 
 
 
@@ -228,14 +228,21 @@ public class DriveCommand extends Command {
        System.out.println("Distance                     " + Robot.driveTrainSubsystem.leftRear.getSelectedSensorPosition());
   
     Robot.driveTrainSubsystem.tankDrive(tankLeft , tankRight);
+
+    loopNumber++;
   }
 
 
   @Override
   protected boolean isFinished() {
     /*Return true if all these are within their target*/
-    return (PIDLeftDistance.onTarget() && PIDRightDistance.onTarget() && PIDGyro.onTarget());
+    //return (PIDLeftDistance.onTarget() && PIDRightDistance.onTarget() && PIDGyro.onTarget());
+    if (loopNumber>=200){
+      return true;
+    }
+    return false;
   }
+
 
   @Override
   protected void end() {
