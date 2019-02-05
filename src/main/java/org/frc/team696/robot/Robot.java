@@ -20,6 +20,7 @@ import com.kauailabs.navx.frc.AHRS;
 import com.kauailabs.navx.frc.AHRS.SerialDataType;
 
 import org.frc.team696.robot.autonomousCommands.Default;
+import org.frc.team696.robot.commands.AutoAlignment;
 import org.frc.team696.robot.subsystems.DriveToAngle;
 import org.frc.team696.robot.subsystems.DriveTrainSubsystem;
 
@@ -240,36 +241,11 @@ public class Robot extends TimedRobot {
        targetAngleDegrees = Math.toDegrees(targetAngle);
 
 
+       if(OI.stick.getRawButton(1)){
+           new AutoAlignment(targetAngleDegrees).start();
+       }
 
-       driveToAngleSubsystem = new DriveToAngle(45);
-
-
-        //OI.alignButton.whileHeld(new DriveCommand(-5000,0));
- 
-
-    //    System.out.println(leftEncoder+ "       " + rightEncoder);
-      // System.out.println(driveTrainSubsystem.rightFront.getSelectedSensorPosition());
-
-    //    driveToAngle = new DriveCommand(0, targetAngleDegrees); 
-    //System.out.println(AlignSubsystem.driveBack.isCompleted());
-    currentAlignState = OI.stick.getRawButton(1);
-    // alignPos = alignPIDSubsystem.getPosition();
-
-    if(currentAlignState && !oldAlignState){
-      toggleAlignState = !toggleAlignState;
-    }
-    oldAlignState = currentAlignState;
-
-    if(toggleAlignState){
-        //navX.zeroYaw();
-        //alignPIDSubsystem.setSetpoint(500);
-        //alignPIDSubsystem.enable();
-        // turnPIDSubsystem.enable();
-  }
       System.out.println(alignPos);
-     
-
-
 
 
     }  
