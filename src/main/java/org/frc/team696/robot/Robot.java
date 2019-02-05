@@ -20,15 +20,10 @@ import com.kauailabs.navx.frc.AHRS;
 import com.kauailabs.navx.frc.AHRS.SerialDataType;
 
 import org.frc.team696.robot.autonomousCommands.Default;
-import org.frc.team696.robot.commands.DriveBackCommand;
-import org.frc.team696.robot.commands.DriveToAngleCommand;
-import org.frc.team696.robot.subsystems.AlignPIDSubsystem;
-import org.frc.team696.robot.subsystems.AlignSubsystem;
 import org.frc.team696.robot.subsystems.DriveToAngle;
 import org.frc.team696.robot.subsystems.DriveTrainSubsystem;
-import org.frc.team696.robot.subsystems.LeftPIDSubsystem;
-import org.frc.team696.robot.subsystems.RightPIDSubsystem;
-import org.frc.team696.robot.subsystems.TurnPIDSubsystem;
+
+
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -38,31 +33,22 @@ import org.frc.team696.robot.subsystems.TurnPIDSubsystem;
  * project.
  */
 // If you rename or move this class, update the build.properties file in the project root
+
 public class Robot extends TimedRobot {
 
     public static OI oi;
 
-    public static  DriveTrainSubsystem driveTrainSubsystem = new DriveTrainSubsystem(RobotMap.lRear, RobotMap.lMid, RobotMap.lFront, 
+    public static DriveTrainSubsystem driveTrainSubsystem = new DriveTrainSubsystem(RobotMap.lRear, RobotMap.lMid, RobotMap.lFront, 
                                                                                           RobotMap.rRear, RobotMap.rMid, RobotMap.rFront);
     
     public static DriveToAngle driveToAngleSubsystem;        
     
-    public AlignSubsystem alignSubsystem = new AlignSubsystem();
-
-    public LeftPIDSubsystem leftPIDSubsystem = new LeftPIDSubsystem();
-    public RightPIDSubsystem rightPIDSubsystem = new RightPIDSubsystem();
-
-    public static AlignPIDSubsystem alignPIDSubsystem = new AlignPIDSubsystem();
-    public static TurnPIDSubsystem turnPIDSubsystem = new TurnPIDSubsystem();
-
     private Command autonomousCommand;
     private SendableChooser<Command> chooser = new SendableChooser<>();
 
 
     public static DigitalInput leftIRSensor = new DigitalInput(0);
     public static DigitalInput rightIRSensor = new DigitalInput(1);
-
-    public static DriveBackCommand command = new DriveBackCommand(45);
 
 
     //public static IMUProtocol navX;
@@ -105,7 +91,6 @@ public class Robot extends TimedRobot {
 
    //public  DriveCommand DriveToAngle = new DriveCommand(0, targetAngleDegrees);
 
-   public DriveToAngleCommand toAngle;
   
 
 
@@ -268,7 +253,7 @@ public class Robot extends TimedRobot {
     //    driveToAngle = new DriveCommand(0, targetAngleDegrees); 
     //System.out.println(AlignSubsystem.driveBack.isCompleted());
     currentAlignState = OI.stick.getRawButton(1);
-    alignPos = alignPIDSubsystem.getPosition();
+    // alignPos = alignPIDSubsystem.getPosition();
 
     if(currentAlignState && !oldAlignState){
       toggleAlignState = !toggleAlignState;
@@ -279,7 +264,7 @@ public class Robot extends TimedRobot {
         //navX.zeroYaw();
         //alignPIDSubsystem.setSetpoint(500);
         //alignPIDSubsystem.enable();
-        turnPIDSubsystem.enable();
+        // turnPIDSubsystem.enable();
   }
       System.out.println(alignPos);
      
