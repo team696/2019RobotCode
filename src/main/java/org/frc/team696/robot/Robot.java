@@ -46,9 +46,9 @@ public class Robot extends TimedRobot {
 
     AHRS ahrs = new AHRS(Port.kMXP, SerialDataType.kProcessedData, (byte)50);
 
-    private static final int k_ticks_per_rev = 1024;
+    private static final int k_ticks_per_rev = 2048;
     private static final double k_wheel_diameter = 0.152;
-    private static final double k_max_velocity = 4.8768;
+    private static final double k_max_velocity = 2;
 
     TalonSRX leftRear = new TalonSRX(16);
     TalonSRX leftMid = new TalonSRX(15);
@@ -145,8 +145,8 @@ public class Robot extends TimedRobot {
         rightFollower = new EncoderFollower(rightTraj);
         leftFollower.configureEncoder(leftRear.getSelectedSensorPosition(), k_ticks_per_rev, k_wheel_diameter);
         rightFollower.configureEncoder(rightFront.getSelectedSensorPosition(), k_ticks_per_rev, k_wheel_diameter);
-        leftFollower.configurePIDVA(1, 0, 0.1, 1/k_max_velocity, 0.2);
-        rightFollower.configurePIDVA(1, 0, 0.1, 1/k_max_velocity, 0.2);
+        leftFollower.configurePIDVA(1, 0, 0, 1/k_max_velocity, 0);
+        rightFollower.configurePIDVA(1, 0, 0, 1/k_max_velocity, 0);
         notifier = new Notifier(this::followPath);
         notifier.startPeriodic(leftTraj.get(0).dt);
 
@@ -166,12 +166,13 @@ public class Robot extends TimedRobot {
             double heading = ahrs.getYaw();
             double desiredHeading = Pathfinder.r2d(leftFollower.getHeading());
             double angleDiff = Pathfinder.boundHalfDegrees(desiredHeading - heading);
-            double turn = 0.8 * (-1.0/80.0) * angleDiff;
-            double leftDrive = (leftSpeed + turn);
-            double rightDrive = -(rightSpeed - turn);
+            double turn = 0.6 * (-1.0/80.0) * angleDiff;
+            double leftDrive = (leftSpeed - turn);
+            double rightDrive = -(rightSpeed + turn);
             leftRear.set(ControlMode.PercentOutput, leftDrive);
             rightFront.set(ControlMode.PercentOutput, rightDrive);
-            System.out.println(leftSpeed + "   " + rightSpeed + "   " + turn);
+            // System.out.println(rightFollower.getSegment().x + " " + rightFollower.getSegment().y);
+            // System.out.println(leftSpeed + "   " + rightSpeed + "   " + turn);
         }
     }
 
