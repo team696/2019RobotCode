@@ -33,10 +33,11 @@ public class AutoAlignment extends CommandGroup {
     // a CommandGroup containing them would require both the chassis and the
     // arm.
 
+    addSequential(new ZeroYaw());
     addSequential(new DriveBack(encoder_ticks));
-    addSequential(new DriveToAngleCommand(-(90 - angle)));
-    // addSequential(new DriveBack(-(encoder_ticks * Math.sin(angle)))); // Negative to go forward
-    // addSequential(new DriveToAngleCommand(90));
+    addSequential(new DriveToAngleCommand(-(90 - angle)), 0.5);
+    addSequential(new DriveForward((encoder_ticks * Math.sin(angle)))); // Negative to go forward
+    addSequential(new DriveToAngleCommand(90 - angle));
 
   }
 }

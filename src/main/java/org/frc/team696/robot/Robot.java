@@ -103,6 +103,7 @@ public class Robot extends TimedRobot {
     public void robotInit() {
         comp.start();
        // navX.zeroYaw();
+        driveTrainSubsystem.leftRear.setSensorPhase(true);
         driveTrainSubsystem.leftRear.setSelectedSensorPosition(0);
         driveTrainSubsystem.rightFront.setSelectedSensorPosition(0);
 
@@ -242,10 +243,10 @@ public class Robot extends TimedRobot {
 
 
        if(OI.stick.getRawButton(1)){
-           new AutoAlignment(45).start();
+           new AutoAlignment(targetAngleDegrees).start();
        }
 
-      System.out.println(alignPos);
+    //   System.out.println(alignPos);
 
 
     }  
