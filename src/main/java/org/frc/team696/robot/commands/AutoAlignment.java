@@ -13,6 +13,8 @@ public class AutoAlignment extends CommandGroup {
   /**
    * Add your docs here.
    */
+
+  private static double encoder_ticks = 3000;
   public AutoAlignment(double angle) {
     // Add Commands here:
     // e.g. addSequential(new Command1());
@@ -31,7 +33,10 @@ public class AutoAlignment extends CommandGroup {
     // a CommandGroup containing them would require both the chassis and the
     // arm.
 
-    addSequential(new DriveBack(3000));
+    addSequential(new DriveBack(encoder_ticks));
+    addSequential(new DriveToAngleCommand(-(90 - angle)));
+    // addSequential(new DriveBack(-(encoder_ticks * Math.sin(angle)))); // Negative to go forward
+    // addSequential(new DriveToAngleCommand(90));
 
   }
 }

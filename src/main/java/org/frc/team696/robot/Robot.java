@@ -242,7 +242,7 @@ public class Robot extends TimedRobot {
 
 
        if(OI.stick.getRawButton(1)){
-           new AutoAlignment(targetAngleDegrees).start();
+           new AutoAlignment(45).start();
        }
 
       System.out.println(alignPos);
