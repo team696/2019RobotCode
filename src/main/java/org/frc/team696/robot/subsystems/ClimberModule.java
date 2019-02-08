@@ -9,6 +9,8 @@ package org.frc.team696.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -21,14 +23,14 @@ import java.util.Properties;
  * Add your docs here.
  */
 public class ClimberModule extends Subsystem{
-  TalonSRX talon;
+  public TalonSRX talon;
   public boolean isInitialized = false;
   public Properties properties = new Properties();
 
   private static final int freePidSlot = 0;
   private static final int climbingPidSlot = 1;
 
-  ClimberModule(TalonSRX talon) {
+  public void setTalon(TalonSRX talon) {
     // Get properties
     Path configFile = Paths.get(System.getProperty("user.home"), "climber.properties");
     try {
@@ -44,14 +46,20 @@ public class ClimberModule extends Subsystem{
 
     // Configure talon PID coefficients
     this.talon = talon;
-    this.talon.config_kP(freePidSlot, Double.parseDouble(properties.getProperty("climber.coefficients.free.kP", "0.1")));
+    this.talon.config_kP(freePidSlot, Double.parseDouble(properties.getProperty("climber.coefficients.free.kP", "0.5")));
     this.talon.config_kI(freePidSlot, Double.parseDouble(properties.getProperty("climber.coefficients.free.kI", "0.0")));
     this.talon.config_kD(freePidSlot, Double.parseDouble(properties.getProperty("climber.coefficients.free.kD", "0.0")));
-    this.talon.config_kF(freePidSlot, Double.parseDouble(properties.getProperty("climber.coefficients.free.kF", "0.2")));
+    this.talon.config_kF(freePidSlot, Double.parseDouble(properties.getProperty("climber.coefficients.free.kF", "0.0")));
     this.talon.config_kP(climbingPidSlot, Double.parseDouble(properties.getProperty("climber.coefficients.climbing.kP", "0.1")));
     this.talon.config_kI(climbingPidSlot, Double.parseDouble(properties.getProperty("climber.coefficients.climbing.kI", "0.0")));
     this.talon.config_kD(climbingPidSlot, Double.parseDouble(properties.getProperty("climber.coefficients.climbing.kD", "0.0")));
     this.talon.config_kF(climbingPidSlot, Double.parseDouble(properties.getProperty("climber.coefficients.climbing.kF", "0.5")));
+    this.talon.configPeakOutputForward(1);
+    this.talon.configPeakOutputReverse(-1);
+    this.talon.setNeutralMode(NeutralMode.Brake);
+    this.talon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
+    this.talon.setSensorPhase(false);
+    this.talon.setInverted(true);
 
     this.talon.selectProfileSlot(freePidSlot, 0);
   }
@@ -72,8 +80,10 @@ public class ClimberModule extends Subsystem{
     if (this.talon.getSensorCollection().isRevLimitSwitchClosed()) {
       this.talon.setSelectedSensorPosition(0);
       this.isInitialized = true;
+      System.out.println("Module initialized");
       return true;
     } else {
+      System.out.println("Module not initialized!");
       return false;
     }
   }
@@ -84,11 +94,11 @@ public class ClimberModule extends Subsystem{
 
   public void moveToPosition(double position, int pidSlot){
     this.talon.selectProfileSlot(pidSlot, 0);
-    this.talon.set(ControlMode.Position, position);
+    this.talon.set(ControlMode.Position, this.convertSetpoint(position));
   }
 
-  public int getPositionError(){
-    return this.talon.getClosedLoopError();
+  public double getCorrectedPositionError(){
+    return ((double)this.talon.getClosedLoopError()/4096.0)/3.0;
   }
 
   public void turnOff(){
@@ -107,7 +117,12 @@ public class ClimberModule extends Subsystem{
     return this.talon.getSensorCollection().isRevLimitSwitchClosed();
   }
 
-  public double getPosition(){
-    return this.talon.getSelectedSensorPosition();
+  public double getCorrectedPosition(){
+    return ((double)this.talon.getSelectedSensorPosition()/4096.0)/3.0;
   }
+
+  public int convertSetpoint(double revs){
+    return (int)(revs*3*4096);
+  }
+
 }

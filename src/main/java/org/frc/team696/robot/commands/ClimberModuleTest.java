@@ -38,6 +38,10 @@ public class ClimberModuleTest extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    System.out.println("Testing module...");
+    this.finished = false;
+    this.success = false;
+    this.phase = TestPhase.MovingUp;
     //Module must be initialized first
     if(!this.module.isInitialized){
       this.finished = true;
@@ -50,18 +54,26 @@ public class ClimberModuleTest extends Command {
     switch(this.phase){
       case MovingUp:
         this.module.moveToPosition(defaultTestMove);
-        if(this.module.getPositionError() < allowablePositionError){
+        System.out.println(this.module.getCorrectedPosition());
+        if(Math.abs(this.module.getCorrectedPosition() - defaultTestMove) < allowablePositionError){
+          System.out.println("At position");
           if(!this.module.getRevLimit()){
             this.success = true;
+            System.out.println("Success!");
           }
           this.phase = TestPhase.MovingDown;
         }
         break;
       case MovingDown:
+          System.out.println(this.module.getCorrectedPosition());
           this.module.moveToPosition(0);
-          if(this.module.getPositionError() < allowablePositionError){
+          if(Math.abs(this.module.getCorrectedPosition()) < allowablePositionError || this.module.getRevLimit()){
+            if(this.module.getRevLimit()){
+              this.module.talon.setSelectedSensorPosition(0);
+            }
             this.module.turnOff();
             this.finished = true;
+            System.out.println("Done!");
           }
           break;
     }

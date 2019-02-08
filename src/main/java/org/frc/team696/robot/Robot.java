@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.frc.team696.robot.commands.ExampleCommand;
 import org.frc.team696.robot.subsystems.Climber;
+import org.frc.team696.robot.subsystems.ClimberModule;
 import org.frc.team696.robot.subsystems.ExampleSubsystem;
 
 /**
@@ -29,6 +30,7 @@ public class Robot extends TimedRobot {
 
     public static final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
     public static final Climber climber = new Climber();
+    public static final ClimberModule singlemodule = new ClimberModule();
     public static OI oi;
     private Command autonomousCommand;
     private SendableChooser<Command> chooser = new SendableChooser<>();
@@ -45,11 +47,14 @@ public class Robot extends TimedRobot {
         SmartDashboard.putData("Auto mode", chooser);
 
         //Quick-n-dirty initialization; just here to test climber modules
-        TalonSRX fl = new TalonSRX(0);
-        TalonSRX fr = new TalonSRX(0);
-        TalonSRX rl = new TalonSRX(0);
-        TalonSRX rr = new TalonSRX(0);
-        Climber.setControllers(fl, fr, rl, rr);
+        TalonSRX fl = new TalonSRX(1);
+        TalonSRX fr = new TalonSRX(2);
+        TalonSRX rl = new TalonSRX(3);
+        TalonSRX rr = new TalonSRX(4);
+        //this.singlemodule.setTalon(fl);
+        //this.singlemodule.initialize();
+        climber.setControllers(fl, fr, rl, rr);
+        climber.initialize();
     }
 
     /**
@@ -128,5 +133,10 @@ public class Robot extends TimedRobot {
     @Override
     public void testPeriodic() {
         
+    }
+
+    @Override
+    public void robotPeriodic(){
+        //System.out.println("Climber position:" + this.singlemodule.getCorrectedPosition());
     }
 }

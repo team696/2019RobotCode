@@ -35,10 +35,19 @@ public class Climber extends Subsystem {
    * @param rrtalon Rear-right TalonSRX
    */
   public static void setControllers(TalonSRX fltalon, TalonSRX frtalon, TalonSRX rltalon, TalonSRX rrtalon){
-    fl = new ClimberModule(fltalon);
-    fr = new ClimberModule(frtalon);
-    rl = new ClimberModule(rltalon);
-    rr = new ClimberModule(rrtalon);
+    fl = new ClimberModule();
+    fr = new ClimberModule();
+    rl = new ClimberModule();
+    rr = new ClimberModule();
+    fl.setTalon(fltalon);
+  }
+
+  public static void initialize(){
+    fl.initialize();
+    //this.fr.initialize();
+    //this.rl.initialize();
+    //this.rr.initialize();
+
   }
 
   /**
@@ -51,9 +60,9 @@ public class Climber extends Subsystem {
    */
   public static void setPower(double flp, double frp, double rlp, double rrp){
     fl.setPower(flp);
-    fr.setPower(frp);
-    rl.setPower(rlp);
-    rr.setPower(rrp);
+    //fr.setPower(frp);
+    //rl.setPower(rlp);
+    //rr.setPower(rrp);
   }
 
   public static void setPower(double power){
@@ -114,6 +123,5 @@ public class Climber extends Subsystem {
   @Override
   public void initDefaultCommand() {
     // Set the default command for a subsystem here.
-    setDefaultCommand(new ClimberManualControl());
   }
 }
