@@ -12,12 +12,6 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import edu.wpi.first.wpilibj.command.Subsystem;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Properties;
 
 /**
  * Add your docs here.
@@ -25,35 +19,32 @@ import java.util.Properties;
 public class ClimberModule extends Subsystem{
   public TalonSRX talon;
   public boolean isInitialized = false;
-  public Properties properties = new Properties();
 
   private static final int freePidSlot = 0;
   private static final int climbingPidSlot = 1;
 
-  public void setTalon(TalonSRX talon) {
-    // Get properties
-    Path configFile = Paths.get(System.getProperty("user.home"), "climber.properties");
-    try {
-      FileInputStream in = new FileInputStream(configFile.toString());
-      try {
-        this.properties.load(in);
-      } catch (IOException e) {
-        System.out.println("Could not read climber properties file. Using defaults instead.");
-      }
-    } catch (FileNotFoundException e) {
-      System.out.println("Could not find climber properties file. Using defaults instead.");
-    }
+  private static final double encoderTicksPerRev = 4096.0*3.0;
 
+  private static final double freePidkP = 0.5;
+  private static final double climbingPidkP = 1.0;
+  private static final double freeMaxOutput = 0.6;
+  private static final double climbingMaxOutput = 1.0; 
+
+  public void setTalon(TalonSRX talon) {
     // Configure talon PID coefficients
     this.talon = talon;
-    this.talon.config_kP(freePidSlot, Double.parseDouble(properties.getProperty("climber.coefficients.free.kP", "0.5")));
-    this.talon.config_kI(freePidSlot, Double.parseDouble(properties.getProperty("climber.coefficients.free.kI", "0.0")));
-    this.talon.config_kD(freePidSlot, Double.parseDouble(properties.getProperty("climber.coefficients.free.kD", "0.0")));
-    this.talon.config_kF(freePidSlot, Double.parseDouble(properties.getProperty("climber.coefficients.free.kF", "0.0")));
-    this.talon.config_kP(climbingPidSlot, Double.parseDouble(properties.getProperty("climber.coefficients.climbing.kP", "0.1")));
-    this.talon.config_kI(climbingPidSlot, Double.parseDouble(properties.getProperty("climber.coefficients.climbing.kI", "0.0")));
-    this.talon.config_kD(climbingPidSlot, Double.parseDouble(properties.getProperty("climber.coefficients.climbing.kD", "0.0")));
-    this.talon.config_kF(climbingPidSlot, Double.parseDouble(properties.getProperty("climber.coefficients.climbing.kF", "0.5")));
+    this.talon.config_kP(freePidSlot, freePidkP);
+    this.talon.config_kI(freePidSlot, 0.0);
+    this.talon.config_kD(freePidSlot, 0.0);
+    this.talon.config_kF(freePidSlot, 0.0);
+    this.talon.configClosedLoopPeakOutput(freePidSlot, freeMaxOutput);
+
+    this.talon.config_kP(climbingPidSlot, climbingPidkP);
+    this.talon.config_kI(climbingPidSlot, 0.0);
+    this.talon.config_kD(climbingPidSlot, 0.0);
+    this.talon.config_kF(climbingPidSlot, 0.0);
+    this.talon.configClosedLoopPeakOutput(climbingPidSlot, climbingMaxOutput);
+
     this.talon.configPeakOutputForward(1);
     this.talon.configPeakOutputReverse(-1);
     this.talon.setNeutralMode(NeutralMode.Brake);
@@ -98,7 +89,7 @@ public class ClimberModule extends Subsystem{
   }
 
   public double getCorrectedPositionError(){
-    return ((double)this.talon.getClosedLoopError()/4096.0)/3.0;
+    return (double)(this.talon.getClosedLoopError()/encoderTicksPerRev);
   }
 
   public void turnOff(){
@@ -118,11 +109,19 @@ public class ClimberModule extends Subsystem{
   }
 
   public double getCorrectedPosition(){
-    return ((double)this.talon.getSelectedSensorPosition()/4096.0)/3.0;
+    return (double)(this.talon.getSelectedSensorPosition()/encoderTicksPerRev);
   }
 
   public int convertSetpoint(double revs){
-    return (int)(revs*3*4096);
+    return (int)(revs*encoderTicksPerRev);
+  }
+
+  public void setSensorPhase(boolean phase){
+    this.talon.setSensorPhase(phase);
+  }
+
+  public void setInverted(boolean inverted){
+    this.talon.setInverted(inverted);
   }
 
 }
