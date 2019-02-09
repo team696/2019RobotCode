@@ -50,7 +50,7 @@ public class DriveBack extends Command {
     currentLeft = Robot.driveTrainSubsystem.leftRear.getSelectedSensorPosition();
     currentRight = Robot.driveTrainSubsystem.rightFront.getSelectedSensorPosition();
 
-    System.out.println(currentLeft + " " + currentRight);
+    //System.out.println(currentLeft + " " + currentRight);
 
   }
 

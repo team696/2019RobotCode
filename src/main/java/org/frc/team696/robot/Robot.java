@@ -68,7 +68,7 @@ public class Robot extends TimedRobot {
     boolean gotRight = false;
     boolean isReady = false;
 
-    double x =259.8; //2.273*218;
+    double x =779.423; //2.273*218;
     double y; 
     
     double targetAngle;
@@ -241,12 +241,17 @@ public class Robot extends TimedRobot {
 
        targetAngleDegrees = Math.toDegrees(targetAngle);
 
+        System.out.println("Target" + targetAngleDegrees);
 
+        System.out.println("Gyro" +   Robot.navX.getYaw());
        if(OI.stick.getRawButton(1)){
            new AutoAlignment(targetAngleDegrees).start();
-       }
 
-    //   System.out.println(alignPos);
+
+       }
+       
+
+       //System.out.println(alignPos);
 
 
     }  

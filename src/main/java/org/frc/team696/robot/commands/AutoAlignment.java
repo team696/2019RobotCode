@@ -16,7 +16,7 @@ public class AutoAlignment extends CommandGroup {
 
   private static double encoder_ticks = 3000;
   private static double halfBotEncoderTicks = 3488;
-
+  private static double hopstAngle = 28.264;
   public AutoAlignment(double angle) {
     // Add Commands here:
     // e.g. addSequential(new Command1());
@@ -34,12 +34,19 @@ public class AutoAlignment extends CommandGroup {
     // e.g. if Command1 requires chassis, and Command2 requires arm,
     // a CommandGroup containing them would require both the chassis and the
     // arm.
-
+    
     addSequential(new ZeroYaw());
-    addSequential(new DriveBack(encoder_ticks));
-    addSequential(new DriveToAngleCommand(-(90 - angle)), 0.5);
-    addSequential(new DriveForward((encoder_ticks * Math.sin(angle)) + halfBotEncoderTicks)); // Negative to go forward
-    addSequential(new DriveToAngleCommand(90 - angle));
+    //addSequential(new DriveToAngleCommand(90));
+
+    addSequential(new DriveBack(halfBotEncoderTicks));
+    if(angle<0){
+    addSequential(new DriveToAngleCommand(90+angle),1);
+    }
+    else{
+    addSequential(new DriveToAngleCommand(-(90-angle)/*(180 - (90 + angle)))*/),1);
+    }
+    addSequential(new DriveForward(((halfBotEncoderTicks * Math.abs(Math.sin(Math.toRadians(angle))))))); 
+    addSequential(new DriveToAngleCommand(angle));
 
   }
 }

@@ -7,6 +7,8 @@
 
 package org.frc.team696.robot.commands;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+
 import org.frc.team696.robot.Robot;
 
 import edu.wpi.first.wpilibj.PIDController;
@@ -108,14 +110,16 @@ public class DriveToAngleCommand extends Command {
   @Override
   protected boolean isFinished() {
     // return gyroController.onTarget();
-    return gyroController.onTarget();
+      return gyroController.onTarget();
   }
 
   // Called once after isFinished returns true
   @Override
   protected void end() {
     gyroController.disable();
-   
+    //Robot.driveTrainSubsystem.leftRear.setNeutralMode(NeutralMode.Brake);
+    //Robot.driveTrainSubsystem.rightFront.setNeutralMode(NeutralMode.Brake);
+    
   }
 
   // Called when another command which requires one or more of the same
