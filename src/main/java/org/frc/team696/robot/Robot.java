@@ -24,17 +24,6 @@ import org.frc.team696.robot.commands.AutoAlignment;
 import org.frc.team696.robot.subsystems.DriveToAngle;
 import org.frc.team696.robot.subsystems.DriveTrainSubsystem;
 
-
-
-/**
- * The VM is configured to automatically run this class, and to call the
- * functions corresponding to each mode, as described in the TimedRobot
- * documentation. If you change the name of this class or the package after
- * creating this project, you must also update the build.properties file in the
- * project.
- */
-// If you rename or move this class, update the build.properties file in the project root
-
 public class Robot extends TimedRobot {
 
     public static OI oi;
@@ -51,7 +40,6 @@ public class Robot extends TimedRobot {
     public static DigitalInput leftIRSensor = new DigitalInput(0);
     public static DigitalInput rightIRSensor = new DigitalInput(1);
 
-
     //public static IMUProtocol navX;
 
     public static AHRS navX;
@@ -63,10 +51,15 @@ public class Robot extends TimedRobot {
     double turn;
     double leftValue;
     double rightValue;
+    double alignError = 0;
 
     boolean gotLeft = false;
     boolean gotRight = false;
     boolean isReady = false;
+
+    public static boolean lookingForLine = false;
+    boolean currentLooking;
+    boolean oldLooking = false;
 
     double x =779.423; //2.273*218;
     double y; 
@@ -79,6 +72,7 @@ public class Robot extends TimedRobot {
    public static double leftEncoder;
    public static double rightEncoder;
    public static double finalEncoder;
+   public static double errorEncoder;
    public static double encoderDifference;
    public boolean angleGot = false;
 
@@ -87,6 +81,7 @@ public class Robot extends TimedRobot {
    boolean toggleAlignState;
 
    double alignPos;
+   int loopNum = 0;
 
    public Compressor comp = new Compressor();
 
@@ -196,9 +191,12 @@ public class Robot extends TimedRobot {
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
 
-        
-        // System.out.println("Left:   " + leftIRSensor.get() + "     " + "Right:  " + !rightIRSensor.get());
-        
+        currentLooking = OI.stick.getRawButton(2);
+        if (!currentLooking && oldLooking) {
+            lookingForLine = !lookingForLine;
+        }
+        oldLooking = currentLooking;
+
         if (leftIRSensor.get() && !gotLeft){
         gotLeft = true;
         leftEncoder = (driveTrainSubsystem.rightFront.getSelectedSensorPosition()+driveTrainSubsystem.leftRear.getSelectedSensorPosition()/2);  
@@ -207,22 +205,14 @@ public class Robot extends TimedRobot {
         if (!rightIRSensor.get() && !gotRight){
             gotRight = true;
             rightEncoder = (driveTrainSubsystem.rightFront.getSelectedSensorPosition()+driveTrainSubsystem.leftRear.getSelectedSensorPosition()/2);  
-           // navX.zeroYaw();
             }
-    
+        
         if(gotLeft && gotRight){
-            // finalEncoder = (driveTrainSubsystem.rightFront.getSelectedSensorPosition()+driveTrainSubsystem.leftRear.getSelectedSensorPosition())/2;
-            // encoderDifference=finalEncoder-initialEncoder;
             encoderDifference = rightEncoder-leftEncoder;
             isReady = true;
-            //navX.zeroYaw();
-
+            
         }
         y = encoderDifference;
-        // System.out.println("y"+"    "+y);
-      //  System.out.println("Average Encoder:    " + (driveTrainSubsystem.rightFront.getSelectedSensorPosition()+driveTrainSubsystem.leftRear.getSelectedSensorPosition() / 2));
-        //System.out.println(leftEncoder + "            " + rightEncoder);
-
 
         speed = -OI.stick.getRawAxis(1) * 0.75;
         turn = -OI.stick.getRawAxis(4) * 0.5;
@@ -235,24 +225,36 @@ public class Robot extends TimedRobot {
         leftValue = speed - turn;
         rightValue = speed + turn;
 
-     
 
        targetAngle = Math.atan(x/y);
 
        targetAngleDegrees = Math.toDegrees(targetAngle);
 
-        System.out.println("Target" + targetAngleDegrees);
+        if(lookingForLine){
+            System.out.println("running auto align...");
+            gotLeft = false;
+            gotRight = false;
+            loopNum++;
+            errorEncoder = driveTrainSubsystem.rightFront.getSelectedSensorPosition();
+            if(rightEncoder > leftEncoder && gotLeft && gotRight){
+                alignError = errorEncoder - rightEncoder;
+            }else{
+                alignError = errorEncoder - leftEncoder;
+            }
 
-        System.out.println("Gyro" +   Robot.navX.getYaw());
-       if(OI.stick.getRawButton(1)){
-           new AutoAlignment(targetAngleDegrees).start();
+            if(loopNum == 1){
+                new AutoAlignment(targetAngleDegrees, alignError).start();
+            }
+        } else {
+            loopNum = 0;
+            driveTrainSubsystem.tankDrive(leftValue, rightValue);
+        }
 
-
-       }
-       
-
+        // System.out.println("Target" + targetAngleDegrees);
+        // System.out.println("Gyro" + Robot.navX.getYaw());
+        // System.out.println("Error " + alignError);
+        
        //System.out.println(alignPos);
-
 
     }  
     

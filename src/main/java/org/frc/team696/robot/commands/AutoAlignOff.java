@@ -7,10 +7,12 @@
 
 package org.frc.team696.robot.commands;
 
+import org.frc.team696.robot.Robot;
+
 import edu.wpi.first.wpilibj.command.Command;
 
-public class LookingForAlignCommand extends Command {
-  public LookingForAlignCommand() {
+public class AutoAlignOff extends Command {
+  public AutoAlignOff() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
   }
@@ -18,7 +20,7 @@ public class LookingForAlignCommand extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    
+    Robot.lookingForLine = false;
   }
 
   // Called repeatedly when this Command is scheduled to run
@@ -29,7 +31,7 @@ public class LookingForAlignCommand extends Command {
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return false;
+    return true;
   }
 
   // Called once after isFinished returns true

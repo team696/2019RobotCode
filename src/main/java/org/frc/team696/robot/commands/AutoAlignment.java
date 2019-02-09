@@ -7,6 +7,8 @@
 
 package org.frc.team696.robot.commands;
 
+import org.frc.team696.robot.Robot;
+
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class AutoAlignment extends CommandGroup {
@@ -14,10 +16,12 @@ public class AutoAlignment extends CommandGroup {
    * Add your docs here.
    */
 
-  private static double encoder_ticks = 3000;
-  private static double halfBotEncoderTicks = 3488;
-  private static double hopstAngle = 28.264;
-  public AutoAlignment(double angle) {
+  private double encoder_ticks = 3000;
+  private double halfBotEncoderTicks = 3488;
+  private double hopstAngle = 28.264;
+  private double angle;
+
+  public AutoAlignment(double angle, double error) {
     // Add Commands here:
     // e.g. addSequential(new Command1());
     // addSequential(new Command2());
@@ -34,19 +38,18 @@ public class AutoAlignment extends CommandGroup {
     // e.g. if Command1 requires chassis, and Command2 requires arm,
     // a CommandGroup containing them would require both the chassis and the
     // arm.
-    
-    addSequential(new ZeroYaw());
-    //addSequential(new DriveToAngleCommand(90));
 
-    addSequential(new DriveBack(halfBotEncoderTicks));
+    addSequential(new ZeroYaw());
+    addSequential(new DriveBack(halfBotEncoderTicks + error));
     if(angle<0){
     addSequential(new DriveToAngleCommand(90+angle),1);
     }
     else{
     addSequential(new DriveToAngleCommand(-(90-angle)/*(180 - (90 + angle)))*/),1);
     }
-    addSequential(new DriveForward(((halfBotEncoderTicks * Math.abs(Math.sin(Math.toRadians(angle))))))); 
-    addSequential(new DriveToAngleCommand(angle));
-
+    addSequential(new DriveForward(((halfBotEncoderTicks * Math.abs(Math.sin(Math.toRadians(angle))) + halfBotEncoderTicks/2)))); 
+    addSequential(new DriveToAngleCommand(angle), 1);
+    addSequential(new AutoAlignOff());
   }
+
 }
