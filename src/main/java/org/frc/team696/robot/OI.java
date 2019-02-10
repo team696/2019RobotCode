@@ -19,6 +19,7 @@ public class OI {
 
     public static Joystick stick = new Joystick(0);
     public static Button alignButton = new JoystickButton(stick, 1);
+    public static Button lookToAlignButton = new JoystickButton(stick, 2);
     
     // CREATING BUTTONS
     // One type of button is a joystick button which is any button on a

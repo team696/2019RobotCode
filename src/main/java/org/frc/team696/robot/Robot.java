@@ -21,6 +21,7 @@ import com.kauailabs.navx.frc.AHRS.SerialDataType;
 
 import org.frc.team696.robot.autonomousCommands.Default;
 import org.frc.team696.robot.commands.AutoAlignment;
+import org.frc.team696.robot.commands.LookingForAlignCommand;
 import org.frc.team696.robot.subsystems.DriveToAngle;
 import org.frc.team696.robot.subsystems.DriveTrainSubsystem;
 
@@ -53,8 +54,8 @@ public class Robot extends TimedRobot {
     double rightValue;
     double alignError = 0;
 
-    boolean gotLeft = false;
-    boolean gotRight = false;
+    public static boolean gotLeft = false;
+    public static boolean gotRight = false;
     boolean isReady = false;
 
     public static boolean lookingForLine = false;
@@ -65,7 +66,7 @@ public class Robot extends TimedRobot {
     double y; 
     
     double targetAngle;
-    static double targetAngleDegrees;
+   public  static double targetAngleDegrees;
     public static double finalTargetAngle;
 
    public static double initialEncoder;
@@ -76,6 +77,10 @@ public class Robot extends TimedRobot {
    public static double encoderDifference;
    public boolean angleGot = false;
 
+   public double leftError;
+   public double rightError;
+   public double rightButtonPos, leftButtonPos;
+
    boolean currentAlignState;
    boolean oldAlignState;
    boolean toggleAlignState;
@@ -83,8 +88,12 @@ public class Robot extends TimedRobot {
    double alignPos;
    int loopNum = 0;
 
+   public static boolean isLookingToAlign;
+   public static boolean isFound;
+
    public Compressor comp = new Compressor();
 
+   AutoAlignment align;
    //public  DriveCommand DriveToAngle = new DriveCommand(0, targetAngleDegrees);
 
   
@@ -190,29 +199,77 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
+<<<<<<< Updated upstream
 
         currentLooking = OI.stick.getRawButton(2);
         if (!currentLooking && oldLooking) {
             lookingForLine = !lookingForLine;
         }
         oldLooking = currentLooking;
+=======
+if(OI.stick.getRawButton(2)){
+    // new LookingForAlignCommand().start(); 
+    isLookingToAlign=true;
+}
+        // System.out.println("Left:   " + leftIRSensor.get() + "     " + "Right:  " + !rightIRSensor.get());
+    if(isLookingToAlign){
+        System.out.println("looking");
+        leftButtonPos=driveTrainSubsystem.leftRear.getSelectedSensorPosition();
+        rightButtonPos=driveTrainSubsystem.rightFront.getSelectedSensorPosition();
+>>>>>>> Stashed changes
 
         if (leftIRSensor.get() && !gotLeft){
-        gotLeft = true;
         leftEncoder = (driveTrainSubsystem.rightFront.getSelectedSensorPosition()+driveTrainSubsystem.leftRear.getSelectedSensorPosition()/2);  
+        gotLeft = true;    
         }
 
         if (!rightIRSensor.get() && !gotRight){
-            gotRight = true;
+            
             rightEncoder = (driveTrainSubsystem.rightFront.getSelectedSensorPosition()+driveTrainSubsystem.leftRear.getSelectedSensorPosition()/2);  
+<<<<<<< Updated upstream
+=======
+            gotRight = true;
+            
+           // navX.zeroYaw();
+>>>>>>> Stashed changes
             }
         
         if(gotLeft && gotRight){
             encoderDifference = rightEncoder-leftEncoder;
             isReady = true;
+<<<<<<< Updated upstream
             
         }
         y = encoderDifference;
+=======
+            y = encoderDifference;
+            targetAngle = Math.atan(x/y);
+
+            targetAngleDegrees = Math.toDegrees(targetAngle);
+            //navX.zeroYaw();
+            isFound = true;
+        }
+        leftError=leftButtonPos-leftEncoder;
+        rightError=rightButtonPos-rightEncoder;
+
+    }   
+    System.out.println("Target Angle:"+targetAngleDegrees);
+
+
+    if(OI.stick.getRawButton(1)){
+         new AutoAlignment(targetAngleDegrees, rightError).start();
+    }
+    // if(align.isCompleted()){
+    //     driveTrainSubsystem.tankDrive(leftValue, rightValue);
+    
+    // }
+        //driveTrainSubsystem.tankDrive(leftValue, rightValue);
+    // }
+        // System.out.println("y"+"    "+y);
+      //  System.out.println("Average Encoder:    " + (driveTrainSubsystem.rightFront.getSelectedSensorPosition()+driveTrainSubsystem.leftRear.getSelectedSensorPosition() / 2));
+        //System.out.println(leftEncoder + "            " + rightEncoder);
+
+>>>>>>> Stashed changes
 
         speed = -OI.stick.getRawAxis(1) * 0.75;
         turn = -OI.stick.getRawAxis(4) * 0.5;
@@ -225,11 +282,16 @@ public class Robot extends TimedRobot {
         leftValue = speed - turn;
         rightValue = speed + turn;
 
+<<<<<<< Updated upstream
 
        targetAngle = Math.atan(x/y);
+=======
+//driveTrainSubsystem.tankDrive(leftValue, rightValue);
+>>>>>>> Stashed changes
 
-       targetAngleDegrees = Math.toDegrees(targetAngle);
+        // System.out.println("Target" + targetAngleDegrees);
 
+<<<<<<< Updated upstream
         if(lookingForLine){
             System.out.println("running auto align...");
             gotLeft = false;
@@ -249,6 +311,16 @@ public class Robot extends TimedRobot {
             loopNum = 0;
             driveTrainSubsystem.tankDrive(leftValue, rightValue);
         }
+=======
+        // System.out.println("Gyro" +   Robot.navX.getYaw());
+    
+    //    if(OI.stick.getRawButton(1)){
+    //        new AutoAlignment(targetAngleDegrees).start();
+
+
+    //    }
+       
+>>>>>>> Stashed changes
 
         // System.out.println("Target" + targetAngleDegrees);
         // System.out.println("Gyro" + Robot.navX.getYaw());
@@ -258,46 +330,6 @@ public class Robot extends TimedRobot {
 
     }  
     
-
-
-
-
-
-
-
-
-
-
-
-
-
-     
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     /**
      * This function is called periodically during test mode.
      */
