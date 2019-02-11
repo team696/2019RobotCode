@@ -59,13 +59,14 @@ public class ClimberModuleTest extends Command {
           System.out.println("At position");
           if(!this.module.getRevLimit()){
             this.success = true;
+            module.positionControlGood = true;
             System.out.println("Success!");
           }
           this.phase = TestPhase.MovingDown;
         }
         break;
       case MovingDown:
-          System.out.println(this.module.getCorrectedPosition());
+          //System.out.println(this.module.getCorrectedPosition());
           this.module.moveToPosition(0);
           if(Math.abs(this.module.getCorrectedPosition()) < allowablePositionError || this.module.getRevLimit()){
             if(this.module.getRevLimit()){

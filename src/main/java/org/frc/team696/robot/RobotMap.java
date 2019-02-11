@@ -14,13 +14,26 @@ package org.frc.team696.robot;
  * floating around.
  */
 public class RobotMap {
-    // For example to map the left and right motors, you could define the
-    // following variables to use with your drivetrain subsystem.
-    // public static int leftMotor = 1;
-    // public static int rightMotor = 2;
+    //Climber parameters
+    //Front left
+    public static final int flClimberTalon = 2;
+    public static final boolean flClimberModuleInverted = false;
+    public static final boolean flClimberModuleSensorPhase = true;
+    
+    //Front right
+    public static final int frClimberTalon = 1;
+    public static final boolean frClimberModuleInverted = true;
+    public static final boolean frClimberModuleSensorPhase = false;
 
-    // If you are using multiple modules, make sure to define both the port
-    // number and the module. For example you with a rangefinder:
-    // public static int rangefinderPort = 1;
-    // public static int rangefinderModule = 1;
+    //Rear left
+    public static final int rlClimberTalon = 3;
+    public static final boolean rlClimberModuleInverted = true;
+    public static final boolean rlClimberModuleSensorPhase = false;
+
+    //Rear right
+    public static final int rrClimberTalon = 4;
+    public static final boolean rrClimberModuleInverted = true;
+    public static final boolean rrClimberModuleSensorPhase = false;
+
+    
 }

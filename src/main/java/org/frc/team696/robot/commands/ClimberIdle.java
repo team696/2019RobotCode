@@ -7,19 +7,14 @@
 
 package org.frc.team696.robot.commands;
 
-import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.command.Command;
 import org.frc.team696.robot.OI;
 import org.frc.team696.robot.Robot;
-import org.frc.team696.robot.subsystems.Climber;
 
-public class ClimberManualControl extends Command {
-  Button isManual;
-
-
-  public ClimberManualControl() {
+public class ClimberIdle extends Command {
+  public ClimberIdle() {
+    // Use requires() here to declare subsystem dependencies
     //requires(Robot.climber);
-    this.setInterruptible(false);
   }
 
   // Called just before this Command runs the first time
@@ -30,7 +25,15 @@ public class ClimberManualControl extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-      //Robot.climber.setPower(OI.getClimberManual());
+    //If position control is working, servo to stowed position
+    //if(!OI.climberManualSwitch.get() && Robot.climber.getPositionControlGood()){
+     // Robot.climber.moveIndividual(0.0);
+    //}
+    //else{
+      //Closed-loop nonoperative, just turn off motors
+      //Robot.climber.turnOff();
+    //}
+
   }
 
   // Make this return true when this Command no longer needs to run execute()

@@ -8,17 +8,18 @@
 package org.frc.team696.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.command.Subsystem;
-
+import org.frc.team696.robot.RobotMap;
 /**
  * Add your docs here.
  */
 public class ClimberModule extends Subsystem{
   public TalonSRX talon;
   public boolean isInitialized = false;
+  public boolean positionControlGood = false;
 
   private static final int freePidSlot = 0;
   private static final int climbingPidSlot = 1;
@@ -30,6 +31,17 @@ public class ClimberModule extends Subsystem{
   private static final double freeMaxOutput = 0.6;
   private static final double climbingMaxOutput = 1.0; 
 
+  public ClimberModule(String name){
+    super(name);
+    //TODO: set up logging
+  }
+
+
+  /**
+   * Sets the talon reference for a module.
+   * Also configures the talon: PID coefficients, limit switches, etc.
+   * @param talon An existing reference to the talon on this module
+   */
   public void setTalon(TalonSRX talon) {
     // Configure talon PID coefficients
     this.talon = talon;
@@ -49,8 +61,8 @@ public class ClimberModule extends Subsystem{
     this.talon.configPeakOutputReverse(-1);
     this.talon.setNeutralMode(NeutralMode.Brake);
     this.talon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
-    this.talon.setSensorPhase(false);
-    this.talon.setInverted(true);
+    //this.talon.setSensorPhase(false);
+    //this.talon.setInverted(true);
 
     this.talon.selectProfileSlot(freePidSlot, 0);
   }
@@ -117,11 +129,27 @@ public class ClimberModule extends Subsystem{
   }
 
   public void setSensorPhase(boolean phase){
+    System.out.println("Setting phase to "+phase+" on "+this.getName());
     this.talon.setSensorPhase(phase);
   }
 
   public void setInverted(boolean inverted){
+    System.out.println("Setting inverted to "+inverted+" on "+this.getName());
     this.talon.setInverted(inverted);
+  }
+
+  /**
+   * Converts a velocity in rps to encoder ticks / 100 ms.
+   * TrajectoryPoints require target velocity in sensor ticks / 100 ms.
+   * This is a helper function to convert from rps, taking into account
+   * sensor resolution and gearing. 
+   * @param rps Revolutions per second of arm
+   * @return Encoder ticks per 100 ms
+   */
+  public int convertVelocityForProfile(double rps){
+    rps *= encoderTicksPerRev; //Now is encoder ticks per second
+    rps /= 10; //Now is encoder ticks per 100 ms
+    return (int) rps;
   }
 
 }
