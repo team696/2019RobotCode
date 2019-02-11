@@ -1,5 +1,8 @@
 package jaci.pathfinder.followers;
 
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import jaci.pathfinder.Trajectory;
 
 /**
@@ -19,6 +22,14 @@ public class EncoderFollower {
 
     int segment;
     Trajectory trajectory;
+
+    double last_time = 0;
+    double start_time;
+    double last_seg_position = 0;
+    double last_distance_covered = 0;
+
+    boolean first_time = true;
+
 
     public EncoderFollower(Trajectory traj) {
         this.trajectory = traj;
@@ -82,15 +93,41 @@ public class EncoderFollower {
         double distance_covered = ((double)(encoder_tick - encoder_offset) / encoder_tick_count)
                 * wheel_circumference;
         if (segment < trajectory.length()) {
-            Trajectory.Segment seg = trajectory.get(segment);
+
+            double dt;
+            double first_dt = trajectory.get(0).dt;
+            double cum_time;
+            Trajectory.Segment seg;
+            double this_time = Timer.getFPGATimestamp();
+
+            if(first_time){
+                seg = trajectory.get(0);
+                dt = seg.dt;
+                start_time = this_time;
+                first_time = false;
+            }else{
+                cum_time = this_time - start_time;
+                segment = (int) Math.round(cum_time / first_dt);
+                seg = trajectory.get(segment);
+                dt = this_time - last_time;
+                // System.out.printf("seg: %d dt: %f cum_time: %f this_time: %f last_time: %f start_time: %f\n", segment, dt, cum_time, this_time, last_time, start_time);
+            }
+
             double error = seg.position - distance_covered;
             double calculated_value =
                     kp * error +                                    // Proportional
-                    kd * ((error - last_error) / seg.dt) +          // Derivative
+                    kd * ((error - last_error) / dt - seg.velocity) +          // Derivative
                     (kv * seg.velocity + ka * seg.acceleration);    // V and A Terms
             last_error = error;
             heading = seg.heading;
-            segment++;
+
+            last_time = this_time;
+            SmartDashboard.putNumber("Seg position", seg.position - last_seg_position);
+            SmartDashboard.putNumber("distance covered", distance_covered - last_distance_covered);
+
+            last_seg_position = seg.position;
+            last_distance_covered = distance_covered;
+
 
             return calculated_value;
         } else return 0;

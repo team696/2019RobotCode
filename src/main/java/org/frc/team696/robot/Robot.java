@@ -69,6 +69,10 @@ public class Robot extends TimedRobot {
 
     Notifier notifier;
 
+    public Robot(){
+        super(0.01);
+    }
+
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
@@ -145,8 +149,8 @@ public class Robot extends TimedRobot {
         rightFollower = new EncoderFollower(rightTraj);
         leftFollower.configureEncoder(leftRear.getSelectedSensorPosition(), k_ticks_per_rev, k_wheel_diameter);
         rightFollower.configureEncoder(rightFront.getSelectedSensorPosition(), k_ticks_per_rev, k_wheel_diameter);
-        leftFollower.configurePIDVA(1, 0, 0, 1/k_max_velocity, 0);
-        rightFollower.configurePIDVA(1, 0, 0, 1/k_max_velocity, 0);
+        leftFollower.configurePIDVA(0.25, 0, 0, 1/k_max_velocity, 0);
+        rightFollower.configurePIDVA(0.25, 0, 0, 1/k_max_velocity, 0);
         notifier = new Notifier(this::followPath);
         notifier.startPeriodic(leftTraj.get(0).dt);
 
@@ -167,10 +171,11 @@ public class Robot extends TimedRobot {
             double desiredHeading = Pathfinder.r2d(leftFollower.getHeading());
             double angleDiff = Pathfinder.boundHalfDegrees(desiredHeading - heading);
             double turn = 0.6 * (-1.0/80.0) * angleDiff;
-            double leftDrive = (leftSpeed - turn);
-            double rightDrive = -(rightSpeed + turn);
+            double leftDrive = (leftSpeed);
+            double rightDrive = -(rightSpeed);
             leftRear.set(ControlMode.PercentOutput, leftDrive);
             rightFront.set(ControlMode.PercentOutput, rightDrive);
+
             // System.out.println(rightFollower.getSegment().x + " " + rightFollower.getSegment().y);
             // System.out.println(leftSpeed + "   " + rightSpeed + "   " + turn);
         }

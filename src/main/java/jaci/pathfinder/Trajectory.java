@@ -102,6 +102,9 @@ public class Trajectory {
     }
 
     public Segment get(int index) {
+        if(index >= length()){
+            return segments[length() - 1];
+        }
         return segments[index];
     }
 
