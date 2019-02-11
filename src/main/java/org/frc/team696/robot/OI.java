@@ -12,6 +12,8 @@ import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import org.frc.team696.robot.commands.ClimberManualControl;
 import org.frc.team696.robot.commands.ClimberTest;
+import org.frc.team696.robot.commands.ClimberModuleTest;
+import org.frc.team696.robot.Robot;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -24,8 +26,8 @@ public class OI {
 
     public OI(){
         //climberManualSwitch.whileHeld(new ClimberManualControl());
-        //climberModuleTest.whenPressed(new ClimberTest());
-        //climberManualSwitch.whileHeld(new ClimberManualControl());
+        climberModuleTest.whenPressed(new ClimberTest());
+        climberManualSwitch.whileHeld(new ClimberManualControl());
     }
 
     public static double getClimberManual(){

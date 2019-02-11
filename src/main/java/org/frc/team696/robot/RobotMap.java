@@ -17,7 +17,7 @@ public class RobotMap {
     //Climber parameters
     //Front left
     public static final int flClimberTalon = 2;
-    public static final boolean flClimberModuleInverted = false;
+    public static final boolean flClimberModuleInverted = true;
     public static final boolean flClimberModuleSensorPhase = true;
     
     //Front right

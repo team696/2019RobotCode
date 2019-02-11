@@ -96,6 +96,7 @@ public class ClimberModule extends Subsystem{
   }
 
   public void moveToPosition(double position, int pidSlot){
+    //System.out.println("Climber "+this.getName()+" moving to "+position);
     this.talon.selectProfileSlot(pidSlot, 0);
     this.talon.set(ControlMode.Position, this.convertSetpoint(position));
   }

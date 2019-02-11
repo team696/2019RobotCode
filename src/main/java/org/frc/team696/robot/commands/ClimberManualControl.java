@@ -18,19 +18,20 @@ public class ClimberManualControl extends Command {
 
 
   public ClimberManualControl() {
-    //requires(Robot.climber);
+    requires(Robot.climber);
     this.setInterruptible(false);
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    System.out.println("Running climber manual control");
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-      //Robot.climber.setPower(OI.getClimberManual());
+      Robot.climber.setPower(OI.getClimberManual());
   }
 
   // Make this return true when this Command no longer needs to run execute()

@@ -38,7 +38,7 @@ public class ClimberModuleTest extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    System.out.println("Testing module...");
+    System.out.println("Testing module " + this.module.getName() + "...");
     this.finished = false;
     this.success = false;
     this.phase = TestPhase.MovingUp;
@@ -46,6 +46,7 @@ public class ClimberModuleTest extends Command {
     if(!this.module.isInitialized){
       this.finished = true;
     }
+    this.module.talon.setSelectedSensorPosition(0);
   }
 
   // Called repeatedly when this Command is scheduled to run
@@ -54,7 +55,7 @@ public class ClimberModuleTest extends Command {
     switch(this.phase){
       case MovingUp:
         this.module.moveToPosition(defaultTestMove);
-        System.out.println(this.module.getCorrectedPosition());
+        System.out.println(this.module.getName() + "is at "+this.module.getCorrectedPosition());
         if(Math.abs(this.module.getCorrectedPosition() - defaultTestMove) < allowablePositionError){
           System.out.println("At position");
           if(!this.module.getRevLimit()){
@@ -67,11 +68,9 @@ public class ClimberModuleTest extends Command {
         break;
       case MovingDown:
           //System.out.println(this.module.getCorrectedPosition());
-          this.module.moveToPosition(0);
-          if(Math.abs(this.module.getCorrectedPosition()) < allowablePositionError || this.module.getRevLimit()){
-            if(this.module.getRevLimit()){
-              this.module.talon.setSelectedSensorPosition(0);
-            }
+          this.module.setPower(-0.2);
+          if(this.module.getRevLimit()){
+            this.module.talon.setSelectedSensorPosition(0);
             this.module.turnOff();
             this.finished = true;
             System.out.println("Done!");
@@ -95,6 +94,7 @@ public class ClimberModuleTest extends Command {
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
+    System.out.println("Interrupted!");
     this.module.turnOff();
   }
 }

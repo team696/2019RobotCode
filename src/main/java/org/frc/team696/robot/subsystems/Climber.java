@@ -25,8 +25,8 @@ import org.frc.team696.robot.subsystems.ClimberModule;
 public class Climber extends Subsystem {
   public static ClimberModule fl = new ClimberModule("FL Climber Module");
   public static ClimberModule fr = new ClimberModule("FR Climber Module"); 
-  public static ClimberModule rl = new ClimberModule("RL Climber Module"); 
-  public static ClimberModule rr = new ClimberModule("RR Climber Module");
+  //public static ClimberModule rl = new ClimberModule("RL Climber Module"); 
+  //public static ClimberModule rr = new ClimberModule("RR Climber Module");
   
   public static boolean isInitialized = false;
 
@@ -48,14 +48,14 @@ public class Climber extends Subsystem {
     //Create talon objects
     TalonSRX fltalon = new TalonSRX(RobotMap.flClimberTalon);
     TalonSRX frtalon = new TalonSRX(RobotMap.frClimberTalon);
-    TalonSRX rltalon = new TalonSRX(RobotMap.rlClimberTalon);
-    TalonSRX rrtalon = new TalonSRX(RobotMap.rrClimberTalon);
+    //TalonSRX rltalon = new TalonSRX(RobotMap.rlClimberTalon);
+    //TalonSRX rrtalon = new TalonSRX(RobotMap.rrClimberTalon);
 
     //Send talons to modules
     fl.setTalon(fltalon);
     fr.setTalon(frtalon);
-    rl.setTalon(rltalon);
-    rr.setTalon(rrtalon);
+    //rl.setTalon(rltalon);
+    //rr.setTalon(rrtalon);
 
     fl.setInverted(RobotMap.flClimberModuleInverted);
     fl.setSensorPhase(RobotMap.flClimberModuleSensorPhase);
@@ -63,15 +63,15 @@ public class Climber extends Subsystem {
     fr.setInverted(RobotMap.frClimberModuleInverted);
     fr.setSensorPhase(RobotMap.frClimberModuleSensorPhase);
 
-    rl.setInverted(RobotMap.rlClimberModuleInverted);
-    rl.setSensorPhase(RobotMap.rlClimberModuleSensorPhase);
+    //rl.setInverted(RobotMap.rlClimberModuleInverted);
+    //rl.setSensorPhase(RobotMap.rlClimberModuleSensorPhase);
 
-    rr.setInverted(RobotMap.rrClimberModuleInverted);
-    rr.setSensorPhase(RobotMap.rrClimberModuleSensorPhase);
+    //rr.setInverted(RobotMap.rrClimberModuleInverted);
+    //rr.setSensorPhase(RobotMap.rrClimberModuleSensorPhase);
   }
 
   public static void initialize(){
-    isInitialized = (fl.initialize());
+    isInitialized = (fl.initialize() && fr.initialize());
   }
 
   /**
@@ -85,8 +85,8 @@ public class Climber extends Subsystem {
   public static void setPower(double flp, double frp, double rlp, double rrp){
     fl.setPower(flp);
     fr.setPower(frp);
-    rl.setPower(rlp);
-    rr.setPower(rrp);
+    //rl.setPower(rlp);
+    //rr.setPower(rrp);
   }
 
   public static void setPower(double power){
@@ -99,7 +99,8 @@ public class Climber extends Subsystem {
    * @return If closed-loop control can work
    */
   public boolean getPositionControlGood(){
-    return (fl.positionControlGood && fr.positionControlGood && rl.positionControlGood && rr.positionControlGood);
+    //return (fl.positionControlGood && fr.positionControlGood && rl.positionControlGood && rr.positionControlGood);
+    return fl.positionControlGood;
   }
 
   /**
@@ -113,8 +114,8 @@ public class Climber extends Subsystem {
   public void moveIndividual(double flPos, double frPos, double rlPos, double rrPos){
     fl.moveToPosition(flPos);
     fr.moveToPosition(frPos);
-    rl.moveToPosition(rlPos);
-    rr.moveToPosition(rrPos);
+    //rl.moveToPosition(rlPos);
+    //rr.moveToPosition(rrPos);
   }
 
   /**
@@ -125,8 +126,8 @@ public class Climber extends Subsystem {
   public void moveIndividual(double pos){
     fl.moveToPosition(pos);
     fr.moveToPosition(pos);
-    rl.moveToPosition(pos);
-    rr.moveToPosition(pos);
+    //rl.moveToPosition(pos);
+    //rr.moveToPosition(pos);
   }
 
   /**
@@ -136,15 +137,15 @@ public class Climber extends Subsystem {
   public void turnOff(){
     fl.turnOff();
     fr.turnOff();
-    rl.turnOff();
-    rr.turnOff();
+    //rl.turnOff();
+    //rr.turnOff();
   }
 
   public void climberPeriodic(){
     ntflpos.setDouble(fl.getCorrectedPosition());
     ntfrpos.setDouble(fr.getCorrectedPosition());
-    ntrlpos.setDouble(rl.getCorrectedPosition());
-    ntrrpos.setDouble(rr.getCorrectedPosition());
+    //ntrlpos.setDouble(rl.getCorrectedPosition());
+    //ntrrpos.setDouble(rr.getCorrectedPosition());
   }
 
   @Override

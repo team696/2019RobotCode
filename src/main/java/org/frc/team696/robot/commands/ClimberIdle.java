@@ -14,7 +14,7 @@ import org.frc.team696.robot.Robot;
 public class ClimberIdle extends Command {
   public ClimberIdle() {
     // Use requires() here to declare subsystem dependencies
-    //requires(Robot.climber);
+    requires(Robot.climber);
   }
 
   // Called just before this Command runs the first time
@@ -26,13 +26,13 @@ public class ClimberIdle extends Command {
   @Override
   protected void execute() {
     //If position control is working, servo to stowed position
-    //if(!OI.climberManualSwitch.get() && Robot.climber.getPositionControlGood()){
-     // Robot.climber.moveIndividual(0.0);
-    //}
-    //else{
+    if(!OI.climberManualSwitch.get() && Robot.climber.getPositionControlGood()){
+      Robot.climber.moveIndividual(0.0);
+    }
+    else{
       //Closed-loop nonoperative, just turn off motors
-      //Robot.climber.turnOff();
-    //}
+      Robot.climber.turnOff();
+    }
 
   }
 

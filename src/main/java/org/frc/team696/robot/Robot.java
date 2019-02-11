@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.frc.team696.robot.commands.ExampleCommand;
-//import org.frc.team696.robot.subsystems.Climber;
+import org.frc.team696.robot.subsystems.Climber;
 import org.frc.team696.robot.subsystems.ClimberModule;
 import org.frc.team696.robot.subsystems.ExampleSubsystem;
 import org.frc.team696.robot.RobotMap;
@@ -32,9 +32,9 @@ import org.frc.team696.robot.RobotMap;
 public class Robot extends TimedRobot {
 
     public static final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
-    //public static final Climber climber = new Climber();
+    public static final Climber climber = new Climber();
     //public static final Climber climber = null;
-    public ClimberModule testModule = new ClimberModule("Test Module");
+    //public ClimberModule testModule = new ClimberModule("Test Module");
     public static OI oi;
     private Command autonomousCommand;
     private SendableChooser<Command> chooser = new SendableChooser<>();
@@ -49,13 +49,12 @@ public class Robot extends TimedRobot {
         chooser.addDefault("Default Auto", new ExampleCommand());
         // chooser.addObject("My Auto", new MyAutoCommand());
         SmartDashboard.putData("Auto mode", chooser);
-        TalonSRX testTalon = new TalonSRX(RobotMap.flClimberTalon);
-        this.testModule.setTalon(testTalon);
-        this.testModule.setInverted(RobotMap.flClimberModuleInverted);
-        this.testModule.setSensorPhase(RobotMap.flClimberModuleSensorPhase);
+        //this.testModule.setTalon(testTalon);
+        //this.testModule.setInverted(RobotMap.flClimberModuleInverted);
+        //this.testModule.setSensorPhase(RobotMap.flClimberModuleSensorPhase);
         //this.singlemodule.setTalon(fl);
         //this.singlemodule.initialize();
-        //Climber.initialize();
+        Climber.initialize();
     }
 
     /**
@@ -65,13 +64,12 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void disabledInit() {
-        //Climber.fl.talon.setSelectedSensorPosition(0);
     }
 
     @Override
     public void disabledPeriodic() {
         Scheduler.getInstance().run();
-        //System.out.println(Climber.fl.getCorrectedPosition());
+        //System.out.println(Climber.fr.getCorrectedPosition());
         //Climber.fl.talon.setSensorPhase(false);
     }
 
@@ -140,7 +138,10 @@ public class Robot extends TimedRobot {
 
     @Override
     public void robotPeriodic(){
-        System.out.println("Climber position:" + this.testModule.getCorrectedPosition());
-        //climber.climberPeriodic();
+        //System.out.println("Climber position:" + this.testModule.getCorrectedPosition());
+        climber.climberPeriodic();
+        //System.out.println(Climber.fr.getName() + " is at "+Climber.fr.getCorrectedPosition());
+        //System.out.println(Climber.fr.getName() + " is outputting "+Climber.fr.talon.getMotorOutputPercent());
+
     }
 }
