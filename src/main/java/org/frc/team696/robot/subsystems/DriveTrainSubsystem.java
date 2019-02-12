@@ -11,7 +11,6 @@ package org.frc.team696.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
-import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
@@ -19,27 +18,30 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
  * Add your docs here.
  */
 public class DriveTrainSubsystem extends Subsystem {
-  WPI_VictorSPX leftFront;
-  WPI_VictorSPX leftMid;
-  WPI_VictorSPX leftRear;
+  public WPI_VictorSPX leftFront;
+  public WPI_VictorSPX leftMid;
+  public WPI_VictorSPX leftRear;
 
-  WPI_VictorSPX rightFront;
-  WPI_VictorSPX rightMid;
-  WPI_VictorSPX rightRear;
+  public WPI_VictorSPX rightFront;
+  public WPI_VictorSPX rightMid;
+  public WPI_VictorSPX rightRear;
   
-  SpeedControllerGroup leftSide;
-  SpeedControllerGroup rightSide;
+  public SpeedControllerGroup leftSide;
+  public SpeedControllerGroup rightSide;
 
-  DifferentialDrive drive;
+  public DifferentialDrive drive;
 
-  public DriveTrainSubsystem(int leftFrontPort, int leftMidPort, int leftRearPort, int rightFrontPort, int rightMidPort, int rightRearPort){
+  public DriveTrainSubsystem(int leftFrontPort, int leftMidPort, int leftRearPort, int rightRearPort, int rightMidPort, int rightFrontPort){
     leftFront = new WPI_VictorSPX(leftFrontPort);
     leftMid = new WPI_VictorSPX(leftMidPort);
     leftRear = new WPI_VictorSPX(leftRearPort);
 
-    rightFront = new WPI_VictorSPX(rightFrontPort);
+    rightFront = new WPI_VictorSPX(rightFrontPort); 
+    rightFront.setInverted(true);
     rightMid = new WPI_VictorSPX(rightMidPort);
+    rightMid.setInverted(true);
     rightRear = new WPI_VictorSPX(rightRearPort);
+    rightRear.setInverted(true);
 
     leftSide = new SpeedControllerGroup(leftFront, leftMid, leftRear);
     rightSide = new SpeedControllerGroup(rightFront, rightMid, rightRear);

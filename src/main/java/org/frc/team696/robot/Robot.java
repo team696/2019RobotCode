@@ -27,7 +27,7 @@ public class Robot extends TimedRobot {
 
     public static OI oi;
     public DriveTrainSubsystem driveTrainSubsystem = new DriveTrainSubsystem(RobotMap.leftFrontPort, RobotMap.leftMidPort, RobotMap.leftRearPort, 
-                                                                             RobotMap.rightFrontPort, RobotMap.rightMidPort, RobotMap.rightRearPort);
+                                                                             RobotMap.rightRearPort, RobotMap.rightMidPort, RobotMap.rightFrontPort);
 
     private Command autonomousCommand;
     private SendableChooser<Command> chooser = new SendableChooser<>();
@@ -122,10 +122,20 @@ public class Robot extends TimedRobot {
         stick = OI.xboxController.getRawAxis(Constants.stickAxisPort);
         wheel = OI.xboxController.getRawAxis(Constants.turnAxisPort);
 
+        if(Math.abs(wheel)<=0.03&&Math.abs(wheel)>=0){
+            wheel=0;
+        }
+        System.out.println(wheel);
         leftSpeed = stick + wheel;
         rightSpeed = stick - wheel;
         
+
         driveTrainSubsystem.runDrive(leftSpeed, rightSpeed);
+        // if(OI.xboxController.getRawButton(1)){
+        //     driveTrainSubsystem.leftRear.set(0.3);
+        //     driveTrainSubsystem.rightRear.set(0.3);
+        // }
+
     }
 
     /**
