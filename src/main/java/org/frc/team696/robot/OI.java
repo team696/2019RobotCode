@@ -21,8 +21,9 @@ import org.frc.team696.robot.Robot;
  */
 public class OI {
     public static Joystick operatorPanel = new Joystick(0);
-    public static Button climberManualSwitch = new JoystickButton(operatorPanel, 2);
+    public static Button climberManualSwitch = new JoystickButton(operatorPanel, 5);
     public static Button climberModuleTest = new JoystickButton(operatorPanel, 1);
+    public static Button climberStage = new JoystickButton(operatorPanel, 7);
 
     public OI(){
         //climberManualSwitch.whileHeld(new ClimberManualControl());

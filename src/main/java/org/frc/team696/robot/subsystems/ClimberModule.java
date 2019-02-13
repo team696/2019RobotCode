@@ -83,10 +83,10 @@ public class ClimberModule extends Subsystem{
     if (this.talon.getSensorCollection().isRevLimitSwitchClosed()) {
       this.talon.setSelectedSensorPosition(0);
       this.isInitialized = true;
-      System.out.println("Module initialized");
+      System.out.println(this.getName() + " initialized");
       return true;
     } else {
-      System.out.println("Module not initialized!");
+      System.out.println(this.getName() + " not initialized!");
       return false;
     }
   }

@@ -8,6 +8,7 @@
 package org.frc.team696.robot;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.ControlMode;
 
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -126,6 +127,9 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
+        Climber.leftPusher.set(ControlMode.PercentOutput, OI.operatorPanel.getRawAxis(3));
+        Climber.rightPusher.set(ControlMode.PercentOutput, OI.operatorPanel.getRawAxis(3));
+        System.out.println(OI.operatorPanel.getRawAxis(3));
     }
 
     /**

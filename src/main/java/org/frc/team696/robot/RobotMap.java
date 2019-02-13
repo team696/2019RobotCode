@@ -16,24 +16,32 @@ package org.frc.team696.robot;
 public class RobotMap {
     //Climber parameters
     //Front left
-    public static final int flClimberTalon = 2;
+    public static final int flClimberTalon = 1;
     public static final boolean flClimberModuleInverted = true;
     public static final boolean flClimberModuleSensorPhase = true;
     
     //Front right
-    public static final int frClimberTalon = 1;
+    public static final int frClimberTalon = 14;
     public static final boolean frClimberModuleInverted = true;
     public static final boolean frClimberModuleSensorPhase = false;
 
     //Rear left
-    public static final int rlClimberTalon = 3;
-    public static final boolean rlClimberModuleInverted = true;
-    public static final boolean rlClimberModuleSensorPhase = false;
+    public static final int rlClimberTalon = 7;
+    public static final boolean rlClimberModuleInverted = false;
+    public static final boolean rlClimberModuleSensorPhase = true;
 
     //Rear right
-    public static final int rrClimberTalon = 4;
+    public static final int rrClimberTalon = 8;
     public static final boolean rrClimberModuleInverted = true;
-    public static final boolean rrClimberModuleSensorPhase = false;
+    public static final boolean rrClimberModuleSensorPhase = true;
+
+    //Left pusher
+    public static final int leftPusherTalon = 6;
+    public static final boolean leftPusherInvert = false;
+
+    //Right pusher
+    public static final int rightPusherTalon = 9;
+    public static final boolean rightPusherInvert = true;
 
     
 }

@@ -18,8 +18,8 @@ public class ClimberTest extends CommandGroup {
   public ClimberTest() {
     addParallel(new ClimberModuleTest(Climber.fl));
     addParallel(new ClimberModuleTest(Climber.fr));
-    //addParallel(new ClimberModuleTest(Climber.rl));
-    //addParallel(new ClimberModuleTest(Climber.rr));
+    addParallel(new ClimberModuleTest(Climber.rl));
+    addParallel(new ClimberModuleTest(Climber.rr));
     // Add Commands here:
     // e.g. addSequential(new Command1());
     // addSequential(new Command2());
