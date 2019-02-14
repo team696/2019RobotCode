@@ -7,13 +7,14 @@
 
 package org.frc.team696.robot;
 
+import org.frc.team696.robot.commands.ConveyorCommand;
+import org.frc.team696.robot.subsystems.ConveyorSubsystem;
+
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.frc.team696.robot.commands.ExampleCommand;
-import org.frc.team696.robot.subsystems.ExampleSubsystem;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -25,8 +26,8 @@ import org.frc.team696.robot.subsystems.ExampleSubsystem;
 // If you rename or move this class, update the build.properties file in the project root
 public class Robot extends TimedRobot {
 
-    public static final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
     public static OI oi;
+    public static ConveyorSubsystem conveyorSubsystem = new ConveyorSubsystem(RobotMap.topConveyorMotorPort, RobotMap.bottomConveyorMotorPort, RobotMap.conveyorSolPort);
 
     private Command autonomousCommand;
     private SendableChooser<Command> chooser = new SendableChooser<>();
@@ -38,7 +39,6 @@ public class Robot extends TimedRobot {
     @Override
     public void robotInit() {
         oi = new OI();
-        chooser.addDefault("Default Auto", new ExampleCommand());
         // chooser.addObject("My Auto", new MyAutoCommand());
         SmartDashboard.putData("Auto mode", chooser);
     }
@@ -111,6 +111,9 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
+
+    OI.conveyorButton.toggleWhenPressed(new ConveyorCommand(0.5, true));
+    OI.conveyorButton.toggleWhenPressed(new ConveyorCommand(0.5, false));
     }
 
     /**
