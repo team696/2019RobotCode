@@ -12,16 +12,14 @@ import org.frc.team696.robot.Robot;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class ConveyorCommand extends Command {
-  boolean conveyorState;
   double conveyorSpeed;
 
-  public ConveyorCommand(double conveyorSpeed, boolean conveyorState) {
+  public ConveyorCommand(double conveyorSpeed) {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
   
     requires(Robot.conveyorSubsystem);
     this.conveyorSpeed=conveyorSpeed;
-    this.conveyorState=conveyorState;
   }
 
   // Called just before this Command runs the first time
@@ -33,7 +31,6 @@ public class ConveyorCommand extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.conveyorSubsystem.tiltConveyor(conveyorState);
     Robot.conveyorSubsystem.runConveyor(conveyorSpeed);
     
 
