@@ -15,8 +15,8 @@ public class ConveyorGroup extends CommandGroup {
    * Add your docs here.
    */
   public ConveyorGroup() {
-    addSequential(new ConveyorCommand(0,true));
-    addSequential(new ConveyorCommand(0.5,true));
+    // addSequential(new ConveyorCommand(0,true));
+    // addSequential(new ConveyorCommand(0.5,true));
     
     // Add Commands here:
     // e.g. addSequential(new Command1());
