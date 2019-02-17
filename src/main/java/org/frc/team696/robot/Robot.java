@@ -7,7 +7,12 @@
 
 package org.frc.team696.robot;
 
+<<<<<<< HEAD
 
+=======
+import org.frc.team696.robot.commands.ConveyorCommand;
+import org.frc.team696.robot.commands.ConveyorTiltCommand;
+>>>>>>> PracticeBotConveyor
 import org.frc.team696.robot.subsystems.ConveyorSubsystem;
 
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -112,6 +117,7 @@ public class Robot extends TimedRobot {
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
 
+<<<<<<< HEAD
     // OI.conveyorButton.toggleWhenPressed(new ConveyorTiltCommand(true));
     // OI.conveyorButton.toggleWhenPressed(new ConveyorTiltCommand(false));
 
@@ -123,6 +129,16 @@ public class Robot extends TimedRobot {
     if(OI.xboxController.getRawButton(2)){
         conveyorSubsystem.runConveyor(0.5);
     }
+=======
+    OI.conveyorButton.toggleWhenPressed(new ConveyorTiltCommand(true));
+    OI.conveyorButton.toggleWhenPressed(new ConveyorTiltCommand(false));
+
+    OI.button1.whenPressed(new ConveyorCommand(0.5));
+    OI.button1.whenReleased(new ConveyorCommand(0));
+
+    OI.button4.whenPressed(new ConveyorCommand(0.5));
+    OI.button4.whenReleased(new ConveyorCommand(0));
+>>>>>>> PracticeBotConveyor
 
     }
 
