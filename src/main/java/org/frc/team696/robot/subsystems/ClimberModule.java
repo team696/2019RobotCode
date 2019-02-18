@@ -21,15 +21,15 @@ public class ClimberModule extends Subsystem{
   public boolean isInitialized = false;
   public boolean positionControlGood = false;
 
-  private static final int freePidSlot = 0;
-  private static final int climbingPidSlot = 1;
+  public static final int freePidSlot = 0;
+  public static final int climbingPidSlot = 1;
 
   private static final double encoderTicksPerRev = 4096.0*3.0;
 
-  private static final double freePidkP = 0.5;
-  private static final double climbingPidkP = 1.0;
-  private static final double freeMaxOutput = 0.6;
-  private static final double climbingMaxOutput = 1.0; 
+  private static final double freePidkP = 0.6;
+  private static final double climbingPidkP = 0.8;
+  private static final double freeMaxOutput = 1.0;
+  private static final double climbingMaxOutput = 0.5; 
 
   public ClimberModule(String name){
     super(name);
@@ -54,7 +54,7 @@ public class ClimberModule extends Subsystem{
     this.talon.config_kP(climbingPidSlot, climbingPidkP);
     this.talon.config_kI(climbingPidSlot, 0.0);
     this.talon.config_kD(climbingPidSlot, 0.0);
-    this.talon.config_kF(climbingPidSlot, 0.0);
+    this.talon.config_kF(climbingPidSlot, 0.15);
     this.talon.configClosedLoopPeakOutput(climbingPidSlot, climbingMaxOutput);
 
     this.talon.configPeakOutputForward(1);
@@ -102,7 +102,7 @@ public class ClimberModule extends Subsystem{
   }
 
   public double getCorrectedPositionError(){
-    return (double)(this.talon.getClosedLoopError()/encoderTicksPerRev);
+    return nativeUnitsToRevolutions(this.talon.getClosedLoopError());
   }
 
   public void turnOff(){
@@ -121,8 +121,12 @@ public class ClimberModule extends Subsystem{
     return this.talon.getSensorCollection().isRevLimitSwitchClosed();
   }
 
+  public double nativeUnitsToRevolutions(int encoderTicks){
+    return ((double)encoderTicks)/encoderTicksPerRev;
+  }
+
   public double getCorrectedPosition(){
-    return (double)(this.talon.getSelectedSensorPosition()/encoderTicksPerRev);
+    return nativeUnitsToRevolutions(this.talon.getSelectedSensorPosition());
   }
 
   public int convertSetpoint(double revs){

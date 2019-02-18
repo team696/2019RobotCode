@@ -127,9 +127,9 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
-        Climber.leftPusher.set(ControlMode.PercentOutput, OI.operatorPanel.getRawAxis(3));
-        Climber.rightPusher.set(ControlMode.PercentOutput, OI.operatorPanel.getRawAxis(3));
-        System.out.println(OI.operatorPanel.getRawAxis(3));
+        Climber.leftPusher.set(ControlMode.PercentOutput, -OI.operatorPanel.getRawAxis(3));
+        Climber.rightPusher.set(ControlMode.PercentOutput, -OI.operatorPanel.getRawAxis(3));
+        //System.out.println(OI.operatorPanel.getRawAxis(3));
     }
 
     /**
@@ -145,7 +145,7 @@ public class Robot extends TimedRobot {
         //System.out.println("Climber position:" + this.testModule.getCorrectedPosition());
         climber.climberPeriodic();
         //System.out.println(Climber.fr.getName() + " is at "+Climber.fr.getCorrectedPosition());
-        //System.out.println(Climber.fr.getName() + " is outputting "+Climber.fr.talon.getMotorOutputPercent());
+        //System.out.println(Climber.rl.getName() + " is outputting "+Climber.fr.talon.getMotorOutputPercent());
 
     }
 }

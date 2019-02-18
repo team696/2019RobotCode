@@ -8,13 +8,14 @@
 package org.frc.team696.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
-import org.frc.team696.robot.OI;
 import org.frc.team696.robot.Robot;
-import org.frc.team696.robot.states.ClimberState;
 import org.frc.team696.robot.subsystems.Climber;
+import org.frc.team696.robot.states.ClimberState;
 
-public class ClimberIdle extends Command {
-  public ClimberIdle() {
+public class ClimberAutoclimb extends Command {
+  private boolean finished;
+
+  public ClimberAutoclimb() {
     // Use requires() here to declare subsystem dependencies
     requires(Robot.climber);
   }
@@ -22,23 +23,43 @@ public class ClimberIdle extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    this.finished = false;
+    if(Robot.climber.getState() != ClimberState.ARMED){
+      //Climber must be armed before climbing
+      this.finished = true;
+    }
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    //If position control is working, servo to stowed position
-    if(!OI.climberManualSwitch.get() && Robot.climber.getPositionControlGood()){
-      if(Robot.climber.getState() == ClimberState.STOWED){
-        Robot.climber.moveIndividual(0.0);
-      }
-      if((Robot.climber.getState() == ClimberState.MOVE_TO_ARMED) || (Robot.climber.getState() == ClimberState.ARMED)){
-        Robot.climber.moveIndividual(Climber.frontStagedPosition, Climber.frontStagedPosition, Climber.rearStagedPosition, Climber.rearStagedPosition);
-      }
-    }
-    else{
-      //Closed-loop nonoperative, just turn off motors
-      Robot.climber.turnOff();
+    switch(Robot.climber.getState()){
+      case ARMED:
+        Robot.climber.setState(ClimberState.CLIMBING);
+        break;
+      case CLIMBING:
+        if(Robot.climber.getMaximumPositionError() < Climber.atHeightError){
+          Robot.climber.setState(ClimberState.AT_HEIGHT);
+        }
+        break;
+      case AT_HEIGHT:
+        Robot.climber.setPusherPower(Climber.pusherPower);
+        if(!Robot.climber.frontWOW()){
+          //If no weight on front wheels, retract
+          Robot.climber.setState(ClimberState.FRONT_ON_PLATFORM);
+          Robot.climber.stowFront();
+        }
+        break;
+      case FRONT_ON_PLATFORM:
+        Robot.climber.stowFront();
+        if(!Robot.climber.rearWOW()){
+          Robot.climber.moveIndividual(0);
+          Robot.climber.setState(ClimberState.STOWED);
+        }
+        break;
+      default:
+        this.finished = true;
+        break;
     }
 
   }
@@ -46,7 +67,7 @@ public class ClimberIdle extends Command {
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return false;
+    return finished;
   }
 
   // Called once after isFinished returns true

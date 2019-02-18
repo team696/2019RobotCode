@@ -8,15 +8,17 @@
 package org.frc.team696.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
+
 import org.frc.team696.robot.OI;
 import org.frc.team696.robot.Robot;
-import org.frc.team696.robot.states.ClimberState;
 import org.frc.team696.robot.subsystems.Climber;
+import org.frc.team696.robot.subsystems.ClimberModule;
 
-public class ClimberIdle extends Command {
-  public ClimberIdle() {
-    // Use requires() here to declare subsystem dependencies
+public class ClimberSemiAuto extends Command {
+  public ClimberSemiAuto() {
     requires(Robot.climber);
+    // Use requires() here to declare subsystem dependencies
+    // eg. requires(chassis);
   }
 
   // Called just before this Command runs the first time
@@ -27,20 +29,9 @@ public class ClimberIdle extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    //If position control is working, servo to stowed position
-    if(!OI.climberManualSwitch.get() && Robot.climber.getPositionControlGood()){
-      if(Robot.climber.getState() == ClimberState.STOWED){
-        Robot.climber.moveIndividual(0.0);
-      }
-      if((Robot.climber.getState() == ClimberState.MOVE_TO_ARMED) || (Robot.climber.getState() == ClimberState.ARMED)){
-        Robot.climber.moveIndividual(Climber.frontStagedPosition, Climber.frontStagedPosition, Climber.rearStagedPosition, Climber.rearStagedPosition);
-      }
-    }
-    else{
-      //Closed-loop nonoperative, just turn off motors
-      Robot.climber.turnOff();
-    }
-
+    double frontPos = OI.operatorPanel.getRawAxis(1)/2.0;
+    double rearPos = OI.operatorPanel.getRawAxis(3)/2.0;
+    Robot.climber.moveIndividual(ClimberModule.climbingPidSlot, frontPos, frontPos, rearPos, rearPos);
   }
 
   // Make this return true when this Command no longer needs to run execute()
