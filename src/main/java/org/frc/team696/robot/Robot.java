@@ -7,6 +7,7 @@
 
 package org.frc.team696.robot;
 
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -31,6 +32,8 @@ public class Robot extends TimedRobot {
     private Command autonomousCommand;
     private SendableChooser<Command> chooser = new SendableChooser<>();
 
+    public Compressor comp = new Compressor();
+
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
@@ -41,6 +44,7 @@ public class Robot extends TimedRobot {
         chooser.addDefault("Default Auto", new ExampleCommand());
         // chooser.addObject("My Auto", new MyAutoCommand());
         SmartDashboard.putData("Auto mode", chooser);
+
     }
 
     /**
@@ -103,6 +107,7 @@ public class Robot extends TimedRobot {
         if (autonomousCommand != null) {
             autonomousCommand.cancel();
         }
+
     }
 
     /**
@@ -110,7 +115,16 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void teleopPeriodic() {
+        
+
         Scheduler.getInstance().run();
+
+
+        if(!comp.enabled()){
+            comp.start();
+            System.out.println("hello hopst");
+        }
+        System.out.println(comp.enabled());
     }
 
     /**
