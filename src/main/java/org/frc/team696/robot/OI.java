@@ -7,11 +7,46 @@
 
 package org.frc.team696.robot;
 
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.buttons.Button;
+import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import org.frc.team696.robot.commands.ClimberManualControl;
+import org.frc.team696.robot.commands.ClimberTest;
+import org.frc.team696.robot.states.ClimberState;
+import org.frc.team696.robot.commands.ClimberModuleTest;
+import org.frc.team696.robot.commands.ClimberSetState;
+import org.frc.team696.robot.commands.ClimberDumbClimb;
+import org.frc.team696.robot.commands.ClimberSemiAuto;
+import org.frc.team696.robot.commands.ClimberInit;
+import org.frc.team696.robot.Robot;
+
 /**
  * This class is the glue that binds the controls on the physical operator
  * interface to the commands and command groups that allow control of the robot.
  */
 public class OI {
+    public static Joystick operatorPanel = new Joystick(0);
+    public static Button climberManualSwitch = new JoystickButton(operatorPanel, 5);
+    public static Button climberModuleTest = new JoystickButton(operatorPanel, 1);
+    public static Button climberStage = new JoystickButton(operatorPanel, 7);
+    public static Button dumbClimb = new JoystickButton(operatorPanel, 8);
+    //public static Button semiAutoClimb = new JoystickButton(operatorPanel, 6);
+    public static Button reinit = new JoystickButton(operatorPanel, 2);
+
+    public OI(){
+        //climberManualSwitch.whileHeld(new ClimberManualControl());
+        climberModuleTest.whenPressed(new ClimberTest());
+        climberManualSwitch.whileHeld(new ClimberManualControl());
+        climberStage.whenPressed(new ClimberSetState(ClimberState.MOVE_TO_ARMED));
+        climberStage.whenReleased(new ClimberSetState(ClimberState.STOWED));
+        dumbClimb.whileHeld(new ClimberDumbClimb());
+        //semiAutoClimb.whileHeld(new ClimberSemiAuto());
+        reinit.whenPressed(new ClimberInit());
+    }
+
+    public static double getClimberManual(){
+        return operatorPanel.getRawAxis(1);
+    }
     // CREATING BUTTONS
     // One type of button is a joystick button which is any button on a
     // joystick.
