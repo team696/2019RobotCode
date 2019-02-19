@@ -7,14 +7,12 @@
 
 package org.frc.team696.robot;
 
-<<<<<<< HEAD
-
-=======
 import org.frc.team696.robot.commands.ConveyorCommand;
-import org.frc.team696.robot.commands.ConveyorTiltCommand;
->>>>>>> PracticeBotConveyor
 import org.frc.team696.robot.subsystems.ConveyorSubsystem;
+import org.frc.team696.robot.subsystems.ConveyorSubsystem.ConveyorPos;
 
+import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -32,11 +30,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Robot extends TimedRobot {
 
     public static OI oi;
-    public static ConveyorSubsystem conveyorSubsystem = new ConveyorSubsystem(RobotMap.topConveyorMotorPort, RobotMap.bottomConveyorMotorPort, RobotMap.conveyorSolPort);
-
+    public static ConveyorSubsystem conveyorSubsystem = new ConveyorSubsystem(RobotMap.topConveyorMotorPort, RobotMap.bottomConveyorMotorPort, RobotMap.conveyorSolPortTop, RobotMap.conveyorSolPortBottom);
     private Command autonomousCommand;
     private SendableChooser<Command> chooser = new SendableChooser<>();
 
+    public static int conveyorTiltCase; 
+
+    public Compressor comp = new Compressor(17);
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
@@ -46,6 +46,7 @@ public class Robot extends TimedRobot {
         oi = new OI();
         // chooser.addObject("My Auto", new MyAutoCommand());
         SmartDashboard.putData("Auto mode", chooser);
+        comp.start();
     }
 
     /**
@@ -117,29 +118,24 @@ public class Robot extends TimedRobot {
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
 
-<<<<<<< HEAD
     // OI.conveyorButton.toggleWhenPressed(new ConveyorTiltCommand(true));
     // OI.conveyorButton.toggleWhenPressed(new ConveyorTiltCommand(false));
 
     // OI.button1.whenPressed(new ConveyorCommand(0.5));
     // OI.button1.whenReleased(new ConveyorCommand(0));
 
-    // OI.button4.whenPressed(new ConveyorCommand(0.5));
-    // OI.button4.whenReleased(new ConveyorCommand(0));
-    if(OI.xboxController.getRawButton(2)){
-        conveyorSubsystem.runConveyor(0.5);
-    }
-=======
-    OI.conveyorButton.toggleWhenPressed(new ConveyorTiltCommand(true));
-    OI.conveyorButton.toggleWhenPressed(new ConveyorTiltCommand(false));
-
-    OI.button1.whenPressed(new ConveyorCommand(0.5));
-    OI.button1.whenReleased(new ConveyorCommand(0));
-
     OI.button4.whenPressed(new ConveyorCommand(0.5));
     OI.button4.whenReleased(new ConveyorCommand(0));
->>>>>>> PracticeBotConveyor
-
+    
+    if(OI.xboxController.getRawButton(1)){
+        conveyorSubsystem.tiltConveyor(ConveyorPos.mid);
+    }
+    if(OI.xboxController.getRawButton(2)){
+        conveyorSubsystem.tiltConveyor(ConveyorPos.low);
+    }
+    if(OI.xboxController.getRawButton(3)){
+        conveyorSubsystem.tiltConveyor(ConveyorPos.high);
+    }
     }
 
     /**

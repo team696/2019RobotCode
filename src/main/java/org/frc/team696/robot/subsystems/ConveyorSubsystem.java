@@ -9,6 +9,8 @@ package org.frc.team696.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
+import org.frc.team696.robot.Robot;
+
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
@@ -21,12 +23,17 @@ public class ConveyorSubsystem extends Subsystem {
   // here. Call these from Commands.
   public  WPI_VictorSPX topConveyorMotor;
   public  WPI_VictorSPX bottomConveyorMotor;
-  public Solenoid conveyorTilt;
-  
-public ConveyorSubsystem(int topConveyorMotorPort, int botomConveyorMotorPort, int conveyorSolPort){
+  public Solenoid conveyorTiltTop;
+  public Solenoid conveyorTiltBottom;
+  public static enum ConveyorPos {
+    high, mid, low
+  }  
+
+public ConveyorSubsystem(int topConveyorMotorPort, int botomConveyorMotorPort, int conveyorSolPortTop, int conveyorSolPortBottom){
   topConveyorMotor = new WPI_VictorSPX(topConveyorMotorPort);
   bottomConveyorMotor = new WPI_VictorSPX(botomConveyorMotorPort);
-  conveyorTilt = new Solenoid(conveyorSolPort);
+  conveyorTiltTop = new Solenoid(17, conveyorSolPortTop);
+  conveyorTiltBottom = new Solenoid(17, conveyorSolPortBottom);
 }
 
 public void runConveyor(double conveyorSpeed){
@@ -34,8 +41,29 @@ public void runConveyor(double conveyorSpeed){
   bottomConveyorMotor.set(-conveyorSpeed);
 
 }
-public void tiltConveyor(boolean conveyorState){
-  conveyorTilt.set(conveyorState);
+public void tiltConveyor(ConveyorPos conveyorPos){
+  //case 1 both disabled
+  //case 2 bottom enabled
+  //case 3 both enabled
+
+  switch(conveyorPos){
+    case mid:
+      conveyorTiltBottom.set(true);
+      conveyorTiltTop.set(false);
+    
+      break;
+    case low:
+      conveyorTiltBottom.set(true);
+      conveyorTiltTop.set(true);
+      break;
+    case high:
+      conveyorTiltBottom.set(false);
+      conveyorTiltTop.set(false);
+      break;
+    
+  }
+
+  
 } 
 
 

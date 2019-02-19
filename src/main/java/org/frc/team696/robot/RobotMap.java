@@ -16,7 +16,8 @@ package org.frc.team696.robot;
 public class RobotMap {
     public static int topConveyorMotorPort=5;
     public static int bottomConveyorMotorPort=10;
-    public static int conveyorSolPort;
+    public static int conveyorSolPortTop = 0;
+    public static int conveyorSolPortBottom = 1;
     // For example to map the left and right motors, you could define the
     // following variables to use with your drivetrain subsystem.
     // public static int leftMotor = 1;

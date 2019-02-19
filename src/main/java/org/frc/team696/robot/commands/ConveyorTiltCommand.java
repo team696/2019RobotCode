@@ -13,8 +13,8 @@ import edu.wpi.first.wpilibj.command.Command;
 
 public class ConveyorTiltCommand extends Command {
 
-  boolean conveyorTiltState;
-  public ConveyorTiltCommand(boolean conveyorTiltState) {
+  int conveyorTiltState;
+  public ConveyorTiltCommand(int conveyorTiltState) {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
     requires(Robot.conveyorSubsystem);
@@ -29,7 +29,7 @@ public class ConveyorTiltCommand extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.conveyorSubsystem.tiltConveyor(conveyorTiltState);
+    // Robot.conveyorSubsystem.tiltConveyor(conveyorTiltState);
   }
 
   // Make this return true when this Command no longer needs to run execute()
