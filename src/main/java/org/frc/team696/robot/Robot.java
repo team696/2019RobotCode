@@ -33,23 +33,26 @@ import org.frc.team696.robot.RobotMap;
  * creating this project, you must also update the build.properties file in the
  * project.
  */
-// If you rename or move this class, update the build.properties file in the project root
+// If you rename or move this class, update the build.properties file in the
+// project root
 public class Robot extends TimedRobot {
 
     public static final Climber climber = new Climber();
-    //public static final Climber climber = null;
-    //public ClimberModule testModule = new ClimberModule("Test Module");
+    // public static final Climber climber = null;
+    // public ClimberModule testModule = new ClimberModule("Test Module");
     public static OI oi;
-    public static ConveyorSubsystem conveyorSubsystem = new ConveyorSubsystem(RobotMap.topConveyorMotorPort, RobotMap.bottomConveyorMotorPort, RobotMap.conveyorSolPortTop, RobotMap.conveyorSolPortBottom);
+    public static ConveyorSubsystem conveyorSubsystem = new ConveyorSubsystem(RobotMap.topConveyorMotorPort,
+            RobotMap.bottomConveyorMotorPort, RobotMap.conveyorSolPortTop, RobotMap.conveyorSolPortBottom);
     private Command autonomousCommand;
     private SendableChooser<Command> chooser = new SendableChooser<>();
 
-    public static int conveyorTiltCase; 
+    public static int conveyorTiltCase;
 
     public Compressor comp = new Compressor(17);
+
     /**
-     * This function is run when the robot is first started up and should be
-     * used for any initialization code.
+     * This function is run when the robot is first started up and should be used
+     * for any initialization code.
      */
     @Override
     public void robotInit() {
@@ -61,9 +64,9 @@ public class Robot extends TimedRobot {
     }
 
     /**
-     * This function is called once each time the robot enters Disabled mode.
-     * You can use it to reset any subsystem information you want to clear when
-     * the robot is disabled.
+     * This function is called once each time the robot enters Disabled mode. You
+     * can use it to reset any subsystem information you want to clear when the
+     * robot is disabled.
      */
     @Override
     public void disabledInit() {
@@ -72,30 +75,31 @@ public class Robot extends TimedRobot {
     @Override
     public void disabledPeriodic() {
         Scheduler.getInstance().run();
-        //System.out.println(Climber.fr.getCorrectedPosition());
-        //Climber.fl.talon.setSensorPhase(false);
+        // System.out.println(Climber.fr.getCorrectedPosition());
+        // Climber.fl.talon.setSensorPhase(false);
     }
 
     /**
      * This autonomous (along with the chooser code above) shows how to select
-     * between different autonomous modes using the dashboard. The sendable
-     * chooser code works with the Java SmartDashboard. If you prefer the
-     * LabVIEW Dashboard, remove all of the chooser code and uncomment the
-     * getString code to get the auto name from the text box below the Gyro
+     * between different autonomous modes using the dashboard. The sendable chooser
+     * code works with the Java SmartDashboard. If you prefer the LabVIEW Dashboard,
+     * remove all of the chooser code and uncomment the getString code to get the
+     * auto name from the text box below the Gyro
      *
-     * <p>You can add additional auto modes by adding additional commands to the
-     * chooser code above (like the commented example) or additional comparisons
-     * to the switch structure below with additional strings & commands.
+     * <p>
+     * You can add additional auto modes by adding additional commands to the
+     * chooser code above (like the commented example) or additional comparisons to
+     * the switch structure below with additional strings & commands.
      */
     @Override
     public void autonomousInit() {
         autonomousCommand = chooser.getSelected();
 
         /*
-         * String autoSelected = SmartDashboard.getString("Auto Selector",
-         * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand
-         * = new MyAutoCommand(); break; case "Default Auto": default:
-         * autonomousCommand = new ExampleCommand(); break; }
+         * String autoSelected = SmartDashboard.getString("Auto Selector", "Default");
+         * switch(autoSelected) { case "My Auto": autonomousCommand = new
+         * MyAutoCommand(); break; case "Default Auto": default: autonomousCommand = new
+         * ExampleCommand(); break; }
          */
 
         // schedule the autonomous command (example)
@@ -129,29 +133,27 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void teleopPeriodic() {
-        
 
         Scheduler.getInstance().run();
-        Climber.leftPusher.set(ControlMode.PercentOutput, -OI.operatorPanel.getRawAxis(3));
-        Climber.rightPusher.set(ControlMode.PercentOutput, -OI.operatorPanel.getRawAxis(3));
-        //System.out.println(OI.operatorPanel.getRawAxis(3));
-        if(!comp.enabled()){
+        //Climber.leftPusher.set(ControlMode.PercentOutput, -OI.operatorPanel.getRawAxis(3));
+        //Climber.rightPusher.set(ControlMode.PercentOutput, -OI.operatorPanel.getRawAxis(3));
+        // System.out.println(OI.operatorPanel.getRawAxis(3));
+        if (!comp.enabled()) {
             comp.start();
             System.out.println("hello hopst");
         }
-        System.out.println(comp.enabled());
-    OI.button4.whenPressed(new ConveyorCommand(0.5));
-    OI.button4.whenReleased(new ConveyorCommand(0));
-    
-    if(OI.xboxController.getRawButton(1)){
-        conveyorSubsystem.tiltConveyor(ConveyorPos.mid);
-    }
-    if(OI.xboxController.getRawButton(2)){
-        conveyorSubsystem.tiltConveyor(ConveyorPos.low);
-    }
-    if(OI.xboxController.getRawButton(3)){
-        conveyorSubsystem.tiltConveyor(ConveyorPos.high);
-    }
+        //System.out.println(comp.enabled());
+        
+
+        if (OI.xboxController.getRawButton(1)) {
+            conveyorSubsystem.tiltConveyor(ConveyorPos.mid);
+        }
+        if (OI.xboxController.getRawButton(2)) {
+            conveyorSubsystem.tiltConveyor(ConveyorPos.low);
+        }
+        if (OI.xboxController.getRawButton(3)) {
+            conveyorSubsystem.tiltConveyor(ConveyorPos.high);
+        }
     }
 
     /**
@@ -159,15 +161,18 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void testPeriodic() {
-        
+
     }
 
     @Override
-    public void robotPeriodic(){
-        //System.out.println("Climber position:" + this.testModule.getCorrectedPosition());
+    public void robotPeriodic() {
+        // System.out.println("Climber position:" +
+        // this.testModule.getCorrectedPosition());
         climber.climberPeriodic();
-        //System.out.println(Climber.fr.getName() + " is at "+Climber.fr.getCorrectedPosition());
-        //System.out.println(Climber.rl.getName() + " is outputting "+Climber.fr.talon.getMotorOutputPercent());
+        // System.out.println(Climber.fr.getName() + " is at
+        // "+Climber.fr.getCorrectedPosition());
+        // System.out.println(Climber.rl.getName() + " is outputting
+        // "+Climber.fr.talon.getMotorOutputPercent());
 
     }
 }

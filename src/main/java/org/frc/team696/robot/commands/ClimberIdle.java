@@ -28,7 +28,7 @@ public class ClimberIdle extends Command {
   @Override
   protected void execute() {
     //If position control is working, servo to stowed position
-    if(!OI.climberManualSwitch.get() && Robot.climber.getPositionControlGood()){
+    if(Robot.climber.getPositionControlGood()){
       if(Robot.climber.getState() == ClimberState.STOWED){
         Robot.climber.moveIndividual(0.0);
       }

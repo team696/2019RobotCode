@@ -243,7 +243,7 @@ public class Climber extends Subsystem {
     ntrlpercent.setDouble(rl.talon.getMotorOutputPercent());
     ntrrpercent.setDouble(rr.talon.getMotorOutputPercent());
 
-    if ( !OI.climberManualSwitch.get() &&  getPositionControlGood()) {
+    if ( getPositionControlGood()) {
       // Service climber state
       switch (state) {
       case UNINITIALIZED:
@@ -283,9 +283,7 @@ public class Climber extends Subsystem {
       }
     }
     else{
-      if(!OI.climberManualSwitch.get()){
         turnOff();
-      }
     }
   }
 
