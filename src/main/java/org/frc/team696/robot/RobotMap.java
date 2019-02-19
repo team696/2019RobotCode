@@ -48,6 +48,16 @@ public class RobotMap {
     public static int bottomConveyorMotorPort=10;
     public static int conveyorSolPortTop = 0;
     public static int conveyorSolPortBottom = 1;
+    
+    //Drivetrain parameters
+    public static int leftFrontPort = 2;
+    public static int leftMidPort = 3;
+    public static int leftRearPort = 4;
+
+    public static int rightRearPort = 11;
+    public static int rightMidPort = 12;
+    public static int rightFrontPort = 13;
+
 
     
 }

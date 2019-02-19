@@ -11,5 +11,8 @@ package org.frc.team696.robot;
  * Add your docs here.
  */
 public class Constants {
-  public static int xboxPort = 0;
+    public static int xboxPort = 0;
+
+    public static int stickAxisPort = 1;
+    public static int turnAxisPort = 4;
 }

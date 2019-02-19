@@ -9,6 +9,7 @@ package org.frc.team696.robot;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.Compressor;
+import org.frc.team696.robot.subsystems.DriveTrainSubsystem;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
 import org.frc.team696.robot.commands.ConveyorCommand;
@@ -43,12 +44,20 @@ public class Robot extends TimedRobot {
     public static OI oi;
     public static ConveyorSubsystem conveyorSubsystem = new ConveyorSubsystem(RobotMap.topConveyorMotorPort,
             RobotMap.bottomConveyorMotorPort, RobotMap.conveyorSolPortTop, RobotMap.conveyorSolPortBottom);
+    public DriveTrainSubsystem driveTrainSubsystem = new DriveTrainSubsystem(RobotMap.leftFrontPort, RobotMap.leftMidPort, RobotMap.leftRearPort, 
+                                                                             RobotMap.rightRearPort, RobotMap.rightMidPort, RobotMap.rightFrontPort);
     private Command autonomousCommand;
     private SendableChooser<Command> chooser = new SendableChooser<>();
 
     public static int conveyorTiltCase;
 
     public Compressor comp = new Compressor(17);
+    
+    public double stick;
+    public double wheel;
+
+    public double leftSpeed;
+    public double rightSpeed;
 
     /**
      * This function is run when the robot is first started up and should be used
@@ -142,6 +151,23 @@ public class Robot extends TimedRobot {
             comp.start();
             System.out.println("hello hopst");
         }
+        stick = OI.xboxController.getRawAxis(Constants.stickAxisPort);
+        wheel = OI.xboxController.getRawAxis(Constants.turnAxisPort);
+
+        if(Math.abs(wheel)<=0.03&&Math.abs(wheel)>=0){
+            wheel=0;
+        }
+        System.out.println(wheel);
+        leftSpeed = stick + wheel;
+        rightSpeed = stick - wheel;
+        
+
+        driveTrainSubsystem.runDrive(leftSpeed, rightSpeed);
+        // if(OI.xboxController.getRawButton(1)){
+        //     driveTrainSubsystem.leftRear.set(0.3);
+        //     driveTrainSubsystem.rightRear.set(0.3);
+        // }
+        
         //System.out.println(comp.enabled());
         
 
@@ -154,6 +180,7 @@ public class Robot extends TimedRobot {
         if (OI.xboxController.getRawButton(3)) {
             conveyorSubsystem.tiltConveyor(ConveyorPos.high);
         }
+        
     }
 
     /**
