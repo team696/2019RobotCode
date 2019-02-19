@@ -25,6 +25,11 @@ import org.frc.team696.robot.Robot;
  * interface to the commands and command groups that allow control of the robot.
  */
 public class OI {
+    public static Joystick xboxController = new Joystick(0);
+    public static Button conveyorButton = new JoystickButton(xboxController, 2);
+    public static Button button1 = new JoystickButton(xboxController, 1);
+    public static Button button4 = new JoystickButton(xboxController, 4);
+
     public static Joystick operatorPanel = new Joystick(0);
     public static Button climberManualSwitch = new JoystickButton(operatorPanel, 5);
     public static Button climberModuleTest = new JoystickButton(operatorPanel, 1);

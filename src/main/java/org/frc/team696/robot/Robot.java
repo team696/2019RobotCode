@@ -11,16 +11,19 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.Compressor;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
+import org.frc.team696.robot.commands.ConveyorCommand;
+import org.frc.team696.robot.subsystems.ConveyorSubsystem;
+import org.frc.team696.robot.subsystems.ConveyorSubsystem.ConveyorPos;
+
 import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.frc.team696.robot.commands.ExampleCommand;
 import org.frc.team696.robot.subsystems.Climber;
 import org.frc.team696.robot.subsystems.ClimberModule;
-import org.frc.team696.robot.subsystems.ExampleSubsystem;
 import org.frc.team696.robot.RobotMap;
 
 /**
@@ -33,16 +36,17 @@ import org.frc.team696.robot.RobotMap;
 // If you rename or move this class, update the build.properties file in the project root
 public class Robot extends TimedRobot {
 
-    public static final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
     public static final Climber climber = new Climber();
     //public static final Climber climber = null;
     //public ClimberModule testModule = new ClimberModule("Test Module");
     public static OI oi;
+    public static ConveyorSubsystem conveyorSubsystem = new ConveyorSubsystem(RobotMap.topConveyorMotorPort, RobotMap.bottomConveyorMotorPort, RobotMap.conveyorSolPortTop, RobotMap.conveyorSolPortBottom);
     private Command autonomousCommand;
     private SendableChooser<Command> chooser = new SendableChooser<>();
 
-    public Compressor comp = new Compressor();
+    public static int conveyorTiltCase; 
 
+    public Compressor comp = new Compressor(17);
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
@@ -50,14 +54,9 @@ public class Robot extends TimedRobot {
     @Override
     public void robotInit() {
         oi = new OI();
-        chooser.addDefault("Default Auto", new ExampleCommand());
         // chooser.addObject("My Auto", new MyAutoCommand());
         SmartDashboard.putData("Auto mode", chooser);
-        //this.testModule.setTalon(testTalon);
-        //this.testModule.setInverted(RobotMap.flClimberModuleInverted);
-        //this.testModule.setSensorPhase(RobotMap.flClimberModuleSensorPhase);
-        //this.singlemodule.setTalon(fl);
-        //this.singlemodule.initialize();
+        comp.start();
         Climber.initialize();
     }
 
@@ -141,6 +140,18 @@ public class Robot extends TimedRobot {
             System.out.println("hello hopst");
         }
         System.out.println(comp.enabled());
+    OI.button4.whenPressed(new ConveyorCommand(0.5));
+    OI.button4.whenReleased(new ConveyorCommand(0));
+    
+    if(OI.xboxController.getRawButton(1)){
+        conveyorSubsystem.tiltConveyor(ConveyorPos.mid);
+    }
+    if(OI.xboxController.getRawButton(2)){
+        conveyorSubsystem.tiltConveyor(ConveyorPos.low);
+    }
+    if(OI.xboxController.getRawButton(3)){
+        conveyorSubsystem.tiltConveyor(ConveyorPos.high);
+    }
     }
 
     /**

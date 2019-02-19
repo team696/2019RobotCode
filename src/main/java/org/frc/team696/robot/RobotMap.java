@@ -42,6 +42,12 @@ public class RobotMap {
     //Right pusher
     public static final int rightPusherTalon = 9;
     public static final boolean rightPusherInvert = true;
+    
+    //Conveyor parameters
+    public static int topConveyorMotorPort=5;
+    public static int bottomConveyorMotorPort=10;
+    public static int conveyorSolPortTop = 0;
+    public static int conveyorSolPortBottom = 1;
 
     
 }
