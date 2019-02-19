@@ -45,10 +45,11 @@ public class OI {
         //climberManualSwitch.whileHeld(new ClimberManualControl());
         //climberStage.whenPressed(new ClimberSetState(ClimberState.MOVE_TO_ARMED));
         //climberStage.whenReleased(new ClimberSetState(ClimberState.STOWED));
-        dumbClimb.whileHeld(new ClimberDumbClimb());
+        dumbClimb.whenPressed(new ClimberSetState(ClimberState.CLIMBING));
+        dumbClimb.whenReleased(new ClimberSetState(ClimberState.STOWED));
         //semiAutoClimb.whileHeld(new ClimberSemiAuto());
         //reinit.whenPressed(new ClimberInit());
-        OI.button4.whenPressed(new ConveyorCommand(0.5));
+        OI.button4.whenPressed(new ConveyorCommand(1));
         OI.button4.whenReleased(new ConveyorCommand(0));
     }
 

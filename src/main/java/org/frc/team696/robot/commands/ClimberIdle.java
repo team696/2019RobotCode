@@ -30,10 +30,10 @@ public class ClimberIdle extends Command {
     //If position control is working, servo to stowed position
     if(Robot.climber.getPositionControlGood()){
       if(Robot.climber.getState() == ClimberState.STOWED){
-        Robot.climber.moveIndividual(0.0);
+        //Robot.climber.moveIndividual(0.0);
       }
       if((Robot.climber.getState() == ClimberState.MOVE_TO_ARMED) || (Robot.climber.getState() == ClimberState.ARMED)){
-        Robot.climber.moveIndividual(Climber.frontStagedPosition, Climber.frontStagedPosition, Climber.rearStagedPosition, Climber.rearStagedPosition);
+        //Robot.climber.moveIndividual(Climber.frontStagedPosition, Climber.frontStagedPosition, Climber.rearStagedPosition, Climber.rearStagedPosition);
       }
     }
     else{
