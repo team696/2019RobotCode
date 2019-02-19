@@ -8,6 +8,7 @@
 package org.frc.team696.robot;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import edu.wpi.first.wpilibj.Compressor;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
 import edu.wpi.first.wpilibj.Talon;
@@ -39,6 +40,8 @@ public class Robot extends TimedRobot {
     public static OI oi;
     private Command autonomousCommand;
     private SendableChooser<Command> chooser = new SendableChooser<>();
+
+    public Compressor comp = new Compressor();
 
     /**
      * This function is run when the robot is first started up and should be
@@ -119,6 +122,7 @@ public class Robot extends TimedRobot {
         if (autonomousCommand != null) {
             autonomousCommand.cancel();
         }
+
     }
 
     /**
@@ -126,10 +130,17 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void teleopPeriodic() {
+        
+
         Scheduler.getInstance().run();
         Climber.leftPusher.set(ControlMode.PercentOutput, -OI.operatorPanel.getRawAxis(3));
         Climber.rightPusher.set(ControlMode.PercentOutput, -OI.operatorPanel.getRawAxis(3));
         //System.out.println(OI.operatorPanel.getRawAxis(3));
+        if(!comp.enabled()){
+            comp.start();
+            System.out.println("hello hopst");
+        }
+        System.out.println(comp.enabled());
     }
 
     /**
