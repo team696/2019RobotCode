@@ -44,7 +44,7 @@ public class Robot extends TimedRobot {
     public static OI oi;
     public static ConveyorSubsystem conveyorSubsystem = new ConveyorSubsystem(RobotMap.topConveyorMotorPort,
             RobotMap.bottomConveyorMotorPort, RobotMap.conveyorSolPortTop, RobotMap.conveyorSolPortBottom);
-    public DriveTrainSubsystem driveTrainSubsystem = new DriveTrainSubsystem(RobotMap.leftFrontPort, RobotMap.leftMidPort, RobotMap.leftRearPort, 
+    public static DriveTrainSubsystem driveTrainSubsystem = new DriveTrainSubsystem(RobotMap.leftFrontPort, RobotMap.leftMidPort, RobotMap.leftRearPort, 
                                                                              RobotMap.rightRearPort, RobotMap.rightMidPort, RobotMap.rightFrontPort);
     private Command autonomousCommand;
     private SendableChooser<Command> chooser = new SendableChooser<>();
@@ -157,6 +157,14 @@ public class Robot extends TimedRobot {
         if(Math.abs(wheel)<=0.03&&Math.abs(wheel)>=0){
             wheel=0;
         }
+
+        //anti tilt
+        if(stick>-stick&&stick>0){
+            leftSpeed-=0.05;
+            rightSpeed-=0.05;
+        } 
+
+
         System.out.println(wheel);
         leftSpeed = stick + wheel;
         rightSpeed = stick - wheel;
