@@ -22,8 +22,8 @@ public class RobotMap {
     
     //Front right
     public static final int frClimberTalon = 14;
-    public static final boolean frClimberModuleInverted = true;
-    public static final boolean frClimberModuleSensorPhase = false;
+    public static final boolean frClimberModuleInverted = false;
+    public static final boolean frClimberModuleSensorPhase = true;
 
     //Rear left
     public static final int rlClimberTalon = 7;

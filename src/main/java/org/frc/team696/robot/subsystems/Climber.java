@@ -42,9 +42,9 @@ public class Climber extends Subsystem {
   public static final double rearDumbClimbPos = 0.410;
 
   public static final double frontLeftClimbPosition = 0.385;
-  public static final double frontRightClimbPosition = 0.400;
+  public static final double frontRightClimbPosition = 0.415;
   public static final double rearLeftClimbPosition = 0.440;
-  public static final double rearRightClimbPosition = 0.440;
+  public static final double rearRightClimbPosition = 0.455;
 
   // Maximum position error to be considered "armed"
   public static final double armedError = 0.05;
@@ -53,7 +53,7 @@ public class Climber extends Subsystem {
   public static final double atHeightError = 0.05;
 
   // Percent output at which to run the pusher motors
-  public static final double pusherPower = 0.5;
+  public static final double pusherPower = 1;
 
   public static final double frontNWOWPower = 0.02;
   public static final double rearNWOWPower = 0.02;

@@ -31,7 +31,11 @@ public class ConveyorSubsystem extends Subsystem {
 
 public ConveyorSubsystem(int topConveyorMotorPort, int botomConveyorMotorPort, int conveyorSolPortTop, int conveyorSolPortBottom){
   topConveyorMotor = new WPI_VictorSPX(topConveyorMotorPort);
+  // topConveyorMotor.setInverted(true);
+
   bottomConveyorMotor = new WPI_VictorSPX(botomConveyorMotorPort);
+  // bottomConveyorMotor.setInverted(true);
+
   conveyorTiltTop = new Solenoid(17, conveyorSolPortTop);
   conveyorTiltBottom = new Solenoid(17, conveyorSolPortBottom);
 }
