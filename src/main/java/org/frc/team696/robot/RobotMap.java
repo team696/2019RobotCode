@@ -14,13 +14,50 @@ package org.frc.team696.robot;
  * floating around.
  */
 public class RobotMap {
-    // For example to map the left and right motors, you could define the
-    // following variables to use with your drivetrain subsystem.
-    // public static int leftMotor = 1;
-    // public static int rightMotor = 2;
+    //Climber parameters
+    //Front left
+    public static final int flClimberTalon = 1;
+    public static final boolean flClimberModuleInverted = true;
+    public static final boolean flClimberModuleSensorPhase = true;
+    
+    //Front right
+    public static final int frClimberTalon = 14;
+    public static final boolean frClimberModuleInverted = true;
+    public static final boolean frClimberModuleSensorPhase = false;
 
-    // If you are using multiple modules, make sure to define both the port
-    // number and the module. For example you with a rangefinder:
-    // public static int rangefinderPort = 1;
-    // public static int rangefinderModule = 1;
+    //Rear left
+    public static final int rlClimberTalon = 7;
+    public static final boolean rlClimberModuleInverted = false;
+    public static final boolean rlClimberModuleSensorPhase = true;
+
+    //Rear right
+    public static final int rrClimberTalon = 8;
+    public static final boolean rrClimberModuleInverted = true;
+    public static final boolean rrClimberModuleSensorPhase = true;
+
+    //Left pusher
+    public static final int leftPusherTalon = 6;
+    public static final boolean leftPusherInvert = false;
+
+    //Right pusher
+    public static final int rightPusherTalon = 9;
+    public static final boolean rightPusherInvert = true;
+    
+    //Conveyor parameters
+    public static int topConveyorMotorPort=5;
+    public static int bottomConveyorMotorPort=10;
+    public static int conveyorSolPortTop = 0;
+    public static int conveyorSolPortBottom = 1;
+    
+    //Drivetrain parameters
+    public static int leftFrontPort = 2;
+    public static int leftMidPort = 3;
+    public static int leftRearPort = 4;
+
+    public static int rightRearPort = 11;
+    public static int rightMidPort = 12;
+    public static int rightFrontPort = 13;
+
+
+    
 }
