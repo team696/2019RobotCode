@@ -12,9 +12,9 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.command.Subsystem;
-import org.frc.team696.robot.RobotMap;
+
 /**
- * Add your docs here.
+ * An individual climber module. 
  */
 public class ClimberModule extends Subsystem{
   public TalonSRX talon;
@@ -27,9 +27,16 @@ public class ClimberModule extends Subsystem{
   private static final double encoderTicksPerRev = 4096.0*3.0;
 
   private static final double freePidkP = 0.6;
+  private static final double freePidkI = 0.0;
+  private static final double freePidkD = 0.0;
+  private static final double freePidkF = 0.0;
+  private static final double freePidMaxOutput = 1.0;
+
   private static final double climbingPidkP = 0.8;
-  private static final double freeMaxOutput = 1.0;
-  private static final double climbingMaxOutput = 0.45; 
+  private static final double climbingPidkI = 0.0;
+  private static final double climbingPidkD = 0.0;
+  private static final double climbingPidkF = 0.15;
+  private static final double climbingPidMaxOutput = 0.45; 
 
   public ClimberModule(String name){
     super(name);
@@ -46,16 +53,16 @@ public class ClimberModule extends Subsystem{
     // Configure talon PID coefficients
     this.talon = talon;
     this.talon.config_kP(freePidSlot, freePidkP);
-    this.talon.config_kI(freePidSlot, 0.0);
-    this.talon.config_kD(freePidSlot, 0.0);
-    this.talon.config_kF(freePidSlot, 0.0);
-    this.talon.configClosedLoopPeakOutput(freePidSlot, freeMaxOutput);
+    this.talon.config_kI(freePidSlot, freePidkI);
+    this.talon.config_kD(freePidSlot, freePidkD);
+    this.talon.config_kF(freePidSlot, freePidkF);
+    this.talon.configClosedLoopPeakOutput(freePidSlot, freePidMaxOutput);
 
     this.talon.config_kP(climbingPidSlot, climbingPidkP);
-    this.talon.config_kI(climbingPidSlot, 0.0);
-    this.talon.config_kD(climbingPidSlot, 0.0);
-    this.talon.config_kF(climbingPidSlot, 0.15);
-    this.talon.configClosedLoopPeakOutput(climbingPidSlot, climbingMaxOutput);
+    this.talon.config_kI(climbingPidSlot, climbingPidkI);
+    this.talon.config_kD(climbingPidSlot, climbingPidkD);
+    this.talon.config_kF(climbingPidSlot, climbingPidkF);
+    this.talon.configClosedLoopPeakOutput(climbingPidSlot, climbingPidMaxOutput);
 
     this.talon.configPeakOutputForward(1);
     this.talon.configPeakOutputReverse(-1);
@@ -91,14 +98,19 @@ public class ClimberModule extends Subsystem{
     }
   }
 
-  public void moveToPosition(double position){
-    moveToPosition(position, freePidSlot);
-  }
-
+  /**
+   * Goes to a given position in position-control mode. 
+   * @param position Desired position, in revolutions
+   * @param pidSlot PID slot (in Talon) to use
+   */
   public void moveToPosition(double position, int pidSlot){
     //System.out.println("Climber "+this.getName()+" moving to "+position);
     this.talon.selectProfileSlot(pidSlot, 0);
     this.talon.set(ControlMode.Position, this.convertSetpoint(position));
+  }
+
+  public void moveToPosition(double position){
+    moveToPosition(position, freePidSlot);
   }
 
   public double getCorrectedPositionError(){
