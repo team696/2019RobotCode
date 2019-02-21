@@ -38,11 +38,13 @@ public class Climber extends Subsystem {
 
   // public static final double frontDumbClimbPos = 0.400;
   // public static final double rearDumbClimbPos = 0.320;
-  public static final double frontDumbClimbPos = 0.35;
-  public static final double rearDumbClimbPos = 0.28;
+  public static final double frontDumbClimbPos = 0.350;
+  public static final double rearDumbClimbPos = 0.410;
 
-  public static final double frontClimbPosition = 0.4;
-  public static final double rearClimbPosition = 0.320;
+  public static final double frontLeftClimbPosition = 0.385;
+  public static final double frontRightClimbPosition = 0.400;
+  public static final double rearLeftClimbPosition = 0.440;
+  public static final double rearRightClimbPosition = 0.440;
 
   // Maximum position error to be considered "armed"
   public static final double armedError = 0.05;
@@ -51,7 +53,7 @@ public class Climber extends Subsystem {
   public static final double atHeightError = 0.05;
 
   // Percent output at which to run the pusher motors
-  public static final double pusherPower = 0.4;
+  public static final double pusherPower = 0.5;
 
   public static final double frontNWOWPower = 0.02;
   public static final double rearNWOWPower = 0.02;
@@ -243,7 +245,7 @@ public class Climber extends Subsystem {
     ntrlpercent.setDouble(rl.talon.getMotorOutputPercent());
     ntrrpercent.setDouble(rr.talon.getMotorOutputPercent());
 
-    if ( !OI.climberManualSwitch.get() &&  getPositionControlGood()) {
+    if ( getPositionControlGood()) {
       // Service climber state
       switch (state) {
       case UNINITIALIZED:
@@ -259,13 +261,13 @@ public class Climber extends Subsystem {
         moveIndividual(frontStagedPosition, frontStagedPosition, rearStagedPosition, rearStagedPosition);
         break;
       case CLIMBING:
-        moveIndividual(frontClimbPosition, frontClimbPosition, rearClimbPosition, rearClimbPosition);
+        moveIndividual(frontLeftClimbPosition, frontRightClimbPosition, rearLeftClimbPosition, rearRightClimbPosition);
         if (getMaximumPositionError() < atHeightError) {
           setState(ClimberState.AT_HEIGHT);
         }
         break;
       case AT_HEIGHT:
-        moveIndividual(frontClimbPosition, frontClimbPosition, rearClimbPosition, rearClimbPosition);
+        moveIndividual(frontLeftClimbPosition, frontRightClimbPosition, rearLeftClimbPosition, rearRightClimbPosition);
         setPusherPower(pusherPower);
         if (!frontWOW()) {
           // If no weight on front wheels, retract
@@ -283,9 +285,7 @@ public class Climber extends Subsystem {
       }
     }
     else{
-      if(!OI.climberManualSwitch.get()){
         turnOff();
-      }
     }
   }
 

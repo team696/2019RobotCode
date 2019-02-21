@@ -7,39 +7,32 @@
 
 package org.frc.team696.robot.commands;
 
-import edu.wpi.first.wpilibj.command.Command;
-import org.frc.team696.robot.OI;
 import org.frc.team696.robot.Robot;
-import org.frc.team696.robot.states.ClimberState;
-import org.frc.team696.robot.subsystems.Climber;
 
-public class ClimberIdle extends Command {
-  public ClimberIdle() {
+import edu.wpi.first.wpilibj.command.Command;
+
+public class ConveyorCommand extends Command {
+  double conveyorSpeed;
+
+  public ConveyorCommand(double conveyorSpeed) {
     // Use requires() here to declare subsystem dependencies
-    requires(Robot.climber);
+    // eg. requires(chassis);
+  
+    requires(Robot.conveyorSubsystem);
+    this.conveyorSpeed=conveyorSpeed;
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    //If position control is working, servo to stowed position
-    if(Robot.climber.getPositionControlGood()){
-      if(Robot.climber.getState() == ClimberState.STOWED){
-        //Robot.climber.moveIndividual(0.0);
-      }
-      if((Robot.climber.getState() == ClimberState.MOVE_TO_ARMED) || (Robot.climber.getState() == ClimberState.ARMED)){
-        //Robot.climber.moveIndividual(Climber.frontStagedPosition, Climber.frontStagedPosition, Climber.rearStagedPosition, Climber.rearStagedPosition);
-      }
-    }
-    else{
-      //Closed-loop nonoperative, just turn off motors
-      Robot.climber.turnOff();
-    }
+    Robot.conveyorSubsystem.runConveyor(conveyorSpeed);
+    
 
   }
 
