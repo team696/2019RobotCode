@@ -10,16 +10,17 @@ package org.frc.team696.robot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
-import org.frc.team696.robot.commands.ClimberManualControl;
-import org.frc.team696.robot.commands.ClimberTest;
-import org.frc.team696.robot.states.ClimberState;
-import org.frc.team696.robot.commands.ClimberModuleTest;
-import org.frc.team696.robot.commands.ClimberSetState;
-import org.frc.team696.robot.commands.ClimberDumbClimb;
-import org.frc.team696.robot.commands.ClimberSemiAuto;
-import org.frc.team696.robot.commands.ClimberInit;
+
 import org.frc.team696.robot.Robot;
+import org.frc.team696.robot.commands.ClimberDumbClimb;
+import org.frc.team696.robot.commands.ClimberInit;
+import org.frc.team696.robot.commands.ClimberManualControl;
+import org.frc.team696.robot.commands.ClimberModuleTest;
+import org.frc.team696.robot.commands.ClimberSemiAuto;
+import org.frc.team696.robot.commands.ClimberSetState;
+import org.frc.team696.robot.commands.ClimberTest;
 import org.frc.team696.robot.commands.ConveyorCommand;
+import org.frc.team696.robot.states.ClimberState;
 
 /**
  * This class is the glue that binds the controls on the physical operator
