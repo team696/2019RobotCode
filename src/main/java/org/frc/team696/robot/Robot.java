@@ -59,6 +59,12 @@ public class Robot extends TimedRobot {
     public double leftSpeed;
     public double rightSpeed;
 
+    double a = 0.170641; // 0.286095    0.170641
+    double h = -0.258475; // -0.243151  -0.258475
+    double k = 0.364407; // -0.130137    0.364407
+
+    double speedTurnScale;
+
     /**
      * This function is run when the robot is first started up and should be used
      * for any initialization code.
@@ -147,12 +153,17 @@ public class Robot extends TimedRobot {
         Climber.leftPusher.set(ControlMode.PercentOutput, OI.xboxController.getRawAxis(3));
         Climber.rightPusher.set(ControlMode.PercentOutput, OI.xboxController.getRawAxis(3));
         // System.out.println(OI.operatorPanel.getRawAxis(3));
+
         if (!comp.enabled()) {
             comp.start();
             System.out.println("hello hopst");
         }
-        stick = OI.xboxController.getRawAxis(Constants.stickAxisPort);
-        wheel = OI.xboxController.getRawAxis(Constants.turnAxisPort);
+
+        stick = OI.xboxController.getRawAxis(0);
+        wheel = OI.wheel.getRawAxis(1);
+
+        speedTurnScale = a*(1/((stick*stick)-h))+k;
+
 
         if(Math.abs(wheel)<=0.03&&Math.abs(wheel)>=0){
             wheel=0;
@@ -166,8 +177,8 @@ public class Robot extends TimedRobot {
 
 
         System.out.println(wheel);
-        leftSpeed = stick + wheel;
-        rightSpeed = stick - wheel;
+        leftSpeed = stick - speedTurnScale*wheel;
+        rightSpeed = stick + speedTurnScale*wheel;
         
 
         driveTrainSubsystem.runDrive(leftSpeed, rightSpeed);

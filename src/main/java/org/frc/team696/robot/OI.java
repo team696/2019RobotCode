@@ -27,6 +27,7 @@ import org.frc.team696.robot.commands.ConveyorCommand;
  */
 public class OI {
     public static Joystick xboxController = new Joystick(0);
+    public static Joystick wheel = new Joystick(1);
 
     public static Button conveyorButton = new JoystickButton(xboxController, 2);
     public static Button button1 = new JoystickButton(xboxController, 1);
