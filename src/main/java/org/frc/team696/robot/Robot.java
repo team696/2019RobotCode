@@ -154,13 +154,8 @@ public class Robot extends TimedRobot {
         Climber.rightPusher.set(ControlMode.PercentOutput, OI.xboxController.getRawAxis(3));
         // System.out.println(OI.operatorPanel.getRawAxis(3));
 
-        if (!comp.enabled()) {
-            comp.start();
-            System.out.println("hello hopst");
-        }
-
-        stick = OI.xboxController.getRawAxis(0);
-        wheel = OI.wheel.getRawAxis(1);
+        wheel = OI.xboxController.getRawAxis(1);
+        stick = OI.wheel.getRawAxis(0);
 
         speedTurnScale = a*(1/((stick*stick)-h))+k;
 
@@ -169,16 +164,11 @@ public class Robot extends TimedRobot {
             wheel=0;
         }
 
-        //anti tilt
-        if(stick>-stick&&stick>0){
-            leftSpeed-=0.05;
-            rightSpeed-=0.05;
-        } 
 
 
         System.out.println(wheel);
-        leftSpeed = stick - speedTurnScale*wheel;
-        rightSpeed = stick + speedTurnScale*wheel;
+        leftSpeed = stick + wheel;
+        rightSpeed = stick - wheel;
         
 
         driveTrainSubsystem.runDrive(leftSpeed, rightSpeed);
