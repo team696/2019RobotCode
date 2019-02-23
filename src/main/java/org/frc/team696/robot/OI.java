@@ -50,17 +50,12 @@ public class OI {
         dumbClimb.whenReleased(new ClimberSetState(ClimberState.STOWED));
         //semiAutoClimb.whileHeld(new ClimberSemiAuto());
         //reinit.whenPressed(new ClimberInit());
-<<<<<<< HEAD
         OI.button7.whenPressed(new ConveyorCommand(1));
         OI.button7.whenReleased(new ConveyorCommand(0));
 
         OI.button8.whenPressed(new ConveyorCommand(-1));
         OI.button8.whenReleased(new ConveyorCommand(0));
         
-=======
-        OI.button4.whenPressed(new ConveyorCommand(1));
-        OI.button4.whenReleased(new ConveyorCommand(0));
->>>>>>> practicebot-master
     }
 
     public static double getClimberManual(){

@@ -33,12 +33,6 @@ public class DriveTrainSubsystem extends Subsystem {
   public static DifferentialDrive drive;
 
   public DriveTrainSubsystem(int leftFrontPort, int leftMidPort, int leftRearPort, int rightRearPort, int rightMidPort, int rightFrontPort){
-<<<<<<< HEAD
-    
-    leftFront = new WPI_VictorSPX(leftFrontPort);
-    leftMid = new WPI_VictorSPX(leftMidPort);
-    leftRear = new WPI_VictorSPX(leftRearPort);
-=======
     leftFront = new CANSparkMax(leftFrontPort, MotorType.kBrushless);
     leftFront.restoreFactoryDefaults();
     leftFront.setIdleMode(IdleMode.kCoast);
@@ -46,7 +40,6 @@ public class DriveTrainSubsystem extends Subsystem {
     leftRear = new CANSparkMax(leftRearPort, MotorType.kBrushless);
     leftRear.restoreFactoryDefaults();
     leftRear.setIdleMode(IdleMode.kCoast);
->>>>>>> practicebot-master
 
     rightFront = new CANSparkMax(rightFrontPort, MotorType.kBrushless);
     rightFront.restoreFactoryDefaults();
