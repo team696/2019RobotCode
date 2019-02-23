@@ -9,6 +9,9 @@ package org.frc.team696.robot.subsystems;
 
 
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -18,36 +21,48 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
  * Add your docs here.
  */
 public class DriveTrainSubsystem extends Subsystem {
-  public WPI_VictorSPX leftFront;
-  public WPI_VictorSPX leftMid;
-  public WPI_VictorSPX leftRear;
+  public static CANSparkMax leftFront;
+  public static CANSparkMax leftRear;
 
-  public WPI_VictorSPX rightFront;
-  public WPI_VictorSPX rightMid;
-  public WPI_VictorSPX rightRear;
+  public static CANSparkMax rightFront;
+  public static CANSparkMax rightRear;
   
-  public SpeedControllerGroup leftSide;
-  public SpeedControllerGroup rightSide;
+  public static SpeedControllerGroup leftSide;
+  public static SpeedControllerGroup rightSide;
 
-  public DifferentialDrive drive;
+  public static DifferentialDrive drive;
 
   public DriveTrainSubsystem(int leftFrontPort, int leftMidPort, int leftRearPort, int rightRearPort, int rightMidPort, int rightFrontPort){
+<<<<<<< HEAD
     
     leftFront = new WPI_VictorSPX(leftFrontPort);
     leftMid = new WPI_VictorSPX(leftMidPort);
     leftRear = new WPI_VictorSPX(leftRearPort);
+=======
+    leftFront = new CANSparkMax(leftFrontPort, MotorType.kBrushless);
+    leftFront.restoreFactoryDefaults();
+    leftFront.setIdleMode(IdleMode.kCoast);
+    
+    leftRear = new CANSparkMax(leftRearPort, MotorType.kBrushless);
+    leftRear.restoreFactoryDefaults();
+    leftRear.setIdleMode(IdleMode.kCoast);
+>>>>>>> practicebot-master
 
-    rightFront = new WPI_VictorSPX(rightFrontPort); 
+    rightFront = new CANSparkMax(rightFrontPort, MotorType.kBrushless);
+    rightFront.restoreFactoryDefaults();
+    rightFront.setIdleMode(IdleMode.kCoast); 
     rightFront.setInverted(true);
-    rightMid = new WPI_VictorSPX(rightMidPort);
-    rightMid.setInverted(true);
-    rightRear = new WPI_VictorSPX(rightRearPort);
+
+    rightRear = new CANSparkMax(rightRearPort, MotorType.kBrushless);
+    rightRear.restoreFactoryDefaults();
+    rightRear.setIdleMode(IdleMode.kCoast);
     rightRear.setInverted(true);
 
-    leftSide = new SpeedControllerGroup(leftFront, leftMid, leftRear);
-    rightSide = new SpeedControllerGroup(rightFront, rightMid, rightRear);
+    leftSide = new SpeedControllerGroup(leftFront, leftRear);
+    rightSide = new SpeedControllerGroup(rightFront, rightRear);
 
     drive = new DifferentialDrive(leftSide, rightSide);
+    drive.setDeadband(0.1);
 
 
   }
