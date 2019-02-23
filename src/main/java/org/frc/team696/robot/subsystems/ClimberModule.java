@@ -29,7 +29,7 @@ public class ClimberModule extends Subsystem{
   private static final double freePidkP = 0.6;
   private static final double climbingPidkP = 0.8;
   private static final double freeMaxOutput = 1.0;
-  private static final double climbingMaxOutput = 0.5; 
+  private static final double climbingMaxOutput = 0.45; 
 
   public ClimberModule(String name){
     super(name);
