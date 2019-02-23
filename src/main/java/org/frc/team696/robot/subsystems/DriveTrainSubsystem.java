@@ -9,6 +9,8 @@ package org.frc.team696.robot.subsystems;
 
 
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -18,7 +20,7 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
  * Add your docs here.
  */
 public class DriveTrainSubsystem extends Subsystem {
-  public WPI_VictorSPX leftFront;
+  public CANSparkMax leftFront;
   public WPI_VictorSPX leftMid;
   public WPI_VictorSPX leftRear;
 
@@ -32,7 +34,9 @@ public class DriveTrainSubsystem extends Subsystem {
   public DifferentialDrive drive;
 
   public DriveTrainSubsystem(int leftFrontPort, int leftMidPort, int leftRearPort, int rightRearPort, int rightMidPort, int rightFrontPort){
-    leftFront = new WPI_VictorSPX(leftFrontPort);
+    leftFront = new CANSparkMax(leftFrontPort, MotorType.kBrushless);
+    leftFront.restoreFactoryDefaults();
+    
     leftMid = new WPI_VictorSPX(leftMidPort);
     leftRear = new WPI_VictorSPX(leftRearPort);
 
