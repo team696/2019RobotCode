@@ -17,6 +17,10 @@ import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
+
 /**
  * Add your docs here.
  */
@@ -32,7 +36,15 @@ public class DriveTrainSubsystem extends Subsystem {
 
   public static DifferentialDrive drive;
 
+  private static NetworkTableEntry ntflcurrent;
+  private static NetworkTableEntry ntfrcurrent;
+  private static NetworkTableEntry ntrlcurrent;
+  private static NetworkTableEntry ntrrcurrent;
+
   public DriveTrainSubsystem(int leftFrontPort, int leftMidPort, int leftRearPort, int rightRearPort, int rightMidPort, int rightFrontPort){
+    NetworkTableInstance inst = NetworkTableInstance.getDefault();
+    NetworkTable dtTable = inst.getTable("Drivetrain");
+    
     leftFront = new CANSparkMax(leftFrontPort, MotorType.kBrushless);
     leftFront.restoreFactoryDefaults();
     leftFront.setIdleMode(IdleMode.kCoast);
@@ -61,11 +73,20 @@ public class DriveTrainSubsystem extends Subsystem {
     drive = new DifferentialDrive(leftSide, rightSide);
     drive.setDeadband(0.1);
 
+    ntflcurrent = dtTable.getEntry("CurrentFL");
+    ntfrcurrent = dtTable.getEntry("CurrentFR");
+    ntrlcurrent = dtTable.getEntry("CurrentRL");
+    ntrrcurrent = dtTable.getEntry("CurrentRR");
+
 
   }
 
   public void runDrive(double leftSpeed, double rightSpeed){
     drive.tankDrive(leftSpeed, rightSpeed);
+    ntflcurrent.setDouble(leftFront.getOutputCurrent());
+    ntfrcurrent.setDouble(rightFront.getOutputCurrent());
+    ntrlcurrent.setDouble(leftRear.getOutputCurrent());
+    ntrrcurrent.setDouble(rightRear.getOutputCurrent());
   }
 
   @Override
