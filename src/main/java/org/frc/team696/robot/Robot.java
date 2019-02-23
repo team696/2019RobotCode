@@ -124,7 +124,7 @@ public class Robot extends TimedRobot {
     // OI.button1.whenPressed(new ConveyorCommand(0.5));
     // OI.button1.whenReleased(new ConveyorCommand(0));
 
-    OI.button4.whenPressed(new ConveyorCommand(0.5));
+    OI.button4.whenPressed(new ConveyorCommand(1));
     OI.button4.whenReleased(new ConveyorCommand(0));
     
     if(OI.xboxController.getRawButton(1)){
