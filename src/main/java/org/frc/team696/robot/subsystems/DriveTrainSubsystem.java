@@ -36,19 +36,23 @@ public class DriveTrainSubsystem extends Subsystem {
     leftFront = new CANSparkMax(leftFrontPort, MotorType.kBrushless);
     leftFront.restoreFactoryDefaults();
     leftFront.setIdleMode(IdleMode.kCoast);
+    leftFront.setSmartCurrentLimit(40);
     
     leftRear = new CANSparkMax(leftRearPort, MotorType.kBrushless);
     leftRear.restoreFactoryDefaults();
     leftRear.setIdleMode(IdleMode.kCoast);
+    leftRear.setSmartCurrentLimit(40);
 
     rightFront = new CANSparkMax(rightFrontPort, MotorType.kBrushless);
     rightFront.restoreFactoryDefaults();
     rightFront.setIdleMode(IdleMode.kCoast); 
+    rightFront.setSmartCurrentLimit(40);
     rightFront.setInverted(true);
 
     rightRear = new CANSparkMax(rightRearPort, MotorType.kBrushless);
     rightRear.restoreFactoryDefaults();
     rightRear.setIdleMode(IdleMode.kCoast);
+    rightRear.setSmartCurrentLimit(40);
     rightRear.setInverted(true);
 
     leftSide = new SpeedControllerGroup(leftFront, leftRear);
