@@ -44,7 +44,7 @@ public class Robot extends TimedRobot {
     public static OI oi;
     public static ConveyorSubsystem conveyorSubsystem = new ConveyorSubsystem(RobotMap.topConveyorMotorPort,
             RobotMap.bottomConveyorMotorPort, RobotMap.conveyorSolPortTop, RobotMap.conveyorSolPortBottom);
-    public DriveTrainSubsystem driveTrainSubsystem = new DriveTrainSubsystem(RobotMap.leftFrontPort, RobotMap.leftMidPort, RobotMap.leftRearPort, 
+    public static DriveTrainSubsystem driveTrainSubsystem = new DriveTrainSubsystem(RobotMap.leftFrontPort, RobotMap.leftMidPort, RobotMap.leftRearPort, 
                                                                              RobotMap.rightRearPort, RobotMap.rightMidPort, RobotMap.rightFrontPort);
     private Command autonomousCommand;
     private SendableChooser<Command> chooser = new SendableChooser<>();
@@ -58,6 +58,12 @@ public class Robot extends TimedRobot {
 
     public double leftSpeed;
     public double rightSpeed;
+
+    double a = 0.170641; // 0.286095    0.170641
+    double h = -0.258475; // -0.243151  -0.258475
+    double k = 0.364407; // -0.130137    0.364407
+
+    double speedTurnScale;
 
     /**
      * This function is run when the robot is first started up and should be used
@@ -147,16 +153,19 @@ public class Robot extends TimedRobot {
         Climber.leftPusher.set(ControlMode.PercentOutput, OI.xboxController.getRawAxis(3));
         Climber.rightPusher.set(ControlMode.PercentOutput, OI.xboxController.getRawAxis(3));
         // System.out.println(OI.operatorPanel.getRawAxis(3));
-        if (!comp.enabled()) {
-            comp.start();
-            System.out.println("hello hopst");
-        }
-        stick = OI.xboxController.getRawAxis(Constants.stickAxisPort);
-        wheel = OI.xboxController.getRawAxis(Constants.turnAxisPort);
+
+        wheel = OI.xboxController.getRawAxis(1);
+        stick = OI.wheel.getRawAxis(0);
+
+        speedTurnScale = a*(1/((stick*stick)-h))+k;
+
 
         if(Math.abs(wheel)<=0.03&&Math.abs(wheel)>=0){
             wheel=0;
         }
+
+
+
         System.out.println(wheel);
         leftSpeed = stick + wheel;
         rightSpeed = stick - wheel;
@@ -170,7 +179,8 @@ public class Robot extends TimedRobot {
         
         //System.out.println(comp.enabled());
         
-
+        
+    
         if (OI.xboxController.getRawButton(1)) {
             conveyorSubsystem.tiltConveyor(ConveyorPos.mid);
         }
@@ -200,6 +210,8 @@ public class Robot extends TimedRobot {
         // "+Climber.fr.getCorrectedPosition());
         // System.out.println(Climber.rl.getName() + " is outputting
         // "+Climber.fr.talon.getMotorOutputPercent());
-
+        //System.out.printf("FL: %f, RL: %f, FR: %f, RR: %f", DriveTrainSubsystem.leftFront.getOutputCurrent(), DriveTrainSubsystem.leftRear.getOutputCurrent(), DriveTrainSubsystem.rightFront.getOutputCurrent(), DriveTrainSubsystem.rightRear.getOutputCurrent());
+        //System.out.println(DriveTrainSubsystem.leftRear.getOutputCurrent());
+        //System.out.println();
     }
 }

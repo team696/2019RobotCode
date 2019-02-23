@@ -7,52 +7,97 @@
 
 package org.frc.team696.robot.subsystems;
 
-
-import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
+
 /**
  * Add your docs here.
  */
 public class DriveTrainSubsystem extends Subsystem {
-  public WPI_VictorSPX leftFront;
-  public WPI_VictorSPX leftMid;
-  public WPI_VictorSPX leftRear;
+  public static CANSparkMax leftFront;
+  public static CANSparkMax leftRear;
 
-  public WPI_VictorSPX rightFront;
-  public WPI_VictorSPX rightMid;
-  public WPI_VictorSPX rightRear;
+  public static CANSparkMax rightFront;
+  public static CANSparkMax rightRear;
   
-  public SpeedControllerGroup leftSide;
-  public SpeedControllerGroup rightSide;
+  public static SpeedControllerGroup leftSide;
+  public static SpeedControllerGroup rightSide;
 
-  public DifferentialDrive drive;
+  public static DifferentialDrive drive;
+
+  private static NetworkTableEntry ntflcurrent;
+  private static NetworkTableEntry ntfrcurrent;
+  private static NetworkTableEntry ntrlcurrent;
+  private static NetworkTableEntry ntrrcurrent;
+  private static NetworkTableEntry ntflmotortemp;
+  private static NetworkTableEntry ntfrmotortemp;
+  private static NetworkTableEntry ntrlmotortemp;
+  private static NetworkTableEntry ntrrmotortemp;
 
   public DriveTrainSubsystem(int leftFrontPort, int leftMidPort, int leftRearPort, int rightRearPort, int rightMidPort, int rightFrontPort){
-    leftFront = new WPI_VictorSPX(leftFrontPort);
-    leftMid = new WPI_VictorSPX(leftMidPort);
-    leftRear = new WPI_VictorSPX(leftRearPort);
+    NetworkTableInstance inst = NetworkTableInstance.getDefault();
+    NetworkTable dtTable = inst.getTable("Drivetrain");
+    
+    leftFront = new CANSparkMax(leftFrontPort, MotorType.kBrushless);
+    leftFront.restoreFactoryDefaults();
+    leftFront.setIdleMode(IdleMode.kCoast);
+    leftFront.setSmartCurrentLimit(40);
+    
+    leftRear = new CANSparkMax(leftRearPort, MotorType.kBrushless);
+    leftRear.restoreFactoryDefaults();
+    leftRear.setIdleMode(IdleMode.kCoast);
+    leftRear.setSmartCurrentLimit(40);
 
-    rightFront = new WPI_VictorSPX(rightFrontPort); 
+    rightFront = new CANSparkMax(rightFrontPort, MotorType.kBrushless);
+    rightFront.restoreFactoryDefaults();
+    rightFront.setIdleMode(IdleMode.kCoast); 
+    rightFront.setSmartCurrentLimit(40);
     rightFront.setInverted(true);
-    rightMid = new WPI_VictorSPX(rightMidPort);
-    rightMid.setInverted(true);
-    rightRear = new WPI_VictorSPX(rightRearPort);
+
+    rightRear = new CANSparkMax(rightRearPort, MotorType.kBrushless);
+    rightRear.restoreFactoryDefaults();
+    rightRear.setIdleMode(IdleMode.kCoast);
+    rightRear.setSmartCurrentLimit(40);
     rightRear.setInverted(true);
 
-    leftSide = new SpeedControllerGroup(leftFront, leftMid, leftRear);
-    rightSide = new SpeedControllerGroup(rightFront, rightMid, rightRear);
+    leftSide = new SpeedControllerGroup(leftFront, leftRear);
+    rightSide = new SpeedControllerGroup(rightFront, rightRear);
 
     drive = new DifferentialDrive(leftSide, rightSide);
+    drive.setDeadband(0.1);
+
+    ntflcurrent = dtTable.getEntry("CurrentFL");
+    ntfrcurrent = dtTable.getEntry("CurrentFR");
+    ntrlcurrent = dtTable.getEntry("CurrentRL");
+    ntrrcurrent = dtTable.getEntry("CurrentRR");
+
+    ntflmotortemp = dtTable.getEntry("MotorTempFL");
+    ntfrmotortemp = dtTable.getEntry("MotorTempFR");
+    ntrlmotortemp = dtTable.getEntry("MotorTempRL");
+    ntrrmotortemp = dtTable.getEntry("MotorTempRR");
 
 
   }
 
   public void runDrive(double leftSpeed, double rightSpeed){
     drive.tankDrive(leftSpeed, rightSpeed);
+    ntflcurrent.setDouble(leftFront.getOutputCurrent());
+    ntfrcurrent.setDouble(rightFront.getOutputCurrent());
+    ntrlcurrent.setDouble(leftRear.getOutputCurrent());
+    ntrrcurrent.setDouble(rightRear.getOutputCurrent());
+    ntflmotortemp.setDouble(leftFront.getMotorTemperature());
+    ntfrmotortemp.setDouble(rightFront.getMotorTemperature());
+    ntrlmotortemp.setDouble(leftRear.getMotorTemperature());
+    ntrrmotortemp.setDouble(rightRear.getMotorTemperature());
   }
 
   @Override

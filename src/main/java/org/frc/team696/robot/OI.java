@@ -28,10 +28,12 @@ import org.frc.team696.robot.states.ClimberState;
  */
 public class OI {
     public static Joystick xboxController = new Joystick(0);
+    public static Joystick wheel = new Joystick(1);
 
     public static Button conveyorButton = new JoystickButton(xboxController, 2);
     public static Button button1 = new JoystickButton(xboxController, 1);
-    public static Button button4 = new JoystickButton(xboxController, 4);
+    public static Button button7 = new JoystickButton(xboxController, 7);
+    public static Button button8 = new JoystickButton(xboxController, 8);
 
     //public static Button climberManualSwitch = new JoystickButton(operatorPanel, 5);
     public static Button climberModuleTest = new JoystickButton(xboxController, 5);
@@ -50,8 +52,12 @@ public class OI {
         dumbClimb.whenReleased(new ClimberSetState(ClimberState.STOWED));
         //semiAutoClimb.whileHeld(new ClimberSemiAuto());
         //reinit.whenPressed(new ClimberInit());
-        OI.button4.whenPressed(new ConveyorCommand(1));
-        OI.button4.whenReleased(new ConveyorCommand(0));
+        OI.button7.whenPressed(new ConveyorCommand(1));
+        OI.button7.whenReleased(new ConveyorCommand(0));
+
+        OI.button8.whenPressed(new ConveyorCommand(-1));
+        OI.button8.whenReleased(new ConveyorCommand(0));
+        
     }
 
     public static double getClimberManual(){
