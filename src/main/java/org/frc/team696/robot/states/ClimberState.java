@@ -7,5 +7,6 @@ public enum ClimberState {
     ARMED,
     CLIMBING,
     AT_HEIGHT,
-    FRONT_ON_PLATFORM
+    FRONT_ON_PLATFORM,
+    HOLD
 }

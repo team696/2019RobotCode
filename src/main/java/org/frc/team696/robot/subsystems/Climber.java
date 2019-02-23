@@ -292,9 +292,13 @@ public class Climber extends Subsystem {
           setState(ClimberState.STOWED);
         }
         break;
+      case HOLD:
+        turnOff();
+        break;
       default:
         //Should never happen
         setState(ClimberState.UNINITIALIZED);
+        break;
       }
     }
     else{
