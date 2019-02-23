@@ -24,7 +24,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 // If you rename or move this class, update the build.properties file in the project root
 public class Robot extends TimedRobot {
-
     public static OI oi;
     public DriveTrainSubsystem driveTrainSubsystem = new DriveTrainSubsystem(RobotMap.leftFrontPort, RobotMap.leftMidPort, RobotMap.leftRearPort, 
                                                                              RobotMap.rightRearPort, RobotMap.rightMidPort, RobotMap.rightFrontPort);
@@ -118,19 +117,18 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
+        System.out.println(OI.xboxController.getRawButton(17));
+        // stick = OI.xboxController.getRawAxis(Constants.stickAxisPort);
+        // wheel = OI.xboxController.getRawAxis(Constants.turnAxisPort);
 
-        stick = OI.xboxController.getRawAxis(Constants.stickAxisPort);
-        wheel = OI.xboxController.getRawAxis(Constants.turnAxisPort);
-
-        if(Math.abs(wheel)<=0.03&&Math.abs(wheel)>=0){
-            wheel=0;
-        }
-        System.out.println(wheel);
-        leftSpeed = stick + wheel;
-        rightSpeed = stick - wheel;
+        // if(Math.abs(wheel)<=0.03&&Math.abs(wheel)>=0){
+        //     wheel=0;
+        // }
+        // System.out.println(wheel);
+        // leftSpeed = stick + wheel;
+        // rightSpeed = stick - wheel;
         
-
-        driveTrainSubsystem.runDrive(leftSpeed, rightSpeed);
+        driveTrainSubsystem.runDrive(0.05, 0.05);
         // if(OI.xboxController.getRawButton(1)){
         //     driveTrainSubsystem.leftRear.set(0.3);
         //     driveTrainSubsystem.rightRear.set(0.3);

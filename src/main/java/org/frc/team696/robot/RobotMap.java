@@ -14,7 +14,7 @@ package org.frc.team696.robot;
  * floating around.
  */
 public class RobotMap {
-    public static int leftFrontPort = 2;
+    public static int leftFrontPort = 1;
     public static int leftMidPort = 3;
     public static int leftRearPort = 4;
 
