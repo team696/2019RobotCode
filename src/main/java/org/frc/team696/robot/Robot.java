@@ -200,6 +200,8 @@ public class Robot extends TimedRobot {
         // "+Climber.fr.getCorrectedPosition());
         // System.out.println(Climber.rl.getName() + " is outputting
         // "+Climber.fr.talon.getMotorOutputPercent());
-
+        //System.out.printf("FL: %f, RL: %f, FR: %f, RR: %f", DriveTrainSubsystem.leftFront.getOutputCurrent(), DriveTrainSubsystem.leftRear.getOutputCurrent(), DriveTrainSubsystem.rightFront.getOutputCurrent(), DriveTrainSubsystem.rightRear.getOutputCurrent());
+        //System.out.println(DriveTrainSubsystem.leftRear.getOutputCurrent());
+        //System.out.println();
     }
 }
