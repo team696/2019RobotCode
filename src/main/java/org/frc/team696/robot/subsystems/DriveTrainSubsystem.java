@@ -38,6 +38,10 @@ public class DriveTrainSubsystem extends Subsystem {
   private static NetworkTableEntry ntfrcurrent;
   private static NetworkTableEntry ntrlcurrent;
   private static NetworkTableEntry ntrrcurrent;
+  private static NetworkTableEntry ntflmotortemp;
+  private static NetworkTableEntry ntfrmotortemp;
+  private static NetworkTableEntry ntrlmotortemp;
+  private static NetworkTableEntry ntrrmotortemp;
 
   public DriveTrainSubsystem(int leftFrontPort, int leftMidPort, int leftRearPort, int rightRearPort, int rightMidPort, int rightFrontPort){
     NetworkTableInstance inst = NetworkTableInstance.getDefault();
@@ -76,6 +80,11 @@ public class DriveTrainSubsystem extends Subsystem {
     ntrlcurrent = dtTable.getEntry("CurrentRL");
     ntrrcurrent = dtTable.getEntry("CurrentRR");
 
+    ntflmotortemp = dtTable.getEntry("MotorTempFL");
+    ntfrmotortemp = dtTable.getEntry("MotorTempFR");
+    ntrlmotortemp = dtTable.getEntry("MotorTempRL");
+    ntrrmotortemp = dtTable.getEntry("MotorTempRR");
+
 
   }
 
@@ -85,6 +94,10 @@ public class DriveTrainSubsystem extends Subsystem {
     ntfrcurrent.setDouble(rightFront.getOutputCurrent());
     ntrlcurrent.setDouble(leftRear.getOutputCurrent());
     ntrrcurrent.setDouble(rightRear.getOutputCurrent());
+    ntflmotortemp.setDouble(leftFront.getMotorTemperature());
+    ntfrmotortemp.setDouble(rightFront.getMotorTemperature());
+    ntrlmotortemp.setDouble(leftRear.getMotorTemperature());
+    ntrrmotortemp.setDouble(rightRear.getMotorTemperature());
   }
 
   @Override
