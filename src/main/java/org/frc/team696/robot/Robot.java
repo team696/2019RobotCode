@@ -80,7 +80,7 @@ public class Robot extends TimedRobot {
         // chooser.addObject("My Auto", new MyAutoCommand());
         SmartDashboard.putData("Auto mode", chooser);
         comp.start();
-        Climber.initialize();
+        climber.initialize();
     }
 
     /**

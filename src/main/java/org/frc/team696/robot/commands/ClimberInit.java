@@ -21,7 +21,7 @@ public class ClimberInit extends Command {
   @Override
   protected void initialize() {
     System.out.println("Initializing climber...");
-    Climber.initialize();
+    Robot.climber.initialize();
   }
 
   // Called repeatedly when this Command is scheduled to run
