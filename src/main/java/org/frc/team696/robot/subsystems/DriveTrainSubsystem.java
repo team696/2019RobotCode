@@ -22,7 +22,9 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 /**
  * Add your docs here.
  */
+
 public class DriveTrainSubsystem extends Subsystem {
+  
   public static CANSparkMax leftFront;
   public static CANSparkMax leftRear;
 
