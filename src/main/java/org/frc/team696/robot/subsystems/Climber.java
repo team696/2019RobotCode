@@ -17,6 +17,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 import org.frc.team696.robot.RobotMap;
+import org.frc.team696.robot.OI;
 import org.frc.team696.robot.states.ClimberState;
 import org.frc.team696.robot.subsystems.ClimberModule;
 
@@ -57,6 +58,7 @@ public class Climber extends Subsystem {
   public static final double rearNWOWPower = 0.02;
 
   private static ClimberState state = ClimberState.UNINITIALIZED;
+  public static boolean isManualControl = false;
 
   private static NetworkTableEntry ntflpos;
   private static NetworkTableEntry ntfrpos;
@@ -72,7 +74,8 @@ public class Climber extends Subsystem {
   private static NetworkTableEntry ntrrpercent;
 
   /**
-   * Climber subsystem; responsible for coordinating the actions of the climber modules. 
+   * Climber subsystem; responsible for coordinating the actions of the climber
+   * modules.
    */
   public Climber() {
     super("Climber");
@@ -121,8 +124,8 @@ public class Climber extends Subsystem {
   }
 
   /**
-   * Convenience method; calls initialize on each of the climber modules.
-   * If all initializations are successful, transitions state to stowed.
+   * Convenience method; calls initialize on each of the climber modules. If all
+   * initializations are successful, transitions state to stowed.
    */
   public void initialize() {
     if (state == ClimberState.UNINITIALIZED) {
@@ -237,9 +240,8 @@ public class Climber extends Subsystem {
   }
 
   /**
-   * Periodic climber tasks. 
-   * Publishes data to Network Tables & services climber state machine.
-   * This should be called from RobotPeriodic() or similar.
+   * Periodic climber tasks. Publishes data to Network Tables & services climber
+   * state machine. This should be called from RobotPeriodic() or similar.
    */
   public void climberPeriodic() {
     ntflpos.setDouble(fl.getCorrectedPosition());
@@ -255,54 +257,73 @@ public class Climber extends Subsystem {
     ntrlpercent.setDouble(rl.talon.getMotorOutputPercent());
     ntrrpercent.setDouble(rr.talon.getMotorOutputPercent());
 
-    if ( getPositionControlGood()) {
+    //Implement pusher control
+    if(OI.pusherOverride.get() || state == ClimberState.AT_HEIGHT || state == ClimberState.FRONT_ON_PLATFORM){
+      setPusherPower(pusherPower);
+      OI.operatorPanel.setOutput(1, true);
+    }
+    else{
+      setPusherPower(0);
+      OI.operatorPanel.setOutput(1, false);
+    }
+
+    if (getPositionControlGood() && !isManualControl) {
       // Service climber state
       switch (state) {
       case UNINITIALIZED:
         break;
+
       case STOWED:
         moveIndividual(0.0);
         break;
+
       case MOVE_TO_ARMED:
         if (getMaximumPositionError() < armedError) {
           setState(ClimberState.ARMED);
         }
+
       case ARMED:
         moveIndividual(frontStagedPosition, frontStagedPosition, rearStagedPosition, rearStagedPosition);
+        OI.operatorPanel.setOutput(2, true);
         break;
+
       case CLIMBING:
         moveIndividual(frontLeftClimbPosition, frontRightClimbPosition, rearLeftClimbPosition, rearRightClimbPosition);
         if (getMaximumPositionError() < atHeightError) {
           setState(ClimberState.AT_HEIGHT);
         }
+        OI.operatorPanel.setOutput(2, true);
         break;
+
       case AT_HEIGHT:
         moveIndividual(frontLeftClimbPosition, frontRightClimbPosition, rearLeftClimbPosition, rearRightClimbPosition);
-        setPusherPower(pusherPower);
-        if (!frontWOW()) {
+        //if (!frontWOW()) {
           // If no weight on front wheels, retract
-          setState(ClimberState.FRONT_ON_PLATFORM);
-          stowFront();
-        }
+          //setState(ClimberState.FRONT_ON_PLATFORM);
+          //stowFront();
+        //}
+        OI.operatorPanel.setOutput(2, true);
         break;
+
       case FRONT_ON_PLATFORM:
         stowFront();
         if (!rearWOW()) {
           moveIndividual(0);
           setState(ClimberState.STOWED);
         }
+        OI.operatorPanel.setOutput(2, true);
         break;
       case HOLD:
         turnOff();
         break;
+
       default:
-        //Should never happen
+        // Should never happen
         setState(ClimberState.UNINITIALIZED);
         break;
       }
-    }
-    else{
-        turnOff();
+    } else {
+      turnOff();
     }
   }
 
@@ -312,9 +333,10 @@ public class Climber extends Subsystem {
   }
 
   /**
-   * WIP: Do not use for the time being. 
-   * Intended to determine if the front arms are supporting any weight. 
-   * @return True if there is weight on the front arms. 
+   * WIP: Do not use for the time being. Intended to determine if the front arms
+   * are supporting any weight.
+   * 
+   * @return True if there is weight on the front arms.
    */
   public boolean frontWOW() {
     if (fl.talon.getMotorOutputPercent() < frontNWOWPower && fr.talon.getMotorOutputPercent() < frontNWOWPower) {
@@ -325,9 +347,10 @@ public class Climber extends Subsystem {
   }
 
   /**
-   * WIP: Do not use for the time being. 
-   * Intended to determine if the rear arms are supporting any weight. 
-   * @return True if there is weight on the rear arms. 
+   * WIP: Do not use for the time being. Intended to determine if the rear arms
+   * are supporting any weight.
+   * 
+   * @return True if there is weight on the rear arms.
    */
   public boolean rearWOW() {
     if (rl.talon.getMotorOutputPercent() < rearNWOWPower && rr.talon.getMotorOutputPercent() < rearNWOWPower) {
@@ -340,6 +363,6 @@ public class Climber extends Subsystem {
   @Override
   public void initDefaultCommand() {
     // Set the default command for a subsystem here.
-    //setDefaultCommand(new ClimberIdle());
+    // setDefaultCommand(new ClimberIdle());
   }
 }

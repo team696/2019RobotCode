@@ -166,7 +166,7 @@ public class Robot extends TimedRobot {
 
 
 
-        System.out.println(wheel);
+        //System.out.println(wheel);
         leftSpeed = stick + wheel;
         rightSpeed = stick - wheel;
         

@@ -37,10 +37,10 @@ public class OI {
     public static Button button8 = new JoystickButton(xboxController, 8);
 
     public static Button climberManualSwitch = new JoystickButton(operatorPanel, 1);
-    public static Button climberModuleTest = new JoystickButton(xboxController, 8);
+    public static Button climberModuleTest = new JoystickButton(operatorPanel, 8);
     public static Button climberArm = new JoystickButton(operatorPanel, 3);
     public static Button pusherOverride = new JoystickButton(operatorPanel, 2);
-    public static Button dumbClimb = new JoystickButton(xboxController, 4);
+    public static Button dumbClimb = new JoystickButton(operatorPanel, 4);
     //public static Button semiAutoClimb = new JoystickButton(operatorPanel, 6);
     //public static Button reinit = new JoystickButton(operatorPanel, 2);
     
