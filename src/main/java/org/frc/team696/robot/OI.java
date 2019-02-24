@@ -10,16 +10,17 @@ package org.frc.team696.robot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
-import org.frc.team696.robot.commands.ClimberManualControl;
-import org.frc.team696.robot.commands.ClimberTest;
-import org.frc.team696.robot.states.ClimberState;
-import org.frc.team696.robot.commands.ClimberModuleTest;
-import org.frc.team696.robot.commands.ClimberSetState;
-import org.frc.team696.robot.commands.ClimberDumbClimb;
-import org.frc.team696.robot.commands.ClimberSemiAuto;
-import org.frc.team696.robot.commands.ClimberInit;
+
 import org.frc.team696.robot.Robot;
+import org.frc.team696.robot.commands.ClimberDumbClimb;
+import org.frc.team696.robot.commands.ClimberInit;
+import org.frc.team696.robot.commands.ClimberManualControl;
+import org.frc.team696.robot.commands.ClimberModuleTest;
+import org.frc.team696.robot.commands.ClimberSemiAuto;
+import org.frc.team696.robot.commands.ClimberSetState;
+import org.frc.team696.robot.commands.ClimberTest;
 import org.frc.team696.robot.commands.ConveyorCommand;
+import org.frc.team696.robot.states.ClimberState;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -28,27 +29,32 @@ import org.frc.team696.robot.commands.ConveyorCommand;
 public class OI {
     public static Joystick xboxController = new Joystick(0);
     public static Joystick wheel = new Joystick(1);
+    public static Joystick operatorPanel = new Joystick(2);
 
     public static Button conveyorButton = new JoystickButton(xboxController, 2);
     public static Button button1 = new JoystickButton(xboxController, 1);
     public static Button button7 = new JoystickButton(xboxController, 7);
     public static Button button8 = new JoystickButton(xboxController, 8);
 
-    //public static Button climberManualSwitch = new JoystickButton(operatorPanel, 5);
-    public static Button climberModuleTest = new JoystickButton(xboxController, 5);
-    //public static Button climberStage = new JoystickButton(operatorPanel, 7);
-    public static Button dumbClimb = new JoystickButton(xboxController, 6);
+    public static Button climberManualSwitch = new JoystickButton(operatorPanel, 1);
+    public static Button climberModuleTest = new JoystickButton(operatorPanel, 8);
+    public static Button climberArm = new JoystickButton(operatorPanel, 3);
+    public static Button pusherOverride = new JoystickButton(operatorPanel, 2);
+    public static Button dumbClimb = new JoystickButton(operatorPanel, 4);
     //public static Button semiAutoClimb = new JoystickButton(operatorPanel, 6);
     //public static Button reinit = new JoystickButton(operatorPanel, 2);
+    
 
     public OI(){
-        //climberManualSwitch.whileHeld(new ClimberManualControl());
         climberModuleTest.whenPressed(new ClimberTest());
-        //climberManualSwitch.whileHeld(new ClimberManualControl());
-        //climberStage.whenPressed(new ClimberSetState(ClimberState.MOVE_TO_ARMED));
-        //climberStage.whenReleased(new ClimberSetState(ClimberState.STOWED));
+        
+        climberManualSwitch.whileHeld(new ClimberManualControl());
+        
+        climberArm.whenPressed(new ClimberSetState(ClimberState.MOVE_TO_ARMED));
+        climberArm.whenReleased(new ClimberSetState(ClimberState.STOWED));
+        
         dumbClimb.whenPressed(new ClimberSetState(ClimberState.CLIMBING));
-        dumbClimb.whenReleased(new ClimberSetState(ClimberState.STOWED));
+        dumbClimb.whenReleased(new ClimberSetState(ClimberState.HOLD));
         //semiAutoClimb.whileHeld(new ClimberSemiAuto());
         //reinit.whenPressed(new ClimberInit());
         OI.button7.whenPressed(new ConveyorCommand(1));
@@ -56,11 +62,10 @@ public class OI {
 
         OI.button8.whenPressed(new ConveyorCommand(-1));
         OI.button8.whenReleased(new ConveyorCommand(0));
-        
     }
 
     public static double getClimberManual(){
-        return xboxController.getRawAxis(1);
+        return operatorPanel.getRawAxis(0);
     }
     // CREATING BUTTONS
     // One type of button is a joystick button which is any button on a

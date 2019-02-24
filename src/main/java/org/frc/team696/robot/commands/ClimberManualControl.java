@@ -26,6 +26,7 @@ public class ClimberManualControl extends Command {
   @Override
   protected void initialize() {
     System.out.println("Running climber manual control");
+    Robot.climber.isManualControl = true;
   }
 
   // Called repeatedly when this Command is scheduled to run
@@ -43,11 +44,13 @@ public class ClimberManualControl extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
+    Climber.isManualControl = false;
   }
 
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
+    Climber.isManualControl = false;
   }
 }

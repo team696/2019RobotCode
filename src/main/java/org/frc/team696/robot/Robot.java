@@ -75,7 +75,7 @@ public class Robot extends TimedRobot {
         // chooser.addObject("My Auto", new MyAutoCommand());
         SmartDashboard.putData("Auto mode", chooser);
         comp.start();
-        Climber.initialize();
+        climber.initialize();
     }
 
     /**
@@ -166,7 +166,7 @@ public class Robot extends TimedRobot {
 
 
 
-        System.out.println(wheel);
+        //System.out.println(wheel);
         leftSpeed = stick + wheel;
         rightSpeed = stick - wheel;
         
