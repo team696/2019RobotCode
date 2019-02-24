@@ -134,6 +134,9 @@ public class RampingSubsystem extends Subsystem {
     if (speed < commandedSpeed) {
       speed += highRampRate;
       System.out.println("if");
+    }else if(speed > commandedSpeed){
+      speed -= highRampRate;
+      System.out.println("else if");
     }else{
       speed = commandedSpeed;
       System.out.println("else");
@@ -149,6 +152,9 @@ public class RampingSubsystem extends Subsystem {
     if (speed < commandedSpeed) {
       speed += midRampRate;
       System.out.println("if");
+    }else if(speed > commandedSpeed){
+      speed -= midRampRate;
+      System.out.println("else if");
     }else{
       speed = commandedSpeed;
       System.out.println("else");
@@ -164,6 +170,9 @@ public class RampingSubsystem extends Subsystem {
     if (speed < commandedSpeed) {
       speed += lowRampRate;
       System.out.println("if");
+    }else if(speed > commandedSpeed){
+      speed -= lowRampRate;
+      System.out.println("else if");
     }else{
       speed = commandedSpeed;
       System.out.println("else");
