@@ -7,27 +7,27 @@
 
 package org.frc.team696.robot;
 
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import edu.wpi.first.wpilibj.Compressor;
-import org.frc.team696.robot.subsystems.DriveTrainSubsystem;
-import org.frc.team696.robot.subsystems.RampingSubsystem;
-
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
-import org.frc.team696.robot.commands.ConveyorCommand;
-import org.frc.team696.robot.states.ConveyorState;
-import org.frc.team696.robot.subsystems.ConveyorSubsystem;
-
-import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+import org.frc.team696.robot.RobotMap;
+import org.frc.team696.robot.commands.ConveyorCommand;
+import org.frc.team696.robot.states.ConveyorState;
 import org.frc.team696.robot.subsystems.Climber;
 import org.frc.team696.robot.subsystems.ClimberModule;
-import org.frc.team696.robot.RobotMap;
+import org.frc.team696.robot.subsystems.ConveyorSubsystem;
+import org.frc.team696.robot.subsystems.DriveTrainSubsystem;
+import org.frc.team696.robot.subsystems.RampingSubsystem;
+
 
 /**
  * The VM is configured to automatically run this class, and to call the
