@@ -7,13 +7,15 @@
 
 package org.frc.team696.robot;
 
+import org.frc.team696.robot.subsystems.HatchIntakeSubsystem;
+import org.frc.team696.robot.subsystems.HatchIntakeSubsystem.HatchIntakePos;
+import org.frc.team696.robot.subsystems.HatchIntakeSubsystem.HatchTiltPos;
+
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.frc.team696.robot.commands.ExampleCommand;
-import org.frc.team696.robot.subsystems.ExampleSubsystem;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -25,11 +27,12 @@ import org.frc.team696.robot.subsystems.ExampleSubsystem;
 // If you rename or move this class, update the build.properties file in the project root
 public class Robot extends TimedRobot {
 
-    public static final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
     public static OI oi;
 
     private Command autonomousCommand;
     private SendableChooser<Command> chooser = new SendableChooser<>();
+
+    public static HatchIntakeSubsystem hatchIntakeSubsystem = new HatchIntakeSubsystem(0, 0);
 
     /**
      * This function is run when the robot is first started up and should be
@@ -38,7 +41,6 @@ public class Robot extends TimedRobot {
     @Override
     public void robotInit() {
         oi = new OI();
-        chooser.addDefault("Default Auto", new ExampleCommand());
         // chooser.addObject("My Auto", new MyAutoCommand());
         SmartDashboard.putData("Auto mode", chooser);
     }
@@ -111,6 +113,22 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
+
+        if(OI.xboxController.getRawButton(0)){
+            hatchIntakeSubsystem.runHatchTilt(HatchTiltPos.high);
+        }
+        if(OI.xboxController.getRawButton(0)){
+            hatchIntakeSubsystem.runHatchTilt(HatchTiltPos.low);
+        }
+
+
+
+        if(OI.xboxController.getRawButton(0)){
+            hatchIntakeSubsystem.runHatchIntake(HatchIntakePos.open);
+        }
+        if(OI.xboxController.getRawButton(0)){
+            hatchIntakeSubsystem.runHatchIntake(HatchIntakePos.closed);
+        }  
     }
 
     /**
