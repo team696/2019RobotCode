@@ -38,7 +38,7 @@ public ConveyorSubsystem(int topConveyorMotorPort, int botomConveyorMotorPort, i
 
 public void runConveyor(double conveyorSpeed){
   topConveyorMotor.set(conveyorSpeed);
-  bottomConveyorMotor.set(-conveyorSpeed);
+  //bottomConveyorMotor.set(-conveyorSpeed);
 
 }
 public void tiltConveyor(ConveyorPos conveyorPos){
