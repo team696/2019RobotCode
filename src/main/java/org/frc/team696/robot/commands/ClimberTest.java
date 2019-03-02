@@ -8,8 +8,8 @@
 package org.frc.team696.robot.commands;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
-import org.frc.team696.robot.subsystems.Climber;
 import org.frc.team696.robot.commands.ClimberModuleTest;
+import org.frc.team696.robot.subsystems.Climber;
 
 public class ClimberTest extends CommandGroup {
   /**
