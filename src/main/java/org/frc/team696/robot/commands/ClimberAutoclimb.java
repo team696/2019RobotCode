@@ -9,8 +9,8 @@ package org.frc.team696.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 import org.frc.team696.robot.Robot;
-import org.frc.team696.robot.states.ClimberState;
 import org.frc.team696.robot.subsystems.Climber;
+import org.frc.team696.robot.states.ClimberState;
 
 public class ClimberAutoclimb extends Command {
   private boolean finished;

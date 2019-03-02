@@ -7,13 +7,13 @@
 
 package org.frc.team696.robot.commands;
 
+import org.frc.team696.robot.Robot;
+
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.command.Command;
-
-import org.frc.team696.robot.Robot;
 
 public class DriveCommand extends Command {
 
