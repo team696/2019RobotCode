@@ -177,12 +177,31 @@ public class Robot extends TimedRobot {
         leftSpeed = stick - wheel;
         rightSpeed = stick + wheel;
 
-    leftSpeed = stick - wheel;
-    rightSpeed = stick + wheel;
+        // driveTrainSubsystem.runDrive(leftSpeed, rightSpeed);
+        if(OI.operatorPanel.getRawButton(4)){
+            System.out.println("climbing, driver functionality disabled");
+        }else{
+            driveTrainSubsystem.runDrive(leftSpeed, rightSpeed);
+        }
+        // if(OI.xboxController.getRawButton(1)){
+        // driveTrainSubsystem.leftRear.set(0.3);
+        // driveTrainSubsystem.rightRear.set(0.3);
+        // }
 
         // System.out.println(comp.enabled());
 
-    // System.out.println(comp.enabled());
+        if (OI.operatorPanel.getRawButton(14)) {
+            conveyorSubsystem.tiltConveyor(ConveyorState.MID);
+            conveyorState = ConveyorState.MID;
+        }
+        if (OI.operatorPanel.getRawButton(13)) {
+            conveyorSubsystem.tiltConveyor(ConveyorState.LOW);
+            conveyorState = ConveyorState.LOW;
+        }
+        if (OI.operatorPanel.getRawButton(15)) {
+            conveyorSubsystem.tiltConveyor(ConveyorState.HIGH);
+            conveyorState = ConveyorState.HIGH;
+        }
 
     }
 
