@@ -23,9 +23,13 @@ public class RampingSubsystem extends Subsystem {
   public double speed;
   public double wheel;
 
-  private double highRampRate = 0.03;
-  private double midRampRate = 0.05;
-  private double lowRampRate = 0.07;
+  private double highRampDownRate = 0.03;
+  private double midRampDownRate = 0.05;
+  private double lowRampDownRate = 0.07;
+
+  private double highRampUpRate = 0.03;
+  private double midRampUpRate = 0.05;
+  private double lowRampUpRate = 0.07;
 
   private double commandedSpeed;
 
@@ -132,10 +136,10 @@ public class RampingSubsystem extends Subsystem {
     commandedSpeed = OI.xboxController.getRawAxis(1);
 
     if (speed < commandedSpeed) {
-      speed += highRampRate;
+      speed += highRampUpRate;
       System.out.println("if");
     }else if(speed > commandedSpeed){
-      speed -= highRampRate;
+      speed -= highRampDownRate;
       System.out.println("else if");
     }else{
       speed = commandedSpeed;
@@ -150,10 +154,10 @@ public class RampingSubsystem extends Subsystem {
     commandedSpeed = OI.xboxController.getRawAxis(1);
 
     if (speed < commandedSpeed) {
-      speed += midRampRate;
+      speed += midRampUpRate;
       System.out.println("if");
     }else if(speed > commandedSpeed){
-      speed -= midRampRate;
+      speed -= midRampDownRate;
       System.out.println("else if");
     }else{
       speed = commandedSpeed;
@@ -168,10 +172,10 @@ public class RampingSubsystem extends Subsystem {
     commandedSpeed = OI.xboxController.getRawAxis(1);
 
     if (speed < commandedSpeed) {
-      speed += lowRampRate;
+      speed += lowRampUpRate;
       System.out.println("if");
     }else if(speed > commandedSpeed){
-      speed -= lowRampRate;
+      speed -= lowRampDownRate;
       System.out.println("else if");
     }else{
       speed = commandedSpeed;

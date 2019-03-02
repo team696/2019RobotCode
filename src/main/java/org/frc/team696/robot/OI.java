@@ -31,10 +31,9 @@ public class OI {
     public static Joystick wheel = new Joystick(1);
     public static Joystick operatorPanel = new Joystick(2);
 
-    public static Button conveyorButton = new JoystickButton(xboxController, 2);
-    public static Button button1 = new JoystickButton(xboxController, 1);
-    public static Button button7 = new JoystickButton(xboxController, 7);
-    public static Button button8 = new JoystickButton(xboxController, 8);
+    public static Button intakeButton = new JoystickButton(operatorPanel, 12);
+    public static Button outtakeButton = new JoystickButton(operatorPanel, 11);
+    public static Button HCRel = new JoystickButton(operatorPanel, 9);
 
     public static Button climberManualSwitch = new JoystickButton(operatorPanel, 1);
     public static Button climberModuleTest = new JoystickButton(operatorPanel, 8);
@@ -57,11 +56,11 @@ public class OI {
         dumbClimb.whenReleased(new ClimberSetState(ClimberState.HOLD));
         //semiAutoClimb.whileHeld(new ClimberSemiAuto());
         //reinit.whenPressed(new ClimberInit());
-        OI.button7.whenPressed(new ConveyorCommand(1));
-        OI.button7.whenReleased(new ConveyorCommand(0));
+        OI.intakeButton.whenPressed(new ConveyorCommand(1));
+        OI.intakeButton.whenReleased(new ConveyorCommand(0));
 
-        OI.button8.whenPressed(new ConveyorCommand(-1));
-        OI.button8.whenReleased(new ConveyorCommand(0));
+        OI.HCRel.whenPressed(new ConveyorCommand(-1));
+        OI.HCRel.whenReleased(new ConveyorCommand(0));
     }
 
     public static double getClimberManual(){

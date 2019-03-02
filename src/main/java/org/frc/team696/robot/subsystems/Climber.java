@@ -52,7 +52,7 @@ public class Climber extends Subsystem {
   public static final double atHeightError = 0.05;
 
   // Percent output at which to run the pusher motors
-  public static final double pusherPower = 0.5;
+  public static final double pusherPower = 1.0;
 
   public static final double frontNWOWPower = 0.02;
   public static final double rearNWOWPower = 0.02;

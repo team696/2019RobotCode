@@ -48,8 +48,8 @@ public class ConveyorSubsystem extends Subsystem {
 
     switch (conveyorPos) {
     case MID:
-      conveyorTiltBottom.set(true);
-      conveyorTiltTop.set(false);
+      conveyorTiltBottom.set(false);
+      conveyorTiltTop.set(true);
       break;
     case LOW:
       conveyorTiltBottom.set(true);
