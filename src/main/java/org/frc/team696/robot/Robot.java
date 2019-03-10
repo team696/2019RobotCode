@@ -28,6 +28,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.frc.team696.robot.subsystems.Climber;
 import org.frc.team696.robot.subsystems.ClimberModule;
 import org.frc.team696.robot.RobotMap;
+import org.frc.team696.robot.subsystems.ConveyorSubsystem;
+import org.frc.team696.robot.subsystems.DriveTrainSubsystem;
+import org.frc.team696.robot.subsystems.HatchSubsystem;
+import org.frc.team696.robot.subsystems.RampingSubsystem;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -40,18 +44,19 @@ import org.frc.team696.robot.RobotMap;
 // project root
 public class Robot extends TimedRobot {
 
-    public static final Climber climber = new Climber();
-    // public static final Climber climber = null;
-    // public ClimberModule testModule = new ClimberModule("Test Module");
-    public static OI oi;
-    public static ConveyorSubsystem conveyorSubsystem = new ConveyorSubsystem(RobotMap.topConveyorMotorPort,
-            RobotMap.bottomConveyorMotorPort, RobotMap.conveyorSolPortTop, RobotMap.conveyorSolPortBottom);
-    public static DriveTrainSubsystem driveTrainSubsystem = new DriveTrainSubsystem(RobotMap.leftFrontPort,
-            RobotMap.leftMidPort, RobotMap.leftRearPort, RobotMap.rightRearPort, RobotMap.rightMidPort,
-            RobotMap.rightFrontPort);
-    public static RampingSubsystem rampingSubsystem = new RampingSubsystem();
-    private Command autonomousCommand;
-    private SendableChooser<Command> chooser = new SendableChooser<>();
+  public static final Climber climber = new Climber();
+  // public static final Climber climber = null;
+  // public ClimberModule testModule = new ClimberModule("Test Module");
+  public static OI oi;
+  public static ConveyorSubsystem conveyorSubsystem = new ConveyorSubsystem(RobotMap.topConveyorMotorPort,
+      RobotMap.bottomConveyorMotorPort, RobotMap.conveyorSolPortTop, RobotMap.conveyorSolPortBottom);
+  public static DriveTrainSubsystem driveTrainSubsystem = new DriveTrainSubsystem(RobotMap.leftFrontPort,
+      RobotMap.leftMidPort, RobotMap.leftRearPort, RobotMap.rightRearPort, RobotMap.rightMidPort,
+      RobotMap.rightFrontPort);
+  public static HatchSubsystem hatchSubsystem = new HatchSubsystem(RobotMap.hatchActuatorPort);
+  public static RampingSubsystem rampingSubsystem = new RampingSubsystem();
+  private Command autonomousCommand;
+  private SendableChooser<Command> chooser = new SendableChooser<>();
 
     public static int conveyorTiltCase;
     private ConveyorState conveyorState = ConveyorState.HIGH;
@@ -128,13 +133,19 @@ public class Robot extends TimedRobot {
         }
     }
 
-    /**
-     * This function is called periodically during autonomous.
-     */
-    @Override
-    public void autonomousPeriodic() {
-        Scheduler.getInstance().run();
-    }
+  /**
+   * This function is called periodically during autonomous.
+   */
+  @Override
+  public void autonomousPeriodic() {
+    Scheduler.getInstance().run();
+    rampingSubsystem.ramp(conveyorState);
+    stick = -rampingSubsystem.wheel;
+    wheel = rampingSubsystem.speed;
+    leftSpeed = stick - wheel;
+    rightSpeed = stick + wheel;
+    driveTrainSubsystem.runDrive(leftSpeed, rightSpeed);
+  }
 
     @Override
     public void teleopInit() {
@@ -177,31 +188,36 @@ public class Robot extends TimedRobot {
         leftSpeed = stick - wheel;
         rightSpeed = stick + wheel;
 
-        // driveTrainSubsystem.runDrive(leftSpeed, rightSpeed);
-        if(OI.operatorPanel.getRawButton(4)){
-            System.out.println("climbing, driver functionality disabled");
-        }else{
-            driveTrainSubsystem.runDrive(leftSpeed, rightSpeed);
-        }
-        // if(OI.xboxController.getRawButton(1)){
-        // driveTrainSubsystem.leftRear.set(0.3);
-        // driveTrainSubsystem.rightRear.set(0.3);
-        // }
+    // driveTrainSubsystem.runDrive(leftSpeed, rightSpeed);
+    if (OI.operatorPanel.getRawButton(4)) {
+      System.out.println("climbing, driver functionality disabled");
+    } else {
+      leftSpeed = stick - wheel;
+      rightSpeed = stick + wheel;
+      driveTrainSubsystem.runDrive(leftSpeed, rightSpeed);
+    }
+    // if(OI.xboxController.getRawButton(1)){
+    // driveTrainSubsystem.leftRear.set(0.3);
+    // driveTrainSubsystem.rightRear.set(0.3);
+    // }
 
-        // System.out.println(comp.enabled());
+    // if(OI.xboxController.getRawButton(1)){
+    // driveTrainSubsystem.leftRear.set(0.3);
+    // driveTrainSubsystem.rightRear.set(0.3);
+    // }
 
-        if (OI.operatorPanel.getRawButton(14)) {
-            conveyorSubsystem.tiltConveyor(ConveyorState.MID);
-            conveyorState = ConveyorState.MID;
-        }
-        if (OI.operatorPanel.getRawButton(13)) {
-            conveyorSubsystem.tiltConveyor(ConveyorState.LOW);
-            conveyorState = ConveyorState.LOW;
-        }
-        if (OI.operatorPanel.getRawButton(15)) {
-            conveyorSubsystem.tiltConveyor(ConveyorState.HIGH);
-            conveyorState = ConveyorState.HIGH;
-        }
+    if (OI.operatorPanel.getRawButton(14)) {
+      conveyorSubsystem.tiltConveyor(ConveyorState.MID);
+      conveyorState = ConveyorState.MID;
+    }
+    if (OI.operatorPanel.getRawButton(13)) {
+      conveyorSubsystem.tiltConveyor(ConveyorState.LOW);
+      conveyorState = ConveyorState.LOW;
+    }
+    if (OI.operatorPanel.getRawButton(15)) {
+      conveyorSubsystem.tiltConveyor(ConveyorState.HIGH);
+      conveyorState = ConveyorState.HIGH;
+    }
 
     }
 

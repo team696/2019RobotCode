@@ -48,6 +48,9 @@ public class RobotMap {
     public static final int bottomConveyorMotorPort=10;
     public static final int conveyorSolPortTop = 0;
     public static final int conveyorSolPortBottom = 1;
+
+    //Hatch Parameters
+    public static final int hatchActuatorPort = 2;
     
     //Drivetrain parameters
     public static final int leftFrontPort = 2;

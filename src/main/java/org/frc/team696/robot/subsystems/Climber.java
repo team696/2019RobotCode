@@ -41,9 +41,9 @@ public class Climber extends Subsystem {
   public static final double rearDumbClimbPos = 0.410;
 
   public static final double frontLeftClimbPosition = 0.385;
-  public static final double frontRightClimbPosition = 0.400;
+  public static final double frontRightClimbPosition = 0.410;
   public static final double rearLeftClimbPosition = 0.440;
-  public static final double rearRightClimbPosition = 0.440;
+  public static final double rearRightClimbPosition = 0.450;
 
   // Maximum position error to be considered "armed"
   public static final double armedError = 0.05;
