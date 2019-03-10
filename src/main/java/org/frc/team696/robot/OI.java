@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 import org.frc.team696.robot.Robot;
+import org.frc.team696.robot.commands.ActuateHatch;
 import org.frc.team696.robot.commands.ClimberDumbClimb;
 import org.frc.team696.robot.commands.ClimberInit;
 import org.frc.team696.robot.commands.ClimberManualControl;
@@ -40,6 +41,7 @@ public class OI {
     public static Button climberArm = new JoystickButton(operatorPanel, 3);
     public static Button pusherOverride = new JoystickButton(operatorPanel, 2);
     public static Button dumbClimb = new JoystickButton(operatorPanel, 4);
+    public static Button hatchDeploy = new JoystickButton(operatorPanel, 6);
     //public static Button semiAutoClimb = new JoystickButton(operatorPanel, 6);
     //public static Button reinit = new JoystickButton(operatorPanel, 2);
     
@@ -61,6 +63,9 @@ public class OI {
 
         OI.HCRel.whenPressed(new ConveyorCommand(-1));
         OI.HCRel.whenReleased(new ConveyorCommand(0));
+
+        hatchDeploy.whenPressed(new ActuateHatch(true));
+        hatchDeploy.whenReleased(new ActuateHatch(false));
     }
 
     public static double getClimberManual(){

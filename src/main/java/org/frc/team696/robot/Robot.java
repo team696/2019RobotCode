@@ -26,8 +26,8 @@ import org.frc.team696.robot.subsystems.Climber;
 import org.frc.team696.robot.subsystems.ClimberModule;
 import org.frc.team696.robot.subsystems.ConveyorSubsystem;
 import org.frc.team696.robot.subsystems.DriveTrainSubsystem;
+import org.frc.team696.robot.subsystems.HatchSubsystem;
 import org.frc.team696.robot.subsystems.RampingSubsystem;
-
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -49,6 +49,7 @@ public class Robot extends TimedRobot {
   public static DriveTrainSubsystem driveTrainSubsystem = new DriveTrainSubsystem(RobotMap.leftFrontPort,
       RobotMap.leftMidPort, RobotMap.leftRearPort, RobotMap.rightRearPort, RobotMap.rightMidPort,
       RobotMap.rightFrontPort);
+  public static HatchSubsystem hatchSubsystem = new HatchSubsystem(RobotMap.hatchActuatorPort);
   public static RampingSubsystem rampingSubsystem = new RampingSubsystem();
   private Command autonomousCommand;
   private SendableChooser<Command> chooser = new SendableChooser<>();
@@ -134,6 +135,12 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
     Scheduler.getInstance().run();
+    rampingSubsystem.ramp(conveyorState);
+    stick = -rampingSubsystem.wheel;
+    wheel = rampingSubsystem.speed;
+    leftSpeed = stick - wheel;
+    rightSpeed = stick + wheel;
+    driveTrainSubsystem.runDrive(leftSpeed, rightSpeed);
   }
 
   @Override
@@ -174,35 +181,36 @@ public class Robot extends TimedRobot {
       wheel = 0;
     }
 
-        // driveTrainSubsystem.runDrive(leftSpeed, rightSpeed);
-        if(OI.operatorPanel.getRawButton(4)){
-            System.out.println("climbing, driver functionality disabled");
-        }else{
-            driveTrainSubsystem.runDrive(leftSpeed, rightSpeed);
-        }
-        // if(OI.xboxController.getRawButton(1)){
-        // driveTrainSubsystem.leftRear.set(0.3);
-        // driveTrainSubsystem.rightRear.set(0.3);
-        // }
-
-    driveTrainSubsystem.runDrive(leftSpeed, rightSpeed);
+    // driveTrainSubsystem.runDrive(leftSpeed, rightSpeed);
+    if (OI.operatorPanel.getRawButton(4)) {
+      System.out.println("climbing, driver functionality disabled");
+    } else {
+      leftSpeed = stick - wheel;
+      rightSpeed = stick + wheel;
+      driveTrainSubsystem.runDrive(leftSpeed, rightSpeed);
+    }
     // if(OI.xboxController.getRawButton(1)){
     // driveTrainSubsystem.leftRear.set(0.3);
     // driveTrainSubsystem.rightRear.set(0.3);
     // }
 
-        if (OI.operatorPanel.getRawButton(14)) {
-            conveyorSubsystem.tiltConveyor(ConveyorState.MID);
-            conveyorState = ConveyorState.MID;
-        }
-        if (OI.operatorPanel.getRawButton(13)) {
-            conveyorSubsystem.tiltConveyor(ConveyorState.LOW);
-            conveyorState = ConveyorState.LOW;
-        }
-        if (OI.operatorPanel.getRawButton(15)) {
-            conveyorSubsystem.tiltConveyor(ConveyorState.HIGH);
-            conveyorState = ConveyorState.HIGH;
-        }
+    // if(OI.xboxController.getRawButton(1)){
+    // driveTrainSubsystem.leftRear.set(0.3);
+    // driveTrainSubsystem.rightRear.set(0.3);
+    // }
+
+    if (OI.operatorPanel.getRawButton(14)) {
+      conveyorSubsystem.tiltConveyor(ConveyorState.MID);
+      conveyorState = ConveyorState.MID;
+    }
+    if (OI.operatorPanel.getRawButton(13)) {
+      conveyorSubsystem.tiltConveyor(ConveyorState.LOW);
+      conveyorState = ConveyorState.LOW;
+    }
+    if (OI.operatorPanel.getRawButton(15)) {
+      conveyorSubsystem.tiltConveyor(ConveyorState.HIGH);
+      conveyorState = ConveyorState.HIGH;
+    }
 
     if (OI.xboxController.getRawButton(1)) {
       conveyorSubsystem.tiltConveyor(ConveyorState.MID);
