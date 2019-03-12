@@ -92,6 +92,7 @@ public class DriveTrainSubsystem extends Subsystem {
 
   public void runDrive(double leftSpeed, double rightSpeed){
     drive.tankDrive(leftSpeed, rightSpeed);
+    drive.feedWatchdog();
     ntflcurrent.setDouble(leftFront.getOutputCurrent());
     ntfrcurrent.setDouble(rightFront.getOutputCurrent());
     ntrlcurrent.setDouble(leftRear.getOutputCurrent());

@@ -23,13 +23,13 @@ public class RampingSubsystem extends Subsystem {
   public double speed;
   public double wheel;
 
-  private double highRampDownRate = 0.03;
-  private double midRampDownRate = 0.05;
-  private double lowRampDownRate = 0.07;
+  private double highRampDownRate = 0.03; //0.03
+  private double midRampDownRate = 0.05; //0.05
+  private double lowRampDownRate = 0.07; //0.07
 
-  private double highRampUpRate = 0.03;
-  private double midRampUpRate = 0.05;
-  private double lowRampUpRate = 0.07;
+  private double highRampUpRate = 0.03; //0.03
+  private double midRampUpRate = 0.05; //0.05
+  private double lowRampUpRate = 0.07; //0.07
 
   private double commandedSpeed;
 
