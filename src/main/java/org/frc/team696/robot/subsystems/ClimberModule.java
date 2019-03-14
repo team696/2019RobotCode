@@ -155,6 +155,10 @@ public class ClimberModule extends Subsystem{
     this.talon.setInverted(inverted);
   }
 
+  public void setSelectedSensorPosition(int tick){
+    this.talon.setSelectedSensorPosition(tick);
+  }
+
   /**
    * Converts a velocity in rps to encoder ticks / 100 ms.
    * TrajectoryPoints require target velocity in sensor ticks / 100 ms.

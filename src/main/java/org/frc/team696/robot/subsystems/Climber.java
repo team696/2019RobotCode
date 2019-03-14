@@ -128,11 +128,12 @@ public class Climber extends Subsystem {
    * initializations are successful, transitions state to stowed.
    */
   public void initialize() {
-    if (state == ClimberState.UNINITIALIZED) {
-      if (fl.initialize() && fr.initialize() && rl.initialize() && rr.initialize()) {
-        setState(ClimberState.STOWED);
-      }
-    }
+    // if (state == ClimberState.UNINITIALIZED) {
+    //   if (fl.initialize() && fr.initialize() && rl.initialize() && rr.initialize()) {
+    //     setState(ClimberState.STOWED);
+    //   }
+    // }
+    setState(ClimberState.STOWED);
   }
 
   public void setState(ClimberState newState) {

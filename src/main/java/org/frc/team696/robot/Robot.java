@@ -138,6 +138,10 @@ public class Robot extends TimedRobot {
             autonomousCommand.start();
         }
 
+        Climber.fl.setSelectedSensorPosition(0);
+        Climber.fr.setSelectedSensorPosition(0);
+        Climber.rl.setSelectedSensorPosition(0);
+        Climber.rr.setSelectedSensorPosition(0);
         autoTimer.start();
     }
 
