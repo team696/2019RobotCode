@@ -11,25 +11,32 @@ import org.frc.team696.robot.Robot;
 
 import edu.wpi.first.wpilibj.command.Command;
 
-public class ActuateHatch extends Command {
-  boolean bool;
+public class MoveHatch extends Command {
 
-  public ActuateHatch(boolean bool) {
+  boolean state;
+
+  public MoveHatch(boolean state) {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
     requires(Robot.hatchSubsystem);
-    this.bool = bool;
+    this.state = state;
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.hatchSubsystem.actuate(bool);
+    if (!state) {
+      Robot.hatchSubsystem.actuate(false);
+      Robot.hatchSubsystem.move(state);
+    } else {
+      Robot.hatchSubsystem.move(state);
+    }
   }
 
   // Make this return true when this Command no longer needs to run execute()

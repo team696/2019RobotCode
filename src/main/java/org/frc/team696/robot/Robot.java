@@ -11,6 +11,8 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
+
 import org.frc.team696.robot.subsystems.DriveTrainSubsystem;
 import org.frc.team696.robot.subsystems.RampingSubsystem;
 
@@ -56,13 +58,13 @@ public class Robot extends TimedRobot {
     public static DriveTrainSubsystem driveTrainSubsystem = new DriveTrainSubsystem(RobotMap.leftFrontPort,
             RobotMap.leftMidPort, RobotMap.leftRearPort, RobotMap.rightRearPort, RobotMap.rightMidPort,
             RobotMap.rightFrontPort);
-    public static HatchSubsystem hatchSubsystem = new HatchSubsystem(RobotMap.hatchActuatorPort);
+    public static HatchSubsystem hatchSubsystem = new HatchSubsystem(RobotMap.hatchActuatorPort, RobotMap.hatchPositionPort);
     public static RampingSubsystem rampingSubsystem = new RampingSubsystem();
     private Command autonomousCommand;
     private SendableChooser<Command> chooser = new SendableChooser<>();
 
     public static int conveyorTiltCase;
-    private ConveyorState conveyorState = ConveyorState.HIGH;
+    public static ConveyorState conveyorState = ConveyorState.HIGH;
 
     public Compressor comp = new Compressor(17);
 
@@ -80,6 +82,8 @@ public class Robot extends TimedRobot {
 
     Timer autoTimer = new Timer();
     double bookitTime = 1.7;
+
+    PowerDistributionPanel pdp = new PowerDistributionPanel(18);
 
     /**
      * This function is run when the robot is first started up and should be used
@@ -138,10 +142,6 @@ public class Robot extends TimedRobot {
             autonomousCommand.start();
         }
 
-        Climber.fl.setSelectedSensorPosition(0);
-        Climber.fr.setSelectedSensorPosition(0);
-        Climber.rl.setSelectedSensorPosition(0);
-        Climber.rr.setSelectedSensorPosition(0);
         autoTimer.start();
     }
 
@@ -195,17 +195,16 @@ public class Robot extends TimedRobot {
         // System.out.println(OI.operatorPanel.getRawAxis(3));
 
         if (OI.wheel.getRawButton(3)) {
-            System.out.println("antitilt not running");
             wheel = OI.xboxController.getRawAxis(1);
             stick = OI.wheel.getRawAxis(0);
         } else {
-            System.out.println("antitilt running");
             rampingSubsystem.ramp(conveyorState);
             stick = -rampingSubsystem.wheel;
             wheel = rampingSubsystem.speed;
         }
 
-        speedTurnScale = a * (1 / ((stick * stick) - h)) + k;
+        // speedTurnScale = a * (1 / ((stick * stick) - h)) + k;
+        speedTurnScale = 1;
 
         // wheel = OI.xboxController.getRawAxis(Constants.turnAxisPort);
 
@@ -213,9 +212,6 @@ public class Robot extends TimedRobot {
         // stick = -rampingSubsystem.wheel;
         // wheel = rampingSubsystem.speed;
 
-        if (Math.abs(wheel) <= 0.03 && Math.abs(wheel) >= 0) {
-            wheel = 0;
-        }
 
         // driveTrainSubsystem.runDrive(leftSpeed, rightSpeed);
         if (OI.operatorPanel.getRawButton(4)) {
@@ -223,8 +219,8 @@ public class Robot extends TimedRobot {
         } else {
             leftSpeed = stick - wheel;
             rightSpeed = stick + wheel;
-            System.out.println(stick + " " + wheel);
             driveTrainSubsystem.runDrive(leftSpeed, rightSpeed);
+            
         }
         // if(OI.xboxController.getRawButton(1)){
         // driveTrainSubsystem.leftRear.set(0.3);
@@ -248,6 +244,9 @@ public class Robot extends TimedRobot {
             conveyorSubsystem.tiltConveyor(ConveyorState.HIGH);
             conveyorState = ConveyorState.HIGH;
         }
+
+        // System.out.println("wheel: " + wheel);
+        System.out.println("Right side: " + pdp.getCurrent(0) + " " + pdp.getCurrent(1) + "    Left Side: " + pdp.getCurrent(15) + " " + pdp.getCurrent(14));
 
     }
 

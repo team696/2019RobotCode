@@ -22,8 +22,8 @@ public class RobotMap {
     
     //Front right
     public static final int frClimberTalon = 14;
-    public static final boolean frClimberModuleInverted = true;
-    public static final boolean frClimberModuleSensorPhase = false;
+    public static final boolean frClimberModuleInverted = false;
+    public static final boolean frClimberModuleSensorPhase = true;
 
     //Rear left
     public static final int rlClimberTalon = 7;
@@ -51,6 +51,7 @@ public class RobotMap {
 
     //Hatch Parameters
     public static final int hatchActuatorPort = 2;
+    public static final int hatchPositionPort = 3;
     
     //Drivetrain parameters
     public static final int leftFrontPort = 2;

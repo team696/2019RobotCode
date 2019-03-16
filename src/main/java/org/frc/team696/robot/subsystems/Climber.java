@@ -18,7 +18,9 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 
 import org.frc.team696.robot.RobotMap;
 import org.frc.team696.robot.OI;
+import org.frc.team696.robot.Robot;
 import org.frc.team696.robot.states.ClimberState;
+import org.frc.team696.robot.states.ConveyorState;
 import org.frc.team696.robot.subsystems.ClimberModule;
 
 /**
@@ -133,6 +135,10 @@ public class Climber extends Subsystem {
     //     setState(ClimberState.STOWED);
     //   }
     // }
+    fl.initialize();
+    fr.initialize();
+    rl.initialize();
+    rr.initialize();
     setState(ClimberState.STOWED);
   }
 
@@ -289,7 +295,11 @@ public class Climber extends Subsystem {
         break;
 
       case CLIMBING:
-        moveIndividual(frontLeftClimbPosition, frontRightClimbPosition, rearLeftClimbPosition, rearRightClimbPosition);
+        if(Robot.conveyorState == ConveyorState.HIGH){
+          moveIndividual(frontLeftClimbPosition, frontRightClimbPosition, rearLeftClimbPosition, rearRightClimbPosition);
+        }else{
+          System.out.println("Conveyor not in high position!");
+        }
         if (getMaximumPositionError() < atHeightError) {
           setState(ClimberState.AT_HEIGHT);
         }
