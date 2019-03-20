@@ -44,19 +44,23 @@ public class RobotMap {
     public static final boolean rightPusherInvert = true;
     
     //Conveyor parameters
-    public static int topConveyorMotorPort=5;
-    public static int bottomConveyorMotorPort=10;
-    public static int conveyorSolPortTop = 0;
-    public static int conveyorSolPortBottom = 1;
+    public static final int topConveyorMotorPort=5;
+    public static final int bottomConveyorMotorPort=10;
+    public static final int conveyorSolPortTop = 0;
+    public static final int conveyorSolPortBottom = 1;
+
+    //Hatch Parameters
+    public static final int hatchActuatorPort = 2;
+    public static final int hatchPositionPort = 3;
     
     //Drivetrain parameters
-    public static int leftFrontPort = 2;
-    public static int leftMidPort = 3;
-    public static int leftRearPort = 4;
+    public static final int leftFrontPort = 2;
+    public static final int leftMidPort = 3;
+    public static final int leftRearPort = 4;
 
-    public static int rightRearPort = 11;
-    public static int rightMidPort = 12;
-    public static int rightFrontPort = 13;
+    public static final int rightRearPort = 11;
+    public static final int rightMidPort = 12;
+    public static final int rightFrontPort = 13;
 
 
     

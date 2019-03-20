@@ -11,15 +11,16 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
-import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.command.Subsystem;
+
 import org.frc.team696.robot.RobotMap;
 import org.frc.team696.robot.OI;
-import org.frc.team696.robot.commands.ClimberIdle;
-import org.frc.team696.robot.commands.ClimberManualControl;
+import org.frc.team696.robot.Robot;
 import org.frc.team696.robot.states.ClimberState;
+import org.frc.team696.robot.states.ConveyorState;
 import org.frc.team696.robot.subsystems.ClimberModule;
 
 /**
@@ -42,9 +43,9 @@ public class Climber extends Subsystem {
   public static final double rearDumbClimbPos = 0.410;
 
   public static final double frontLeftClimbPosition = 0.385;
-  public static final double frontRightClimbPosition = 0.415;
+  public static final double frontRightClimbPosition = 0.410;
   public static final double rearLeftClimbPosition = 0.440;
-  public static final double rearRightClimbPosition = 0.455;
+  public static final double rearRightClimbPosition = 0.450;
 
   // Maximum position error to be considered "armed"
   public static final double armedError = 0.05;
@@ -53,12 +54,13 @@ public class Climber extends Subsystem {
   public static final double atHeightError = 0.05;
 
   // Percent output at which to run the pusher motors
-  public static final double pusherPower = 1;
+  public static final double pusherPower = 1.0;
 
   public static final double frontNWOWPower = 0.02;
   public static final double rearNWOWPower = 0.02;
 
   private static ClimberState state = ClimberState.UNINITIALIZED;
+  public static boolean isManualControl = false;
 
   private static NetworkTableEntry ntflpos;
   private static NetworkTableEntry ntfrpos;
@@ -73,6 +75,10 @@ public class Climber extends Subsystem {
   private static NetworkTableEntry ntrlpercent;
   private static NetworkTableEntry ntrrpercent;
 
+  /**
+   * Climber subsystem; responsible for coordinating the actions of the climber
+   * modules.
+   */
   public Climber() {
     super("Climber");
 
@@ -119,12 +125,21 @@ public class Climber extends Subsystem {
     rightPusher.setInverted(RobotMap.rightPusherInvert);
   }
 
-  public static void initialize() {
-    if (state == ClimberState.UNINITIALIZED) {
-      if (fl.initialize() && fr.initialize() && rl.initialize() && rr.initialize()) {
-        state = ClimberState.STOWED;
-      }
-    }
+  /**
+   * Convenience method; calls initialize on each of the climber modules. If all
+   * initializations are successful, transitions state to stowed.
+   */
+  public void initialize() {
+    // if (state == ClimberState.UNINITIALIZED) {
+    //   if (fl.initialize() && fr.initialize() && rl.initialize() && rr.initialize()) {
+    //     setState(ClimberState.STOWED);
+    //   }
+    // }
+    fl.initialize();
+    fr.initialize();
+    rl.initialize();
+    rr.initialize();
+    setState(ClimberState.STOWED);
   }
 
   public void setState(ClimberState newState) {
@@ -185,11 +200,6 @@ public class Climber extends Subsystem {
     rr.moveToPosition(rrPos, PIDslot);
   }
 
-  public void stowFront() {
-    fl.moveToPosition(0);
-    fr.moveToPosition(0);
-  }
-
   public void moveIndividual(double flPos, double frPos, double rlPos, double rrPos) {
     moveIndividual(ClimberModule.freePidSlot, flPos, frPos, rlPos, rrPos);
   }
@@ -205,6 +215,11 @@ public class Climber extends Subsystem {
     fr.moveToPosition(pos);
     rl.moveToPosition(pos);
     rr.moveToPosition(pos);
+  }
+
+  public void stowFront() {
+    fl.moveToPosition(0);
+    fr.moveToPosition(0);
   }
 
   /**
@@ -231,6 +246,10 @@ public class Climber extends Subsystem {
     return Math.max(flerror, Math.max(frerror, Math.max(rlerror, rrerror)));
   }
 
+  /**
+   * Periodic climber tasks. Publishes data to Network Tables & services climber
+   * state machine. This should be called from RobotPeriodic() or similar.
+   */
   public void climberPeriodic() {
     ntflpos.setDouble(fl.getCorrectedPosition());
     ntfrpos.setDouble(fr.getCorrectedPosition());
@@ -245,47 +264,77 @@ public class Climber extends Subsystem {
     ntrlpercent.setDouble(rl.talon.getMotorOutputPercent());
     ntrrpercent.setDouble(rr.talon.getMotorOutputPercent());
 
-    if ( getPositionControlGood()) {
+    //Implement pusher control
+    if(OI.pusherOverride.get() || state == ClimberState.AT_HEIGHT || state == ClimberState.FRONT_ON_PLATFORM){
+      setPusherPower(pusherPower);
+      OI.operatorPanel.setOutput(1, true);
+    }
+    else{
+      setPusherPower(0);
+      OI.operatorPanel.setOutput(1, false);
+    }
+
+    if (getPositionControlGood() && !isManualControl) {
       // Service climber state
       switch (state) {
       case UNINITIALIZED:
         break;
+
       case STOWED:
         moveIndividual(0.0);
         break;
+
       case MOVE_TO_ARMED:
         if (getMaximumPositionError() < armedError) {
           setState(ClimberState.ARMED);
         }
+
       case ARMED:
         moveIndividual(frontStagedPosition, frontStagedPosition, rearStagedPosition, rearStagedPosition);
+        OI.operatorPanel.setOutput(2, true);
         break;
+
       case CLIMBING:
-        moveIndividual(frontLeftClimbPosition, frontRightClimbPosition, rearLeftClimbPosition, rearRightClimbPosition);
+        if(Robot.conveyorState == ConveyorState.HIGH){
+          moveIndividual(frontLeftClimbPosition, frontRightClimbPosition, rearLeftClimbPosition, rearRightClimbPosition);
+        }else{
+          System.out.println("Conveyor not in high position!");
+        }
         if (getMaximumPositionError() < atHeightError) {
           setState(ClimberState.AT_HEIGHT);
         }
+        OI.operatorPanel.setOutput(2, true);
         break;
+
       case AT_HEIGHT:
         moveIndividual(frontLeftClimbPosition, frontRightClimbPosition, rearLeftClimbPosition, rearRightClimbPosition);
-        setPusherPower(pusherPower);
-        if (!frontWOW()) {
+        //if (!frontWOW()) {
           // If no weight on front wheels, retract
-          setState(ClimberState.FRONT_ON_PLATFORM);
-          stowFront();
-        }
+          //setState(ClimberState.FRONT_ON_PLATFORM);
+          //stowFront();
+        //}
+        OI.operatorPanel.setOutput(2, true);
         break;
+
       case FRONT_ON_PLATFORM:
         stowFront();
         if (!rearWOW()) {
           moveIndividual(0);
           setState(ClimberState.STOWED);
         }
+        OI.operatorPanel.setOutput(2, true);
+        break;
+      case HOLD:
+        turnOff();
+        break;
+
+      default:
+        // Should never happen
+        setState(ClimberState.UNINITIALIZED);
         break;
       }
-    }
-    else{
-        turnOff();
+    } else {
+      turnOff();
     }
   }
 
@@ -294,6 +343,12 @@ public class Climber extends Subsystem {
     rightPusher.set(ControlMode.PercentOutput, power);
   }
 
+  /**
+   * WIP: Do not use for the time being. Intended to determine if the front arms
+   * are supporting any weight.
+   * 
+   * @return True if there is weight on the front arms.
+   */
   public boolean frontWOW() {
     if (fl.talon.getMotorOutputPercent() < frontNWOWPower && fr.talon.getMotorOutputPercent() < frontNWOWPower) {
       return false;
@@ -302,6 +357,12 @@ public class Climber extends Subsystem {
     }
   }
 
+  /**
+   * WIP: Do not use for the time being. Intended to determine if the rear arms
+   * are supporting any weight.
+   * 
+   * @return True if there is weight on the rear arms.
+   */
   public boolean rearWOW() {
     if (rl.talon.getMotorOutputPercent() < rearNWOWPower && rr.talon.getMotorOutputPercent() < rearNWOWPower) {
       return false;
@@ -313,6 +374,6 @@ public class Climber extends Subsystem {
   @Override
   public void initDefaultCommand() {
     // Set the default command for a subsystem here.
-    //setDefaultCommand(new ClimberIdle());
+    // setDefaultCommand(new ClimberIdle());
   }
 }
