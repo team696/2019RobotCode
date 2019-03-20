@@ -152,23 +152,23 @@ public class Robot extends TimedRobot {
     public void autonomousPeriodic() {
         Scheduler.getInstance().run();
 
-        if (autoTimer.get() <= bookitTime) {
-            driveTrainSubsystem.runDrive(1, -1);
-        } else if (autoTimer.get() > bookitTime && autoTimer.get() <= bookitTime + 0.25) {
-            // DriveTrainSubsystem.leftFront.setIdleMode(IdleMode.kBrake);
-            // DriveTrainSubsystem.leftRear.setIdleMode(IdleMode.kBrake);
-            // DriveTrainSubsystem.rightFront.setIdleMode(IdleMode.kBrake);
-            // DriveTrainSubsystem.rightRear.setIdleMode(IdleMode.kBrake);
-            // driveTrainSubsystem.runDrive(0.75, -0.75);
-            driveTrainSubsystem.runDrive(0.75, 0.75);
-        } else {
+        // if (autoTimer.get() <= bookitTime) {
+        //     driveTrainSubsystem.runDrive(1, -1);
+        // } else if (autoTimer.get() > bookitTime && autoTimer.get() <= bookitTime + 0.25) {
+        //     // DriveTrainSubsystem.leftFront.setIdleMode(IdleMode.kBrake);
+        //     // DriveTrainSubsystem.leftRear.setIdleMode(IdleMode.kBrake);
+        //     // DriveTrainSubsystem.rightFront.setIdleMode(IdleMode.kBrake);
+        //     // DriveTrainSubsystem.rightRear.setIdleMode(IdleMode.kBrake);
+        //     // driveTrainSubsystem.runDrive(0.75, -0.75);
+        //     driveTrainSubsystem.runDrive(0.75, 0.75);
+        // } else {
             rampingSubsystem.ramp(conveyorState);
             stick = -rampingSubsystem.wheel;
             wheel = rampingSubsystem.speed;
             leftSpeed = stick - wheel;
             rightSpeed = stick + wheel;
             driveTrainSubsystem.runDrive(leftSpeed, rightSpeed);
-        }
+        //}
     }
 
     @Override
@@ -195,11 +195,11 @@ public class Robot extends TimedRobot {
         // System.out.println(OI.operatorPanel.getRawAxis(3));
 
         if (OI.wheel.getRawButton(3)) {
-            wheel = OI.xboxController.getRawAxis(1);
+            wheel = OI.xboxController.getRawAxis(1) * 0.75;
             stick = OI.wheel.getRawAxis(0);
         } else {
             rampingSubsystem.ramp(conveyorState);
-            stick = -rampingSubsystem.wheel;
+            stick = -rampingSubsystem.wheel * 0.75;
             wheel = rampingSubsystem.speed;
         }
 
@@ -247,6 +247,7 @@ public class Robot extends TimedRobot {
 
         // System.out.println("wheel: " + wheel);
         System.out.println("Right side: " + pdp.getCurrent(0) + " " + pdp.getCurrent(1) + "    Left Side: " + pdp.getCurrent(15) + " " + pdp.getCurrent(14));
+        System.out.println(DriveTrainSubsystem.leftFront.getOutputCurrent() + " " + DriveTrainSubsystem.leftRear.getOutputCurrent() + " " + DriveTrainSubsystem.rightFront.getOutputCurrent() + " " + DriveTrainSubsystem.rightRear.getOutputCurrent());
 
     }
 

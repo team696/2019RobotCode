@@ -30,11 +30,16 @@ public class HatchSubsystem extends Subsystem {
       hatchActuator.set(bool);
   }
 
+  int loopNumber = 0;
   public void move(boolean bool){
     if(!bool){
       hatchActuator.set(true);
+      loopNumber = 0;
     }else{
-      hatchActuator.set(false);
+      loopNumber++;
+      if(loopNumber == 16){
+        hatchActuator.set(false);
+      }
     }
 
     hatchPosition.set(bool);
