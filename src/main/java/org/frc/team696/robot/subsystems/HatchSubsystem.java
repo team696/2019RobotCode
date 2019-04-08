@@ -17,15 +17,32 @@ public class HatchSubsystem extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
-  private Solenoid hatchActuator;
+  public Solenoid hatchActuator;
+  public Solenoid hatchPosition;
 
-  public HatchSubsystem(final int hatchActuator){
+  public HatchSubsystem(final int hatchActuator, final int hatchPosition){
     this.hatchActuator = new Solenoid(17, hatchActuator);
+    this.hatchPosition = new Solenoid(17, hatchPosition);
   }
 
   public void actuate(boolean bool){
-    hatchActuator.set(bool);
-    System.out.println("HELLO 2");
+    if(hatchPosition.get())
+      hatchActuator.set(bool);
+  }
+
+  int loopNumber = 0;
+  public void move(boolean bool){
+    if(!bool){
+      hatchActuator.set(true);
+      loopNumber = 0;
+    }else{
+      loopNumber++;
+      if(loopNumber == 16){
+        hatchActuator.set(false);
+      }
+    }
+
+    hatchPosition.set(bool);
   }
 
   @Override

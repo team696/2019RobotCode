@@ -52,24 +52,28 @@ public class DriveTrainSubsystem extends Subsystem {
     leftFront = new CANSparkMax(leftFrontPort, MotorType.kBrushless);
     leftFront.restoreFactoryDefaults();
     leftFront.setIdleMode(IdleMode.kCoast);
-    leftFront.setSmartCurrentLimit(40);
+    leftFront.setSmartCurrentLimit(80, 20, 10000);
+    leftFront.setOpenLoopRampRate(0);
     
     leftRear = new CANSparkMax(leftRearPort, MotorType.kBrushless);
     leftRear.restoreFactoryDefaults();
     leftRear.setIdleMode(IdleMode.kCoast);
-    leftRear.setSmartCurrentLimit(40);
+    leftRear.setSmartCurrentLimit(80, 20, 10000);
+    leftRear.setOpenLoopRampRate(0);
 
     rightFront = new CANSparkMax(rightFrontPort, MotorType.kBrushless);
     rightFront.restoreFactoryDefaults();
     rightFront.setIdleMode(IdleMode.kCoast); 
-    rightFront.setSmartCurrentLimit(40);
+    rightFront.setSmartCurrentLimit(80, 20, 10000);
     rightFront.setInverted(true);
+    rightFront.setOpenLoopRampRate(0);
 
     rightRear = new CANSparkMax(rightRearPort, MotorType.kBrushless);
     rightRear.restoreFactoryDefaults();
     rightRear.setIdleMode(IdleMode.kCoast);
-    rightRear.setSmartCurrentLimit(40);
+    rightRear.setSmartCurrentLimit(80, 20, 10000);
     rightRear.setInverted(true);
+    rightRear.setOpenLoopRampRate(0);
 
     leftSide = new SpeedControllerGroup(leftFront, leftRear);
     rightSide = new SpeedControllerGroup(rightFront, rightRear);
@@ -101,6 +105,7 @@ public class DriveTrainSubsystem extends Subsystem {
     ntfrmotortemp.setDouble(rightFront.getMotorTemperature());
     ntrlmotortemp.setDouble(leftRear.getMotorTemperature());
     ntrrmotortemp.setDouble(rightRear.getMotorTemperature());
+    //System.out.println(leftFront.get());
   }
 
   @Override

@@ -131,19 +131,15 @@ public class RampingSubsystem extends Subsystem {
   // }
 
   private void rampDownHigh() {
-    System.out.println("Running rampDownHigh");
     wheel = -OI.wheel.getRawAxis(0);
     commandedSpeed = OI.xboxController.getRawAxis(1);
 
     if (speed < commandedSpeed) {
       speed += highRampUpRate;
-      System.out.println("if");
     }else if(speed > commandedSpeed){
       speed -= highRampDownRate;
-      System.out.println("else if");
     }else{
       speed = commandedSpeed;
-      System.out.println("else");
     }
 
   }

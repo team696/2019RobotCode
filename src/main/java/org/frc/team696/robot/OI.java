@@ -21,6 +21,7 @@ import org.frc.team696.robot.commands.ClimberSemiAuto;
 import org.frc.team696.robot.commands.ClimberSetState;
 import org.frc.team696.robot.commands.ClimberTest;
 import org.frc.team696.robot.commands.ConveyorCommand;
+import org.frc.team696.robot.commands.MoveHatch;
 import org.frc.team696.robot.states.ClimberState;
 
 /**
@@ -42,33 +43,36 @@ public class OI {
     public static Button pusherOverride = new JoystickButton(operatorPanel, 2);
     public static Button dumbClimb = new JoystickButton(operatorPanel, 4);
     public static Button hatchDeploy = new JoystickButton(operatorPanel, 6);
-    //public static Button semiAutoClimb = new JoystickButton(operatorPanel, 6);
-    //public static Button reinit = new JoystickButton(operatorPanel, 2);
-    
+    public static Button hatchStow = new JoystickButton(operatorPanel, 5);
+    // public static Button semiAutoClimb = new JoystickButton(operatorPanel, 6);
+    // public static Button reinit = new JoystickButton(operatorPanel, 2);
 
-    public OI(){
+    public OI() {
         climberModuleTest.whenPressed(new ClimberTest());
-        
+
         climberManualSwitch.whileHeld(new ClimberManualControl());
-        
+
         climberArm.whenPressed(new ClimberSetState(ClimberState.MOVE_TO_ARMED));
         climberArm.whenReleased(new ClimberSetState(ClimberState.STOWED));
-        
+
         dumbClimb.whenPressed(new ClimberSetState(ClimberState.CLIMBING));
         dumbClimb.whenReleased(new ClimberSetState(ClimberState.HOLD));
-        //semiAutoClimb.whileHeld(new ClimberSemiAuto());
-        //reinit.whenPressed(new ClimberInit());
+        // semiAutoClimb.whileHeld(new ClimberSemiAuto());
+        // reinit.whenPressed(new ClimberInit());
         OI.intakeButton.whenPressed(new ConveyorCommand(1));
         OI.intakeButton.whenReleased(new ConveyorCommand(0));
 
-        OI.HCRel.whenPressed(new ConveyorCommand(-1));
-        OI.HCRel.whenReleased(new ConveyorCommand(0));
+        outtakeButton.whenPressed(new ConveyorCommand(-1));
+        outtakeButton.whenReleased(new ConveyorCommand(0));
 
-        hatchDeploy.whenPressed(new ActuateHatch(true));
-        hatchDeploy.whenReleased(new ActuateHatch(false));
+        HCRel.whenPressed(new ActuateHatch(true));
+        HCRel.whenReleased(new ActuateHatch(false));
+
+        hatchDeploy.whenPressed(new MoveHatch(true));
+        hatchStow.whenPressed(new MoveHatch(false));
     }
 
-    public static double getClimberManual(){
+    public static double getClimberManual() {
         return operatorPanel.getRawAxis(0);
     }
     // CREATING BUTTONS
@@ -98,7 +102,5 @@ public class OI {
     // Start the command when the button is released and let it run the command
     // until it is finished as determined by it's isFinished method.
     // button.whenReleased(new ExampleCommand());
-
-
 
 }

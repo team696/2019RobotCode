@@ -85,17 +85,21 @@ public class ClimberModule extends Subsystem{
    * If so, zeros the encoder and sets the isInitialized attribute.
    * @return True if initialization was successful, false otherwise. 
    */
-  public boolean initialize() {
+  public void initialize() {
     // Check that limit switches indicate stowed position
-    if (this.talon.getSensorCollection().isRevLimitSwitchClosed()) {
-      this.talon.setSelectedSensorPosition(0);
-      this.isInitialized = true;
-      System.out.println(this.getName() + " initialized");
-      return true;
-    } else {
-      System.out.println(this.getName() + " not initialized!");
-      return false;
-    }
+    // if (this.talon.getSensorCollection().isRevLimitSwitchClosed()) {
+    //   this.talon.setSelectedSensorPosition(0);
+    //   this.isInitialized = true;
+    //   System.out.println(this.getName() + " initialized");
+    //   return true;
+    // } else {
+    //   System.out.println(this.getName() + " not initialized!");
+    //   return false;
+    // }
+    this.talon.setSelectedSensorPosition(0);
+    this.isInitialized = true;
+    this.positionControlGood = true;
+    System.out.println("Initialized!");
   }
 
   /**
