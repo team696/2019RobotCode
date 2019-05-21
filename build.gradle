@@ -1,18 +1,12 @@
-
 plugins {
     id "java"
-    id "edu.wpi.first.GradleRIO" version "2019.2.1"
+    id "edu.wpi.first.GradleRIO" version "2019.4.1"
 }
 
-apply plugin: 'checkstyle'
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
 
-checkstyle {
-    toolVersion "8.11"
-    configFile rootProject.file('config/checkstyle/checkstyle.xml')
-}
-
-def TEAM = 696
-def ROBOT_MAIN_CLASS = "org.frc.team696.robot.Main"
+def ROBOT_MAIN_CLASS = "frc.robot.Main"
 
 // Define my targets (RoboRIO) and artifacts (deployable files)
 // This is added by GradleRIO's backing project EmbeddedTools.
@@ -43,18 +37,23 @@ deploy {
     }
 }
 
-// Defining my dependencies. In this case, WPILib (+ friends), CTRE Phoenix (Talon SRX)
-// and NavX.
+// Set this to true to enable desktop support.
+def includeDesktopSupport = false
+
+// Maven central needed for JUnit
+repositories {
+    mavenCentral()
+}
+
+// Defining my dependencies. In this case, WPILib (+ friends), and vendor libraries.
+// Also defines JUnit 4.
 dependencies {
     compile wpi.deps.wpilib()
     compile wpi.deps.vendor.java()
     nativeZip wpi.deps.vendor.jni(wpi.platforms.roborio)
     nativeDesktopZip wpi.deps.vendor.jni(wpi.platforms.desktop)
+    
     testCompile 'junit:junit:4.12'
-}
-
-repositories{
-    mavenCentral()
 }
 
 // Setting up my Jar File. In this case, adding all libraries into the main jar ('fat jar')
@@ -63,16 +62,4 @@ repositories{
 jar {
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     manifest edu.wpi.first.gradlerio.GradleRIOPlugin.javaManifest(ROBOT_MAIN_CLASS)
-}
-
-tasks.withType(Checkstyle) {
- ignoreFailures = true
- exclude '**/com/**'
- exclude '**/frc/team696/autonomousCommands/**'
- reports {
-    html.enabled = true
-    html.destination rootProject.file("build/reports/checkstyle.html")
-    xml.enabled = true
-    xml.destination rootProject.file("build/reports/checkstyle-result.xml")
- }
 }
