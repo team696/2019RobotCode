@@ -51,7 +51,7 @@ public class Robot extends TimedRobot  {
   Command m_autonomousCommand;
   SendableChooser<Command> m_chooser = new SendableChooser<>();
 
-  private static final String k_path_name = "xeris";
+  private static final String k_path_name = "boz";
 
   // public static CANSparkMax leftFront;
   // public static CANSparkMax leftRear;
@@ -117,8 +117,10 @@ public class Robot extends TimedRobot  {
     m_oi = new OI();
     m_chooser.setDefaultOption("Default Auto", new ExampleCommand());
 
-    
-
+    //just added 
+    navX.zeroYaw();
+    lFrontEncoder.setPosition(0);
+    rFrontEncoder.setPosition(0);
 
     lFrontEncoder.setPosition(0);
     lRearEncoder.setPosition(0);
@@ -199,8 +201,8 @@ public class Robot extends TimedRobot  {
 
     // navX.zeroYaw();
 
-    int leftIntPos = (int)(lFrontEncoder.getPosition()*0.1538);
-    int rightIntPos = (int)(rFrontEncoder.getPosition()*0.1463);
+    int leftIntPos = (int)(lFrontEncoder.getPosition());
+    int rightIntPos = (int)(rFrontEncoder.getPosition());
 
  try{
 
@@ -213,10 +215,10 @@ public class Robot extends TimedRobot  {
 
 
     leftFollower.configureEncoder(leftIntPos, 10, wheelDiameter);
-    leftFollower.configurePIDVA(0.2,0,0,1/16, 0);
+    leftFollower.configurePIDVA(0.5,0,0,1/16, 0);
 
     rightFollower.configureEncoder(rightIntPos , 10 , wheelDiameter);
-    rightFollower.configurePIDVA(0.2, 0, 0, 1/16, 0);
+    rightFollower.configurePIDVA(0.5, 0, 0, 1/16, 0);
 
     followerNotifier = new Notifier(this::followPath);
     followerNotifier.startPeriodic(left_trajectory.get(0).dt);
@@ -260,6 +262,7 @@ public class Robot extends TimedRobot  {
       leftSide.set(0);
       rightSide.set(0);
       System.out.println("pathfinder is done");
+
     } else {
       leftFront.setIdleMode(IdleMode.kCoast);
       leftRear.setIdleMode(IdleMode.kCoast);
@@ -270,47 +273,47 @@ public class Robot extends TimedRobot  {
       double rawRightSpeed = rightFollower.calculate((int)rFrontEncoder.getPosition());
       double heading = navX.getYaw();
       double desired_heading = Pathfinder.r2d(leftFollower.getHeading());
-      double heading_difference = Pathfinder.boundHalfDegrees(desired_heading - heading);
-      double turn =  0;//0.8 * (-1.0/80.0) * heading_difference;
+      double heading_difference = Pathfinder.boundHalfDegrees(heading - desired_heading);
+      double turn =  0.8 * (-1.0/80.0) * heading_difference;
       double leftSpeed = rawLeftSpeed+turn;
       double rightSpeed = rawRightSpeed-turn;
       // drive.tankDrive(leftSpeed, rightSpeed);
       leftSide.set(leftSpeed);
       rightSide.set(rightSpeed);
-      System.out.println("Pathfinder is Running");
+      System.out.println(rawRightSpeed);
 
       //csv file writer
 
-      try{
-        //  FileWriter logFile = new FileWriter(new FileWriter("log.csv"));
-         errorFileWriter = new PrintWriter(new File("log.csv"));
-         StringBuffer csvHeader = new StringBuffer("");
-         StringBuffer csvData = new StringBuffer("");
+      // try{
+      //   //  FileWriter logFile = new FileWriter(new FileWriter("log.csv"));
+      //    errorFileWriter = new PrintWriter(new File("log.csv"));
+      //    StringBuffer csvHeader = new StringBuffer("");
+      //    StringBuffer csvData = new StringBuffer("");
 
 
-         csvHeader.append("dTime,SegPosition,DistanceCovered\n");
+      //    csvHeader.append("dTime,SegPosition,DistanceCovered\n");
 
-         errorFileWriter.write(csvHeader.toString());
+      //    errorFileWriter.write(csvHeader.toString());
         
-        for(int i = 0; i<200; i++){
+      //   for(int i = 0; i<200; i++){
       
-          csvData.append((char)leftFollower.getSegment().dt);
-          csvData.append(',');
-          csvData.append((char)leftFollower.getSegment().position);
-          csvData.append(',');
-          csvData.append((char)leftFollower.getSegment().x);
-          csvData.append('\n');
-          errorFileWriter.write(csvData.toString());
+      //     csvData.append((char)leftFollower.getSegment().dt);
+      //     csvData.append(',');
+      //     csvData.append((char)leftFollower.getSegment().position);
+      //     csvData.append(',');
+      //     csvData.append((char)leftFollower.getSegment().x);
+      //     csvData.append('\n');
+      //     errorFileWriter.write(csvData.toString());
 
 
-        } 
-        errorFileWriter.close();
+      //   } 
+      //   errorFileWriter.close();
         
-      }
-         catch(FileNotFoundException error){
+      // }
+      //    catch(FileNotFoundException error){
 
-           error.printStackTrace();
-         }
+      //      error.printStackTrace();
+      //    }
      
     }
   }
@@ -330,7 +333,7 @@ public class Robot extends TimedRobot  {
     
     followerNotifier.stop();
     leftSide.set(0);
-    rightSide.set(0);
+    rightSide.set(0); 
     navX.zeroYaw();
     lFrontEncoder.setPosition(0);
     rFrontEncoder.setPosition(0);
