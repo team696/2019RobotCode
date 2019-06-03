@@ -9,6 +9,7 @@ package frc.robot;
 
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -23,6 +24,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
@@ -51,7 +54,7 @@ public class Robot extends TimedRobot  {
   Command m_autonomousCommand;
   SendableChooser<Command> m_chooser = new SendableChooser<>();
 
-  private static final String k_path_name = "boz";
+  // private static final String k_path_name = "boz";
 
   // public static CANSparkMax leftFront;
   // public static CANSparkMax leftRear;
@@ -106,6 +109,12 @@ public class Robot extends TimedRobot  {
   PrintWriter errorFileWriter;
 
   double wheelDiameter =  5.5/12;
+
+  public static String path1 = "Unnamed";
+  public static String path2 = "path2";
+
+
+  VictorSPX conveyor = new VictorSPX(10);
 
   /**
    * This function is run when the robot is first started up and should be
@@ -220,10 +229,15 @@ public class Robot extends TimedRobot  {
     rightFollower.configureEncoder(rightIntPos , 10 , wheelDiameter);
     rightFollower.configurePIDVA(0.5, 0, 0, 1/16, 0);
 
-    followerNotifier = new Notifier(this::followPath);
-    followerNotifier.startPeriodic(left_trajectory.get(0).dt);
+    followerNotifier1 = new Notifier(this::followPath1);
+    followerNotifier1.startPeriodic(leftTrajectory1.get(0).dt);
     
-  
+   
+
+
+
+
+
 
   }
   catch(IOException ex){
