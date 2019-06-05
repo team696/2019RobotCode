@@ -33,6 +33,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import jaci.pathfinder.Pathfinder;
@@ -78,26 +79,34 @@ public class Robot extends TimedRobot  {
   public static AHRS navX = new AHRS(Port.kMXP, (byte)50);
   Compressor comp = new Compressor(17);
 
-  Trajectory leftTrajectory;
-  Trajectory rightTrajectory;
+  public static Trajectory leftTrajectory1;
+  public static Trajectory rightTrajectory1;
+
+  public static Trajectory leftTrajectory2;
+  public static Trajectory rightTrajectory2;
 
 
-  public static EncoderFollower leftFollower;
-  public static EncoderFollower rightFollower;
+  public static EncoderFollower leftFollower1;
+  public static EncoderFollower rightFollower1;
+
+  public static EncoderFollower leftFollower2;
+  public static EncoderFollower rightFollower2;
 
   public static Notifier followerNotifier;
 
+  public static Notifier followerNotifier2;
+
   // public static double conversionFactor = 0.16;
 
-  CANSparkMax leftFront = new CANSparkMax(2, MotorType.kBrushless);
-  CANEncoder lFrontEncoder = new CANEncoder(leftFront);
+  static CANSparkMax leftFront = new CANSparkMax(2, MotorType.kBrushless);
+  public static CANEncoder lFrontEncoder = new CANEncoder(leftFront);
   // lFrontEncoder.setPositionConversionFactor(1.9188888888888888888);
 
   CANSparkMax leftRear = new CANSparkMax(4, MotorType.kBrushless);
   CANEncoder lRearEncoder = new CANEncoder(leftRear);
 
-  CANSparkMax rightFront = new CANSparkMax(13, MotorType.kBrushless);
-  CANEncoder rFrontEncoder = new CANEncoder(rightFront);
+  static CANSparkMax rightFront = new CANSparkMax(13, MotorType.kBrushless);
+  public static CANEncoder rFrontEncoder = new CANEncoder(rightFront);
   // rFrontEncoder.setPositionConversionFactor(1.9188888888888888888);
 
   CANSparkMax rightRear = new CANSparkMax(11, MotorType.kBrushless);
@@ -106,11 +115,11 @@ public class Robot extends TimedRobot  {
   SpeedControllerGroup leftSide = new SpeedControllerGroup(leftFront, leftRear);
   SpeedControllerGroup rightSide = new SpeedControllerGroup(rightFront, rightRear);
 
-  PrintWriter errorFileWriter;
+  // PrintWriter errorFileWriter;
 
-  double wheelDiameter =  5.5/12;
+  public static final double wheelDiameter =  5.5/12;
 
-  public static String path1 = "Unnamed";
+  public static String path1 = "path1";
   public static String path2 = "path2";
 
 
@@ -216,21 +225,35 @@ public class Robot extends TimedRobot  {
  try{
 
 
-    Trajectory left_trajectory =  PathfinderFRC.getTrajectory(k_path_name + ".right");
-    Trajectory right_trajectory = PathfinderFRC.getTrajectory(k_path_name + ".left");
+     leftTrajectory1 =  PathfinderFRC.getTrajectory( path1+ ".right");
+     rightTrajectory1 = PathfinderFRC.getTrajectory(path1 + ".left");
+
+     leftTrajectory2 = PathfinderFRC.getTrajectory(path2 + ".right");
+     rightTrajectory2 = PathfinderFRC.getTrajectory(path2 + ".left");
+
   
-    leftFollower = new EncoderFollower(left_trajectory);
-    rightFollower = new EncoderFollower(right_trajectory);
+    leftFollower1 = new EncoderFollower(leftTrajectory1);
+    rightFollower1 = new EncoderFollower(rightTrajectory1);
 
+    leftFollower2 = new EncoderFollower(leftTrajectory2);
+    rightFollower2 = new EncoderFollower(rightTrajectory2);    
 
-    leftFollower.configureEncoder(leftIntPos, 10, wheelDiameter);
-    leftFollower.configurePIDVA(0.5,0,0,1/16, 0);
+    leftFollower1.configureEncoder(leftIntPos, 10, wheelDiameter);
+    leftFollower1.configurePIDVA(0.5,0,0,1/16, 0);
 
-    rightFollower.configureEncoder(rightIntPos , 10 , wheelDiameter);
-    rightFollower.configurePIDVA(0.5, 0, 0, 1/16, 0);
+    leftFollower2.configureEncoder(leftIntPos, 10, wheelDiameter);
+    leftFollower2.configurePIDVA(0.5, 0, 0, 1/16, 0);
 
-    followerNotifier1 = new Notifier(this::followPath1);
-    followerNotifier1.startPeriodic(leftTrajectory1.get(0).dt);
+    rightFollower1.configureEncoder(rightIntPos , 10 , wheelDiameter);
+    rightFollower1.configurePIDVA(0.5, 0, 0, 1/16, 0);
+
+    rightFollower2.configureEncoder(rightIntPos, 10, wheelDiameter);
+    rightFollower2.configurePIDVA(0.5, 0, 0, 1/16, 0);
+
+    followerNotifier = new Notifier(this::followPath);
+    followerNotifier.startPeriodic(leftTrajectory1.get(0).dt);
+
+    followerNotifier2 = new Notifier(this::followPath2);
     
    
 
@@ -271,10 +294,10 @@ public class Robot extends TimedRobot  {
 
   
   public void followPath(){
-    if(leftFollower.isFinished()||rightFollower.isFinished()){
+    if(leftFollower1.isFinished()||rightFollower1.isFinished()){
       followerNotifier.stop();
-      leftSide.set(0);
-      rightSide.set(0);
+      // leftSide.set(0);
+      // rightSide.set(0);
       System.out.println("pathfinder is done");
 
     } else {
@@ -283,10 +306,10 @@ public class Robot extends TimedRobot  {
       rightFront.setIdleMode(IdleMode.kCoast);
       rightRear.setIdleMode(IdleMode.kCoast);
 
-      double rawLeftSpeed = leftFollower.calculate((int)lFrontEncoder.getPosition());
-      double rawRightSpeed = rightFollower.calculate((int)rFrontEncoder.getPosition());
+      double rawLeftSpeed = leftFollower1.calculate((int)lFrontEncoder.getPosition());
+      double rawRightSpeed = rightFollower1.calculate((int)rFrontEncoder.getPosition());
       double heading = navX.getYaw();
-      double desired_heading = Pathfinder.r2d(leftFollower.getHeading());
+      double desired_heading = Pathfinder.r2d(leftFollower1.getHeading());
       double heading_difference = Pathfinder.boundHalfDegrees(heading - desired_heading);
       double turn =  0.8 * (-1.0/80.0) * heading_difference;
       double leftSpeed = rawLeftSpeed+turn;
@@ -330,8 +353,37 @@ public class Robot extends TimedRobot  {
       //    }
      
     }
-  }
 
+   
+  }
+  public void followPath2(){
+    if(leftFollower2.isFinished()||rightFollower2.isFinished()){
+      followerNotifier2.stop();
+      leftSide.set(0);
+      rightSide.set(0);
+      System.out.println("pathfinder is done");
+  
+    } else {
+      leftFront.setIdleMode(IdleMode.kCoast);
+      leftRear.setIdleMode(IdleMode.kCoast);
+      rightFront.setIdleMode(IdleMode.kCoast);
+      rightRear.setIdleMode(IdleMode.kCoast);
+
+      double rawLeftSpeed2 = leftFollower2.calculate((int)lFrontEncoder.getPosition());
+      double rawRightSpeed2 = rightFollower2.calculate((int)rFrontEncoder.getPosition());
+      double heading2 = navX.getYaw();
+      double desired_heading2 = Pathfinder.r2d(leftFollower2.getHeading());
+      double heading_difference2 = Pathfinder.boundHalfDegrees(heading2 - desired_heading2);
+      double turn2 =  0.8 * (-1.0/80.0) * heading_difference2;
+      double leftSpeed2 = rawLeftSpeed2+turn2;
+      double rightSpeed2 = rawRightSpeed2-turn2;
+      // drive.tankDrive(leftSpeed, rightSpeed);
+      leftSide.set(leftSpeed2);
+      rightSide.set(rightSpeed2);
+      System.out.println(rawRightSpeed2);
+
+  }
+  }
   /**
    * This function is called periodically during autonomous.
    */
@@ -339,7 +391,10 @@ public class Robot extends TimedRobot  {
   public void autonomousPeriodic() {
     Scheduler.getInstance().run();
     //System.out.println(lFrontEncoder.getPosition());
-    
+    if(leftFollower1.isFinished()||rightFollower2.isFinished()){
+      followerNotifier2.startPeriodic(leftTrajectory2.get(0).dt);
+
+    }
   } 
 
   @Override
