@@ -81,15 +81,15 @@ public class DriveTrainSubsystem extends Subsystem {
     drive = new DifferentialDrive(leftSide, rightSide);
     drive.setDeadband(0.1);
 
-    ntflcurrent = dtTable.getEntry("CurrentFL");
-    ntfrcurrent = dtTable.getEntry("CurrentFR");
-    ntrlcurrent = dtTable.getEntry("CurrentRL");
-    ntrrcurrent = dtTable.getEntry("CurrentRR");
+    // ntflcurrent = dtTable.getEntry("CurrentFL");
+    // ntfrcurrent = dtTable.getEntry("CurrentFR");
+    // ntrlcurrent = dtTable.getEntry("CurrentRL");
+    // ntrrcurrent = dtTable.getEntry("CurrentRR");
 
-    ntflmotortemp = dtTable.getEntry("MotorTempFL");
-    ntfrmotortemp = dtTable.getEntry("MotorTempFR");
-    ntrlmotortemp = dtTable.getEntry("MotorTempRL");
-    ntrrmotortemp = dtTable.getEntry("MotorTempRR");
+    // ntflmotortemp = dtTable.getEntry("MotorTempFL");
+    // ntfrmotortemp = dtTable.getEntry("MotorTempFR");
+    // ntrlmotortemp = dtTable.getEntry("MotorTempRL");
+    // ntrrmotortemp = dtTable.getEntry("MotorTempRR");
 
 
   }
@@ -97,14 +97,14 @@ public class DriveTrainSubsystem extends Subsystem {
   public void runDrive(double leftSpeed, double rightSpeed){
     drive.tankDrive(leftSpeed, rightSpeed);
     drive.feedWatchdog();
-    ntflcurrent.setDouble(leftFront.getOutputCurrent());
-    ntfrcurrent.setDouble(rightFront.getOutputCurrent());
-    ntrlcurrent.setDouble(leftRear.getOutputCurrent());
-    ntrrcurrent.setDouble(rightRear.getOutputCurrent());
-    ntflmotortemp.setDouble(leftFront.getMotorTemperature());
-    ntfrmotortemp.setDouble(rightFront.getMotorTemperature());
-    ntrlmotortemp.setDouble(leftRear.getMotorTemperature());
-    ntrrmotortemp.setDouble(rightRear.getMotorTemperature());
+    // ntflcurrent.setDouble(leftFront.getOutputCurrent());
+    // ntfrcurrent.setDouble(rightFront.getOutputCurrent());
+    // ntrlcurrent.setDouble(leftRear.getOutputCurrent());
+    // ntrrcurrent.setDouble(rightRear.getOutputCurrent());
+    // ntflmotortemp.setDouble(leftFront.getMotorTemperature());
+    // ntfrmotortemp.setDouble(rightFront.getMotorTemperature());
+    // ntrlmotortemp.setDouble(leftRear.getMotorTemperature());
+    // ntrrmotortemp.setDouble(rightRear.getMotorTemperature());
     //System.out.println(leftFront.get());
   }
 

@@ -251,18 +251,6 @@ public class Climber extends Subsystem {
    * state machine. This should be called from RobotPeriodic() or similar.
    */
   public void climberPeriodic() {
-    ntflpos.setDouble(fl.getCorrectedPosition());
-    ntfrpos.setDouble(fr.getCorrectedPosition());
-    ntrlpos.setDouble(rl.getCorrectedPosition());
-    ntrrpos.setDouble(rr.getCorrectedPosition());
-    ntflcurrent.setDouble(fl.talon.getOutputCurrent());
-    ntfrcurrent.setDouble(fr.talon.getOutputCurrent());
-    ntrlcurrent.setDouble(rl.talon.getOutputCurrent());
-    ntrrcurrent.setDouble(rr.talon.getOutputCurrent());
-    ntflpercent.setDouble(fl.talon.getMotorOutputPercent());
-    ntfrpercent.setDouble(fr.talon.getMotorOutputPercent());
-    ntrlpercent.setDouble(rl.talon.getMotorOutputPercent());
-    ntrrpercent.setDouble(rr.talon.getMotorOutputPercent());
 
     //Implement pusher control
     if(OI.pusherOverride.get() || state == ClimberState.AT_HEIGHT || state == ClimberState.FRONT_ON_PLATFORM){
