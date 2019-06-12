@@ -9,7 +9,6 @@ package frc.robot;
 
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -18,13 +17,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.ExampleSubsystem;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANEncoder;
@@ -33,7 +27,6 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import jaci.pathfinder.Pathfinder;
@@ -119,8 +112,8 @@ public class Robot extends TimedRobot  {
 
   public static final double wheelDiameter =  5.5/12;
 
-  public static String path1 = "path1";
-  public static String path2 = "path2";
+  public static String path1 = "path3";
+  public static String path2 = "path4";
 
 
   VictorSPX conveyor = new VictorSPX(10);
@@ -225,7 +218,7 @@ public class Robot extends TimedRobot  {
  try{
 
 
-     leftTrajectory1 =  PathfinderFRC.getTrajectory( path1+ ".right");
+     leftTrajectory1 =  PathfinderFRC.getTrajectory(path1+ ".right");
      rightTrajectory1 = PathfinderFRC.getTrajectory(path1 + ".left");
 
      leftTrajectory2 = PathfinderFRC.getTrajectory(path2 + ".right");
@@ -254,13 +247,6 @@ public class Robot extends TimedRobot  {
     followerNotifier.startPeriodic(leftTrajectory1.get(0).dt);
 
     followerNotifier2 = new Notifier(this::followPath2);
-    
-   
-
-
-
-
-
 
   }
   catch(IOException ex){
