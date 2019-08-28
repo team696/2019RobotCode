@@ -8,18 +8,11 @@
 package org.frc.team696.robot.commands;
 
 import org.frc.team696.robot.Robot;
-<<<<<<< Updated upstream:src/main/java/org/frc/team696/robot/commands/AutoAlignOff.java
-
-import edu.wpi.first.wpilibj.command.Command;
-
-public class AutoAlignOff extends Command {
-  public AutoAlignOff() {
-=======
 import org.frc.team696.robot.subsystems.DriveTrainSubsystem;
 
 import edu.wpi.first.wpilibj.command.Command;
 
-public class LookingForAlignCommand extends Command {
+public class AutoAlignOff extends Command {
   private static boolean gotLeft = false;
   private static boolean gotRight = false;
   
@@ -36,8 +29,7 @@ public class LookingForAlignCommand extends Command {
   private static boolean isFound = false;
 
 
-  public LookingForAlignCommand() {
->>>>>>> Stashed changes:src/main/java/org/frc/team696/robot/commands/LookingForAlignCommand.java
+  public AutoAlignOff() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
   }
@@ -45,10 +37,6 @@ public class LookingForAlignCommand extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-<<<<<<< Updated upstream:src/main/java/org/frc/team696/robot/commands/AutoAlignOff.java
-    Robot.lookingForLine = false;
-=======
->>>>>>> Stashed changes:src/main/java/org/frc/team696/robot/commands/LookingForAlignCommand.java
   }
 
   // Called repeatedly when this Command is scheduled to run
@@ -87,11 +75,7 @@ public class LookingForAlignCommand extends Command {
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-<<<<<<< Updated upstream:src/main/java/org/frc/team696/robot/commands/AutoAlignOff.java
-    return true;
-=======
    return isFound;
->>>>>>> Stashed changes:src/main/java/org/frc/team696/robot/commands/LookingForAlignCommand.java
   }
 
   // Called once after isFinished returns true

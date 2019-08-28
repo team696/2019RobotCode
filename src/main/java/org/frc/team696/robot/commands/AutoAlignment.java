@@ -16,16 +16,9 @@ public class AutoAlignment extends CommandGroup {
    * Add your docs here.
    */
 
-<<<<<<< Updated upstream
-  private double encoder_ticks = 3000;
-  private double halfBotEncoderTicks = 3488;
-  private double hopstAngle = 28.264;
-  private double angle;
-=======
   private static double encoder_ticks = 3000;
   private static double halfBotEncoderTicks = 3488;
   private static double hopstAngle = 28.264;
->>>>>>> Stashed changes
 
   public AutoAlignment(double angle, double error) {
     // Add Commands here:
@@ -44,33 +37,20 @@ public class AutoAlignment extends CommandGroup {
     // e.g. if Command1 requires chassis, and Command2 requires arm,
     // a CommandGroup containing them would require both the chassis and the
     // arm.
-<<<<<<< Updated upstream
-
-    addSequential(new ZeroYaw());
-    addSequential(new DriveBack(halfBotEncoderTicks + error));
-=======
     if(Robot.isFound){
     addSequential(new ZeroYaw());
     //addSequential(new DriveToAngleCommand(90));
 
     addSequential(new DriveBack(halfBotEncoderTicks+error));
->>>>>>> Stashed changes
     if(angle<0){
     addSequential(new DriveToAngleCommand(90+angle),1);
     }
     else{
     addSequential(new DriveToAngleCommand(-(90-angle)/*(180 - (90 + angle)))*/),1);
-<<<<<<< Updated upstream
-    }
-    addSequential(new DriveForward(((halfBotEncoderTicks * Math.abs(Math.sin(Math.toRadians(angle))) + halfBotEncoderTicks/2)))); 
-    addSequential(new DriveToAngleCommand(angle), 1);
-    addSequential(new AutoAlignOff());
-=======
    }
     addSequential(new DriveForward(((halfBotEncoderTicks * Math.abs(Math.sin(Math.toRadians(angle))))))); 
      addSequential(new DriveToAngleCommand(angle));
 
->>>>>>> Stashed changes
   }
 
 }

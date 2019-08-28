@@ -21,7 +21,7 @@ import com.kauailabs.navx.frc.AHRS.SerialDataType;
 
 import org.frc.team696.robot.autonomousCommands.Default;
 import org.frc.team696.robot.commands.AutoAlignment;
-import org.frc.team696.robot.commands.LookingForAlignCommand;
+import org.frc.team696.robot.commands.AutoAlignOff;
 import org.frc.team696.robot.subsystems.DriveToAngle;
 import org.frc.team696.robot.subsystems.DriveTrainSubsystem;
 
@@ -199,14 +199,6 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
-<<<<<<< Updated upstream
-
-        currentLooking = OI.stick.getRawButton(2);
-        if (!currentLooking && oldLooking) {
-            lookingForLine = !lookingForLine;
-        }
-        oldLooking = currentLooking;
-=======
 if(OI.stick.getRawButton(2)){
     // new LookingForAlignCommand().start(); 
     isLookingToAlign=true;
@@ -216,7 +208,6 @@ if(OI.stick.getRawButton(2)){
         System.out.println("looking");
         leftButtonPos=driveTrainSubsystem.leftRear.getSelectedSensorPosition();
         rightButtonPos=driveTrainSubsystem.rightFront.getSelectedSensorPosition();
->>>>>>> Stashed changes
 
         if (leftIRSensor.get() && !gotLeft){
         leftEncoder = (driveTrainSubsystem.rightFront.getSelectedSensorPosition()+driveTrainSubsystem.leftRear.getSelectedSensorPosition()/2);  
@@ -226,22 +217,14 @@ if(OI.stick.getRawButton(2)){
         if (!rightIRSensor.get() && !gotRight){
             
             rightEncoder = (driveTrainSubsystem.rightFront.getSelectedSensorPosition()+driveTrainSubsystem.leftRear.getSelectedSensorPosition()/2);  
-<<<<<<< Updated upstream
-=======
             gotRight = true;
             
            // navX.zeroYaw();
->>>>>>> Stashed changes
             }
         
         if(gotLeft && gotRight){
             encoderDifference = rightEncoder-leftEncoder;
             isReady = true;
-<<<<<<< Updated upstream
-            
-        }
-        y = encoderDifference;
-=======
             y = encoderDifference;
             targetAngle = Math.atan(x/y);
 
@@ -269,7 +252,6 @@ if(OI.stick.getRawButton(2)){
       //  System.out.println("Average Encoder:    " + (driveTrainSubsystem.rightFront.getSelectedSensorPosition()+driveTrainSubsystem.leftRear.getSelectedSensorPosition() / 2));
         //System.out.println(leftEncoder + "            " + rightEncoder);
 
->>>>>>> Stashed changes
 
         speed = -OI.stick.getRawAxis(1) * 0.75;
         turn = -OI.stick.getRawAxis(4) * 0.5;
@@ -282,36 +264,10 @@ if(OI.stick.getRawButton(2)){
         leftValue = speed - turn;
         rightValue = speed + turn;
 
-<<<<<<< Updated upstream
-
-       targetAngle = Math.atan(x/y);
-=======
 //driveTrainSubsystem.tankDrive(leftValue, rightValue);
->>>>>>> Stashed changes
 
         // System.out.println("Target" + targetAngleDegrees);
 
-<<<<<<< Updated upstream
-        if(lookingForLine){
-            System.out.println("running auto align...");
-            gotLeft = false;
-            gotRight = false;
-            loopNum++;
-            errorEncoder = driveTrainSubsystem.rightFront.getSelectedSensorPosition();
-            if(rightEncoder > leftEncoder && gotLeft && gotRight){
-                alignError = errorEncoder - rightEncoder;
-            }else{
-                alignError = errorEncoder - leftEncoder;
-            }
-
-            if(loopNum == 1){
-                new AutoAlignment(targetAngleDegrees, alignError).start();
-            }
-        } else {
-            loopNum = 0;
-            driveTrainSubsystem.tankDrive(leftValue, rightValue);
-        }
-=======
         // System.out.println("Gyro" +   Robot.navX.getYaw());
     
     //    if(OI.stick.getRawButton(1)){
@@ -320,7 +276,6 @@ if(OI.stick.getRawButton(2)){
 
     //    }
        
->>>>>>> Stashed changes
 
         // System.out.println("Target" + targetAngleDegrees);
         // System.out.println("Gyro" + Robot.navX.getYaw());
