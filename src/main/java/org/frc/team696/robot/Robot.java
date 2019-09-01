@@ -94,7 +94,7 @@ public class Robot extends TimedRobot {
         oi = new OI();
         // chooser.addObject("My Auto", new MyAutoCommand());
         SmartDashboard.putData("Auto mode", chooser);
-        comp.start();
+        comp.stop();
         climber.initialize();
     }
 
@@ -194,14 +194,17 @@ public class Robot extends TimedRobot {
         Climber.rightPusher.set(ControlMode.PercentOutput, OI.xboxController.getRawAxis(3));
         // System.out.println(OI.operatorPanel.getRawAxis(3));
 
-        if (OI.wheel.getRawButton(3)) {
-            wheel = OI.xboxController.getRawAxis(1) * 0.75;
-            stick = OI.wheel.getRawAxis(0);
-        } else {
-            rampingSubsystem.ramp(conveyorState);
-            stick = -rampingSubsystem.wheel * 0.75;
-            wheel = rampingSubsystem.speed;
-        }
+        stick = OI.xboxController.getRawAxis(4);
+        wheel = OI.xboxController.getRawAxis(1);
+
+        // if (OI.wheel.getRawButton(3)) {
+        //     wheel = OI.xboxController.getRawAxis(1) * 0.75;
+        //     stick = OI.xbho.getRawAxis(0);
+        // } else {
+        //     rampingSubsystem.ramp(conveyorState);
+        //     stick = -rampingSubsystem.wheel * 0.75;
+        //     wheel = rampingSubsystem.speed;
+        // }
 
         // speedTurnScale = a * (1 / ((stick * stick) - h)) + k;
         speedTurnScale = 1;
@@ -214,14 +217,14 @@ public class Robot extends TimedRobot {
 
 
         // driveTrainSubsystem.runDrive(leftSpeed, rightSpeed);
-        if (OI.operatorPanel.getRawButton(4)) {
-            System.out.println("climbing, driver functionality disabled");
-        } else {
+        // if (OI.operatorPanel.getRawButton(4)) {
+        //     System.out.println("climbing, driver functionality disabled");
+        // } else {
             leftSpeed = stick - wheel;
             rightSpeed = stick + wheel;
             driveTrainSubsystem.runDrive(leftSpeed, rightSpeed);
             
-        }
+        // }
         // if(OI.xboxController.getRawButton(1)){
         // driveTrainSubsystem.leftRear.set(0.3);
         // driveTrainSubsystem.rightRear.set(0.3);
