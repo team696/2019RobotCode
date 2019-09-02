@@ -267,11 +267,11 @@ public class Climber extends Subsystem {
     //Implement pusher control
     if(OI.pusherOverride.get() || state == ClimberState.AT_HEIGHT || state == ClimberState.FRONT_ON_PLATFORM){
       setPusherPower(pusherPower);
-      OI.operatorPanel.setOutput(1, true);
+      OI.stickPanel.setOutput(1, true);
     }
     else{
       setPusherPower(0);
-      OI.operatorPanel.setOutput(1, false);
+      OI.stickPanel.setOutput(1, false);
     }
 
     if (getPositionControlGood() && !isManualControl) {
@@ -291,7 +291,7 @@ public class Climber extends Subsystem {
 
       case ARMED:
         moveIndividual(frontStagedPosition, frontStagedPosition, rearStagedPosition, rearStagedPosition);
-        OI.operatorPanel.setOutput(2, true);
+        OI.stickPanel.setOutput(2, true);
         break;
 
       case CLIMBING:
@@ -303,7 +303,7 @@ public class Climber extends Subsystem {
         if (getMaximumPositionError() < atHeightError) {
           setState(ClimberState.AT_HEIGHT);
         }
-        OI.operatorPanel.setOutput(2, true);
+        OI.stickPanel.setOutput(2, true);
         break;
 
       case AT_HEIGHT:
@@ -313,7 +313,7 @@ public class Climber extends Subsystem {
           //setState(ClimberState.FRONT_ON_PLATFORM);
           //stowFront();
         //}
-        OI.operatorPanel.setOutput(2, true);
+        OI.stickPanel.setOutput(2, true);
         break;
 
       case FRONT_ON_PLATFORM:
@@ -322,7 +322,7 @@ public class Climber extends Subsystem {
           moveIndividual(0);
           setState(ClimberState.STOWED);
         }
-        OI.operatorPanel.setOutput(2, true);
+        OI.stickPanel.setOutput(2, true);
         break;
       case HOLD:
         turnOff();

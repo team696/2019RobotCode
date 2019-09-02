@@ -190,13 +190,13 @@ public class Robot extends TimedRobot {
     public void teleopPeriodic() {
 
         Scheduler.getInstance().run();
-        Climber.leftPusher.set(ControlMode.PercentOutput, OI.xboxController.getRawAxis(3));
-        Climber.rightPusher.set(ControlMode.PercentOutput, OI.xboxController.getRawAxis(3));
+        // Climber.leftPusher.set(ControlMode.PercentOutput, OI.stickPanel.getRawAxis(3));
+        // Climber.rightPusher.set(ControlMode.PercentOutput, OI.xboxController.getRawAxis(3));
         // System.out.println(OI.operatorPanel.getRawAxis(3));
 
-        stick = OI.xboxController.getRawAxis(4);
-        wheel = OI.xboxController.getRawAxis(1);
-
+        stick = -OI.racingWheel.getRawAxis(0);
+        // wheel = OI.xboxController.getRawAxis(1);
+        wheel = -OI.stickPanel.getRawAxis(0);
         // if (OI.wheel.getRawButton(3)) {
         //     wheel = OI.xboxController.getRawAxis(1) * 0.75;
         //     stick = OI.xbho.getRawAxis(0);
@@ -235,18 +235,18 @@ public class Robot extends TimedRobot {
         // driveTrainSubsystem.rightRear.set(0.3);
         // }
 
-        if (OI.operatorPanel.getRawButton(14)) {
-            conveyorSubsystem.tiltConveyor(ConveyorState.MID);
-            conveyorState = ConveyorState.MID;
-        }
-        if (OI.operatorPanel.getRawButton(13)) {
-            conveyorSubsystem.tiltConveyor(ConveyorState.LOW);
-            conveyorState = ConveyorState.LOW;
-        }
-        if (OI.operatorPanel.getRawButton(15)) {
-            conveyorSubsystem.tiltConveyor(ConveyorState.HIGH);
-            conveyorState = ConveyorState.HIGH;
-        }
+        // if (OI.operatorPanel.getRawButton(14)) {
+        //     conveyorSubsystem.tiltConveyor(ConveyorState.MID);
+        //     conveyorState = ConveyorState.MID;
+        // }
+        // if (OI.operatorPanel.getRawButton(13)) {
+        //     conveyorSubsystem.tiltConveyor(ConveyorState.LOW);
+        //     conveyorState = ConveyorState.LOW;
+        // }
+        // if (OI.operatorPanel.getRawButton(15)) {
+        //     conveyorSubsystem.tiltConveyor(ConveyorState.HIGH);
+        //     conveyorState = ConveyorState.HIGH;
+        // }
 
         // System.out.println("wheel: " + wheel);
         System.out.println("Right side: " + pdp.getCurrent(0) + " " + pdp.getCurrent(1) + "    Left Side: " + pdp.getCurrent(15) + " " + pdp.getCurrent(14));

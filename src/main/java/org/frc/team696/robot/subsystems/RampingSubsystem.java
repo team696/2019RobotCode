@@ -131,8 +131,8 @@ public class RampingSubsystem extends Subsystem {
   // }
 
   private void rampDownHigh() {
-    wheel = -OI.wheel.getRawAxis(0);
-    commandedSpeed = OI.xboxController.getRawAxis(1);
+    wheel = -OI.racingWheel.getRawAxis(0);
+    commandedSpeed = OI.stickPanel.getRawAxis(0);
 
     if (speed < commandedSpeed) {
       speed += highRampUpRate;
@@ -146,8 +146,8 @@ public class RampingSubsystem extends Subsystem {
 
   private void rampDownMid() {
     System.out.println("Running rampDownMid");
-    wheel = -OI.wheel.getRawAxis(0);
-    commandedSpeed = OI.xboxController.getRawAxis(1);
+    wheel = -OI.racingWheel.getRawAxis(0);
+    commandedSpeed = OI.stickPanel.getRawAxis(0);
 
     if (speed < commandedSpeed) {
       speed += midRampUpRate;
@@ -164,8 +164,8 @@ public class RampingSubsystem extends Subsystem {
 
   private void rampDownLow() {
     System.out.println("Running rampDownLow");
-    wheel = -OI.wheel.getRawAxis(0);
-    commandedSpeed = OI.xboxController.getRawAxis(1);
+    wheel = -OI.racingWheel.getRawAxis(0);
+    commandedSpeed = OI.stickPanel.getRawAxis(0);
 
     if (speed < commandedSpeed) {
       speed += lowRampUpRate;

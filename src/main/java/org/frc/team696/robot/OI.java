@@ -29,28 +29,28 @@ import org.frc.team696.robot.states.ClimberState;
  * interface to the commands and command groups that allow control of the robot.
  */
 public class OI {
-    public static Joystick xboxController = new Joystick(0);
-    public static Joystick wheel = new Joystick(1);
-    public static Joystick operatorPanel = new Joystick(2);
+    public static Joystick stickPanel = new Joystick(0);
+    public static Joystick racingWheel = new Joystick(1);
+    // public static Joystick operatorPanel = new Joystick(2);
 
-    public static Button intakeButton = new JoystickButton(operatorPanel, 12);
-    public static Button outtakeButton = new JoystickButton(operatorPanel, 11);
-    public static Button HCRel = new JoystickButton(operatorPanel, 9);
+    public static Button intakeButton = new JoystickButton(stickPanel, 13);
+    public static Button outtakeButton = new JoystickButton(stickPanel, 14);
+    // public static Button HCRel = new JoystickButton(operatorPanel, 9);
 
-    public static Button climberManualSwitch = new JoystickButton(operatorPanel, 1);
-    public static Button climberModuleTest = new JoystickButton(operatorPanel, 8);
-    public static Button climberArm = new JoystickButton(operatorPanel, 3);
-    public static Button pusherOverride = new JoystickButton(operatorPanel, 2);
-    public static Button dumbClimb = new JoystickButton(operatorPanel, 4);
-    public static Button hatchDeploy = new JoystickButton(operatorPanel, 6);
-    public static Button hatchStow = new JoystickButton(operatorPanel, 5);
+    // public static Button climberManualSwitch = new JoystickButton(operatorPanel, 1);
+    // public static Button climberModuleTest = new JoystickButton(operatorPanel, 8);
+    public static Button climberArm = new JoystickButton(stickPanel, 3);
+    public static Button pusherOverride = new JoystickButton(stickPanel, 2);
+    public static Button dumbClimb = new JoystickButton(stickPanel, 12);
+    // public static Button hatchDeploy = new JoystickButton(operatorPanel, 6);
+    // public static Button hatchStow = new JoystickButton(operatorPanel, 5);
     // public static Button semiAutoClimb = new JoystickButton(operatorPanel, 6);
     // public static Button reinit = new JoystickButton(operatorPanel, 2);
 
     public OI() {
-        climberModuleTest.whenPressed(new ClimberTest());
+        // climberModuleTest.whenPressed(new ClimberTest());
 
-        climberManualSwitch.whileHeld(new ClimberManualControl());
+        // climberManualSwitch.whileHeld(new ClimberManualControl());
 
         climberArm.whenPressed(new ClimberSetState(ClimberState.MOVE_TO_ARMED));
         climberArm.whenReleased(new ClimberSetState(ClimberState.STOWED));
@@ -65,16 +65,16 @@ public class OI {
         outtakeButton.whenPressed(new ConveyorCommand(-1));
         outtakeButton.whenReleased(new ConveyorCommand(0));
 
-        HCRel.whenPressed(new ActuateHatch(true));
-        HCRel.whenReleased(new ActuateHatch(false));
+        // HCRel.whenPressed(new ActuateHatch(true));
+        // HCRel.whenReleased(new ActuateHatch(false));
 
-        hatchDeploy.whenPressed(new MoveHatch(true));
-        hatchStow.whenPressed(new MoveHatch(false));
+        // hatchDeploy.whenPressed(new MoveHatch(true));
+        // hatchStow.whenPressed(new MoveHatch(false));
     }
 
-    public static double getClimberManual() {
-        return operatorPanel.getRawAxis(0);
-    }
+    // public static double getClimberManual() {
+    //     // return operatorPanel.getRawAxis(0);
+    // }
     // CREATING BUTTONS
     // One type of button is a joystick button which is any button on a
     // joystick.

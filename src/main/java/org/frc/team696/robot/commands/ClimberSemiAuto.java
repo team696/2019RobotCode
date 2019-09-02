@@ -29,9 +29,9 @@ public class ClimberSemiAuto extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    double frontPos = OI.xboxController.getRawAxis(1)/2.0;
-    double rearPos = OI.xboxController.getRawAxis(3)/2.0;
-    Robot.climber.moveIndividual(ClimberModule.climbingPidSlot, frontPos, frontPos, rearPos, rearPos);
+    // double frontPos = OI.xboxController.getRawAxis(1)/2.0;
+    // double rearPos = OI.xboxController.getRawAxis(3)/2.0;
+    // Robot.climber.moveIndividual(ClimberModule.climbingPidSlot, frontPos, frontPos, rearPos, rearPos);
   }
 
   // Make this return true when this Command no longer needs to run execute()
