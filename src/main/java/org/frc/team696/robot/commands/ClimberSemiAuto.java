@@ -51,3 +51,4 @@ public class ClimberSemiAuto extends Command {
   protected void interrupted() {
   }
 }
+

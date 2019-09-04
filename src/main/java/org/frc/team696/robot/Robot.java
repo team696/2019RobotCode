@@ -8,13 +8,17 @@
 package org.frc.team696.robot;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 
 import org.frc.team696.robot.subsystems.DriveTrainSubsystem;
 import org.frc.team696.robot.subsystems.RampingSubsystem;
+
+import java.io.IOException;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
@@ -26,10 +30,16 @@ import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import jaci.pathfinder.Pathfinder;
+import jaci.pathfinder.PathfinderFRC;
+import jaci.pathfinder.Trajectory;
+import jaci.pathfinder.followers.EncoderFollower;
+
 import org.frc.team696.robot.subsystems.Climber;
 import org.frc.team696.robot.subsystems.ClimberModule;
 import org.frc.team696.robot.RobotMap;
@@ -49,6 +59,10 @@ import org.frc.team696.robot.subsystems.RampingSubsystem;
 // project root
 public class Robot extends TimedRobot {
 
+    public static String path1 = "path3";
+    public static String path2 = "path4";
+
+
     public static final Climber climber = new Climber();
     // public static final Climber climber = null;
     // public ClimberModule testModule = new ClimberModule("Test Module");
@@ -66,7 +80,31 @@ public class Robot extends TimedRobot {
     public static int conveyorTiltCase;
     public static ConveyorState conveyorState = ConveyorState.HIGH;
 
+    public static AHRS navX = new AHRS(Port.kMXP, (byte)50);
     public Compressor comp = new Compressor(17);
+
+    //Pathfinder objects
+    public static Trajectory leftTrajectory1;
+    public static Trajectory rightTrajectory1;
+
+    public static Trajectory leftTrajectory2;
+    public static Trajectory rightTrajectory2;
+
+
+    public static EncoderFollower leftFollower1;
+    public static EncoderFollower rightFollower1;
+
+    public static EncoderFollower leftFollower2;
+    public static EncoderFollower rightFollower2;
+
+    public static Notifier followerNotifier;
+
+    public static Notifier followerNotifier2;
+
+    //Pathfinder constants
+    public static final double wheelDiameter =  5.5/12;
+
+    
 
     public double stick;
     public double wheel;
@@ -96,10 +134,16 @@ public class Robot extends TimedRobot {
         SmartDashboard.putData("Auto mode", chooser);
         comp.start();
         climber.initialize();
+        navX.zeroYaw();
+        driveTrainSubsystem.leftFrontEncoder.setPosition(0);
+        driveTrainSubsystem.leftRearEncoder.setPosition(0);
+    
+        driveTrainSubsystem.rightFrontEncoder.setPosition(0);
+        driveTrainSubsystem.rightRearEncoder.setPosition(0);
     }
 
     /**
-     * This function is called once each time the robot enters Disabled mode. You
+     * This function is called once eacxh time the robot enters Disabled mode. You
      * can use it to reset any subsystem information you want to clear when the
      * robot is disabled.
      */
@@ -137,6 +181,48 @@ public class Robot extends TimedRobot {
          * ExampleCommand(); break; }
          */
 
+
+
+         
+    int leftIntPos = (int)(driveTrainSubsystem.leftFrontEncoder.getPosition());
+    int rightIntPos = (int)(driveTrainSubsystem.rightFrontEncoder.getPosition());
+
+    try {
+    leftTrajectory1 =  PathfinderFRC.getTrajectory(path1+ ".right");
+    rightTrajectory1 = PathfinderFRC.getTrajectory(path1 + ".left");
+
+    leftTrajectory2 = PathfinderFRC.getTrajectory(path2 + ".right");
+    rightTrajectory2 = PathfinderFRC.getTrajectory(path2 + ".left");
+
+ 
+   leftFollower1 = new EncoderFollower(leftTrajectory1);
+   rightFollower1 = new EncoderFollower(rightTrajectory1);
+
+   leftFollower2 = new EncoderFollower(leftTrajectory2);
+   rightFollower2 = new EncoderFollower(rightTrajectory2);    
+
+   leftFollower1.configureEncoder(leftIntPos, 10, wheelDiameter);
+   leftFollower1.configurePIDVA(0.5,0,0,1/16, 0);
+
+   leftFollower2.configureEncoder(leftIntPos, 10, wheelDiameter);
+   leftFollower2.configurePIDVA(0.5, 0, 0, 1/16, 0);
+
+   rightFollower1.configureEncoder(rightIntPos , 10 , wheelDiameter);
+   rightFollower1.configurePIDVA(0.5, 0, 0, 1/16, 0);
+
+   rightFollower2.configureEncoder(rightIntPos, 10, wheelDiameter);
+   rightFollower2.configurePIDVA(0.5, 0, 0, 1/16, 0);
+
+   followerNotifier = new Notifier(this::followPath);
+   followerNotifier.startPeriodic(leftTrajectory1.get(0).dt);
+
+   followerNotifier2 = new Notifier(this::followPath2);
+
+    }
+    catch(IOException ex ){
+        System.out.println(ex);
+    }
+
         // schedule the autonomous command (example)
         if (autonomousCommand != null) {
             autonomousCommand.start();
@@ -144,6 +230,63 @@ public class Robot extends TimedRobot {
 
         autoTimer.start();
     }
+
+    public void followPath(){
+        if(leftFollower1.isFinished()||rightFollower1.isFinished()){
+          followerNotifier.stop();
+          // leftSide.set(0);
+          // rightSide.set(0);
+          System.out.println("pathfinder is done");
+    
+        } else {
+          DriveTrainSubsystem.leftFront.setIdleMode(IdleMode.kCoast);
+          DriveTrainSubsystem.leftRear.setIdleMode(IdleMode.kCoast);
+          DriveTrainSubsystem.rightFront.setIdleMode(IdleMode.kCoast);
+          DriveTrainSubsystem.rightRear.setIdleMode(IdleMode.kCoast);
+    
+          double rawLeftSpeed = leftFollower1.calculate((int)driveTrainSubsystem.leftFrontEncoder.getPosition());
+          double rawRightSpeed = rightFollower1.calculate((int)driveTrainSubsystem.rightFrontEncoder.getPosition());
+          double heading = navX.getYaw();
+          double desired_heading = Pathfinder.r2d(leftFollower1.getHeading());
+          double heading_difference = Pathfinder.boundHalfDegrees(heading - desired_heading);
+          double turn =  0.8 * (-1.0/80.0) * heading_difference;
+          double leftSpeed = rawLeftSpeed+turn;
+          double rightSpeed = rawRightSpeed-turn;
+          // drive.tankDrive(leftSpeed, rightSpeed);
+          DriveTrainSubsystem.leftSide.set(leftSpeed);
+          DriveTrainSubsystem.rightSide.set(rightSpeed);
+          System.out.println(rawRightSpeed);
+        }
+        }
+    
+        public void followPath2(){
+            if(leftFollower2.isFinished()||rightFollower2.isFinished()){
+              followerNotifier2.stop();
+              DriveTrainSubsystem.leftSide.set(0);
+              DriveTrainSubsystem.rightSide.set(0);
+              System.out.println("pathfinder is done");
+          
+            } else {
+              DriveTrainSubsystem.leftFront.setIdleMode(IdleMode.kCoast);
+              DriveTrainSubsystem.leftRear.setIdleMode(IdleMode.kCoast);
+              DriveTrainSubsystem.rightFront.setIdleMode(IdleMode.kCoast);
+              DriveTrainSubsystem.rightRear.setIdleMode(IdleMode.kCoast);
+        
+              double rawLeftSpeed2 = leftFollower2.calculate((int)driveTrainSubsystem.leftFrontEncoder.getPosition());
+              double rawRightSpeed2 = rightFollower2.calculate((int)driveTrainSubsystem.rightFrontEncoder.getPosition());
+              double heading2 = navX.getYaw();
+              double desired_heading2 = Pathfinder.r2d(leftFollower2.getHeading());
+              double heading_difference2 = Pathfinder.boundHalfDegrees(heading2 - desired_heading2);
+              double turn2 =  0.8 * (-1.0/80.0) * heading_difference2;
+              double leftSpeed2 = rawLeftSpeed2+turn2;
+              double rightSpeed2 = rawRightSpeed2-turn2;
+              // drive.tankDrive(leftSpeed, rightSpeed);
+              DriveTrainSubsystem.leftSide.set(leftSpeed2);
+              DriveTrainSubsystem.rightSide.set(rightSpeed2);
+              System.out.println(rawRightSpeed2);
+        
+          }
+          }
 
     /**
      * This function is called periodically during autonomous.
@@ -162,17 +305,29 @@ public class Robot extends TimedRobot {
         //     // driveTrainSubsystem.runDrive(0.75, -0.75);
         //     driveTrainSubsystem.runDrive(0.75, 0.75);
         // } else {
-            rampingSubsystem.ramp(conveyorState);
-            stick = -rampingSubsystem.wheel;
-            wheel = rampingSubsystem.speed;
-            leftSpeed = stick - wheel;
-            rightSpeed = stick + wheel;
-            driveTrainSubsystem.runDrive(leftSpeed, rightSpeed);
+            // rampingSubsystem.ramp(conveyorState);
+            // stick = -rampingSubsystem.wheel;
+            // wheel = rampingSubsystem.speed;
+            // leftSpeed = stick - wheel;
+            // rightSpeed = stick + wheel;
+            // driveTrainSubsystem.runDrive(leftSpeed, rightSpeed);
         //}
+
+        if(leftFollower1.isFinished()||rightFollower2.isFinished()){
+            followerNotifier2.startPeriodic(leftTrajectory2.get(0).dt);
+      
+          }
     }
 
     @Override
     public void teleopInit() {
+        followerNotifier.stop();
+        DriveTrainSubsystem.leftSide.set(0);
+        DriveTrainSubsystem.rightSide.set(0); 
+        navX.zeroYaw();
+        driveTrainSubsystem.leftFrontEncoder.setPosition(0);
+        driveTrainSubsystem.rightFrontEncoder.setPosition(0);
+        System.out.println("pathfinder is over");
         // This makes sure that the autonomous stops running when
         // teleop starts running. If you want the autonomous to
         // continue until interrupted by another command, remove
@@ -230,18 +385,19 @@ public class Robot extends TimedRobot {
         // driveTrainSubsystem.rightRear.set(0.3);
         // }
 
-        if (OI.operatorPanel.getRawButton(14)) {
-            conveyorSubsystem.tiltConveyor(ConveyorState.MID);
-            conveyorState = ConveyorState.MID;
-        }
-        if (OI.operatorPanel.getRawButton(13)) {
-            conveyorSubsystem.tiltConveyor(ConveyorState.LOW);
-            conveyorState = ConveyorState.LOW;
-        }
-        if (OI.operatorPanel.getRawButton(15)) {
-            conveyorSubsystem.tiltConveyor(ConveyorState.HIGH);
-            conveyorState = ConveyorState.HIGH;
-        }
+        //Previous tilting conveyor code
+        // if (OI.operatorPanel.getRawButton(14)) {
+        //     conveyorSubsystem.tiltConveyor(ConveyorState.MID);
+        //     conveyorState = ConveyorState.MID;
+        // }
+        // if (OI.operatorPanel.getRawButton(13)) {
+        //     conveyorSubsystem.tiltConveyor(ConveyorState.LOW);
+        //     conveyorState = ConveyorState.LOW;
+        // }
+        // if (OI.operatorPanel.getRawButton(15)) {
+        //     conveyorSubsystem.tiltConveyor(ConveyorState.HIGH);
+        //     conveyorState = ConveyorState.HIGH;
+        // }
 
         // System.out.println("wheel: " + wheel);
         System.out.println("Right side: " + pdp.getCurrent(0) + " " + pdp.getCurrent(1) + "    Left Side: " + pdp.getCurrent(15) + " " + pdp.getCurrent(14));

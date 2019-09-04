@@ -7,6 +7,7 @@
 
 package org.frc.team696.robot.subsystems;
 
+import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -45,6 +46,12 @@ public class DriveTrainSubsystem extends Subsystem {
   private static NetworkTableEntry ntrlmotortemp;
   private static NetworkTableEntry ntrrmotortemp;
 
+  public CANEncoder leftFrontEncoder;
+  public CANEncoder leftRearEncoder;
+
+  public CANEncoder rightFrontEncoder;
+  public CANEncoder rightRearEncoder;
+
   public DriveTrainSubsystem(int leftFrontPort, int leftMidPort, int leftRearPort, int rightRearPort, int rightMidPort, int rightFrontPort){
     NetworkTableInstance inst = NetworkTableInstance.getDefault();
     NetworkTable dtTable = inst.getTable("Drivetrain");
@@ -74,6 +81,14 @@ public class DriveTrainSubsystem extends Subsystem {
     rightRear.setSmartCurrentLimit(80, 20, 10000);
     rightRear.setInverted(true);
     rightRear.setOpenLoopRampRate(0);
+
+
+    leftFrontEncoder = new CANEncoder(leftFront);
+    leftRearEncoder = new CANEncoder(leftRear);
+
+    rightFrontEncoder = new CANEncoder(rightFront);
+    rightRearEncoder = new CANEncoder(rightRear);
+
 
     leftSide = new SpeedControllerGroup(leftFront, leftRear);
     rightSide = new SpeedControllerGroup(rightFront, rightRear);
