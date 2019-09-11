@@ -7,6 +7,10 @@
 
 package org.frc.team696.robot;
 
+import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -31,6 +35,12 @@ public class Robot extends TimedRobot {
     private Command autonomousCommand;
     private SendableChooser<Command> chooser = new SendableChooser<>();
 
+    public static Joystick operatorPanel = new Joystick(2);
+
+    public static Solenoid moveHatchSol = new Solenoid(3);
+    public static PowerDistributionPanel pdp = new PowerDistributionPanel(18);
+    public static Compressor comp = new Compressor(18);
+
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
@@ -41,6 +51,7 @@ public class Robot extends TimedRobot {
         chooser.addDefault("Default Auto", new ExampleCommand());
         // chooser.addObject("My Auto", new MyAutoCommand());
         SmartDashboard.putData("Auto mode", chooser);
+        comp.start();
     }
 
     /**
@@ -99,7 +110,7 @@ public class Robot extends TimedRobot {
         // This makes sure that the autonomous stops running when
         // teleop starts running. If you want the autonomous to
         // continue until interrupted by another command, remove
-        // this line or comment it out.
+        // this line or comment it out.;
         if (autonomousCommand != null) {
             autonomousCommand.cancel();
         }
@@ -111,6 +122,16 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
+
+        //sticky faults relates to voltage, never gonna give you up, never gonna et you down
+        pdp.clearStickyFaults();
+
+        if(operatorPanel.getRawButton(5)){
+            moveHatchSol.set(true);
+        }
+        else{
+            moveHatchSol.set(false);
+        }
     }
 
     /**
