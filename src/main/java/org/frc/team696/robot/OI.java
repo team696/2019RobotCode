@@ -68,8 +68,11 @@ public class OI {
         HCRel.whenPressed(new ActuateHatch(true));
         HCRel.whenReleased(new ActuateHatch(false));
 
-        hatchDeploy.whenPressed(new MoveHatch(true));
-        hatchStow.whenPressed(new MoveHatch(false));
+        hatchStow.toggleWhenPressed(new ActuateHatch(true));
+        hatchStow.toggleWhenPressed(new ActuateHatch(false));
+
+        hatchDeploy.toggleWhenPressed(new MoveHatch(true));
+        hatchDeploy.toggleWhenPressed(new MoveHatch(false));
     }
 
     public static double getClimberManual() {
