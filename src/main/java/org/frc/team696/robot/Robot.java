@@ -105,6 +105,8 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void disabledInit() {
+
+        hatchSubsystem.actuate(false);
     }
 
     @Override
@@ -112,6 +114,8 @@ public class Robot extends TimedRobot {
         Scheduler.getInstance().run();
         // System.out.println(Climber.fr.getCorrectedPosition());
         // Climber.fl.talon.setSensorPhase(false);
+
+        hatchSubsystem.actuate(false);
     }
 
     /**
@@ -243,6 +247,13 @@ public class Robot extends TimedRobot {
             conveyorState = ConveyorState.HIGH;
         }
 
+        if(OI.operatorPanel.getRawButton(9)){
+            hatchSubsystem.actuate(false);
+        }else {
+
+            hatchSubsystem.actuate(true);
+
+        }
         // System.out.println("wheel: " + wheel);
         System.out.println("Right side: " + pdp.getCurrent(0) + " " + pdp.getCurrent(1) + "    Left Side: " + pdp.getCurrent(15) + " " + pdp.getCurrent(14));
         System.out.println(DriveTrainSubsystem.leftFront.getOutputCurrent() + " " + DriveTrainSubsystem.leftRear.getOutputCurrent() + " " + DriveTrainSubsystem.rightFront.getOutputCurrent() + " " + DriveTrainSubsystem.rightRear.getOutputCurrent());

@@ -26,7 +26,6 @@ public class HatchSubsystem extends Subsystem {
   }
 
   public void actuate(boolean bool){
-    if(hatchPosition.get())
       hatchActuator.set(bool);
   }
 

@@ -7,6 +7,7 @@
 
 package org.frc.team696.robot.subsystems;
 
+import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -30,7 +31,12 @@ public class DriveTrainSubsystem extends Subsystem {
 
   public static CANSparkMax rightFront;
   public static CANSparkMax rightRear;
-  
+
+  public static CANEncoder leftFrontEncoder;
+  public static CANEncoder leftRearEncoder;
+  public static CANEncoder rightFrontEncoder;
+  public static CANEncoder rightRearEncoder;
+
   public static SpeedControllerGroup leftSide;
   public static SpeedControllerGroup rightSide;
 
@@ -50,18 +56,21 @@ public class DriveTrainSubsystem extends Subsystem {
     NetworkTable dtTable = inst.getTable("Drivetrain");
     
     leftFront = new CANSparkMax(leftFrontPort, MotorType.kBrushless);
+    leftFrontEncoder = new CANEncoder(leftFront);
     leftFront.restoreFactoryDefaults();
     leftFront.setIdleMode(IdleMode.kCoast);
     leftFront.setSmartCurrentLimit(80, 20, 10000);
     leftFront.setOpenLoopRampRate(0);
     
     leftRear = new CANSparkMax(leftRearPort, MotorType.kBrushless);
+    leftRearEncoder = new CANEncoder(leftRear);
     leftRear.restoreFactoryDefaults();
     leftRear.setIdleMode(IdleMode.kCoast);
     leftRear.setSmartCurrentLimit(80, 20, 10000);
     leftRear.setOpenLoopRampRate(0);
 
     rightFront = new CANSparkMax(rightFrontPort, MotorType.kBrushless);
+    rightFrontEncoder = new CANEncoder(rightFront);
     rightFront.restoreFactoryDefaults();
     rightFront.setIdleMode(IdleMode.kCoast); 
     rightFront.setSmartCurrentLimit(80, 20, 10000);
@@ -69,6 +78,7 @@ public class DriveTrainSubsystem extends Subsystem {
     rightFront.setOpenLoopRampRate(0);
 
     rightRear = new CANSparkMax(rightRearPort, MotorType.kBrushless);
+    rightRearEncoder = new CANEncoder(rightRear);
     rightRear.restoreFactoryDefaults();
     rightRear.setIdleMode(IdleMode.kCoast);
     rightRear.setSmartCurrentLimit(80, 20, 10000);
