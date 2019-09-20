@@ -65,11 +65,11 @@ public class OI {
         outtakeButton.whenPressed(new ConveyorCommand(-1));
         outtakeButton.whenReleased(new ConveyorCommand(0));
 
-        HCRel.whenPressed(new ActuateHatch(true));
-        HCRel.whenReleased(new ActuateHatch(false));
+        // HCRel.whenReleased(new ActuateHatch(true));
+        // HCRel.whenPressed(new ActuateHatch(false));
 
-        hatchDeploy.whenPressed(new MoveHatch(true));
-        hatchStow.whenPressed(new MoveHatch(false));
+        hatchDeploy.toggleWhenPressed(new MoveHatch(true));
+        hatchStow.toggleWhenPressed(new MoveHatch(false));
     }
 
     public static double getClimberManual() {

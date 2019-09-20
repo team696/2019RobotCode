@@ -356,6 +356,13 @@ public class Robot extends TimedRobot {
             wheel = rampingSubsystem.speed;
         }
 
+        if(OI.operatorPanel.getRawButton(9)){
+            hatchSubsystem.actuate(false);
+        }else {
+
+            hatchSubsystem.actuate(true);
+
+        }
         // speedTurnScale = a * (1 / ((stick * stick) - h)) + k;
         speedTurnScale = 1;
 

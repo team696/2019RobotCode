@@ -31,12 +31,13 @@ public class MoveHatch extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    if (!state) {
-      Robot.hatchSubsystem.actuate(false);
-      Robot.hatchSubsystem.move(state);
-    } else {
-      Robot.hatchSubsystem.move(state);
-    }
+    // if (!state) {
+    //   Robot.hatchSubsystem.actuate(false);
+    //   Robot.hatchSubsystem.move(state);
+    // } else {
+    //   Robot.hatchSubsystem.move(state);
+    // }
+    Robot.hatchSubsystem.move(state);
   }
 
   // Make this return true when this Command no longer needs to run execute()
