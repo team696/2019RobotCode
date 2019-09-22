@@ -18,7 +18,9 @@ import org.frc.team696.robot.subsystems.RampingSubsystem;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
+import org.frc.team696.robot.commands.ActuateHatch;
 import org.frc.team696.robot.commands.ConveyorCommand;
+import org.frc.team696.robot.commands.MoveHatch;
 import org.frc.team696.robot.states.ConveyorState;
 import org.frc.team696.robot.subsystems.ConveyorSubsystem;
 
@@ -68,6 +70,8 @@ public class Robot extends TimedRobot {
 
     public Compressor comp = new Compressor(17);
 
+    public static MoveHatch moveHatchCommand;
+    public static ActuateHatch actuateHatchCommand;
     public double stick;
     public double wheel;
 

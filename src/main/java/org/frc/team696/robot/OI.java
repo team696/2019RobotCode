@@ -44,6 +44,7 @@ public class OI {
     public static Button dumbClimb = new JoystickButton(operatorPanel, 4);
     public static Button hatchDeploy = new JoystickButton(operatorPanel, 6);
     public static Button hatchStow = new JoystickButton(operatorPanel, 5);
+    public static Button autoHatch = new JoystickButton(operatorPanel, 7);
     // public static Button semiAutoClimb = new JoystickButton(operatorPanel, 6);
     // public static Button reinit = new JoystickButton(operatorPanel, 2);
 
