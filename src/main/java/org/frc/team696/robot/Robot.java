@@ -248,10 +248,10 @@ public class Robot extends TimedRobot {
         }
 
         if(OI.operatorPanel.getRawButton(9)){
-            hatchSubsystem.actuate(false);
+            hatchSubsystem.actuate(true);
         }else {
 
-            hatchSubsystem.actuate(true);
+            hatchSubsystem.actuate(false);
 
         }
         // System.out.println("wheel: " + wheel);
