@@ -14,8 +14,10 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.commands.AutoHatch;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.HatchSubsystem;
 
 import java.io.IOException;
 
@@ -48,6 +50,8 @@ public class Robot extends TimedRobot  {
   Command m_autonomousCommand;
   SendableChooser<Command> m_chooser = new SendableChooser<>();
 
+
+ public static HatchSubsystem hatchSubsystem = new HatchSubsystem();
   // private static final String k_path_name = "boz";
 
   // public static CANSparkMax leftFront;
@@ -112,11 +116,13 @@ public class Robot extends TimedRobot  {
 
   public static final double wheelDiameter =  5.5/12;
 
-  public static String path1 = "path3";
-  public static String path2 = "path4";
+  public static String path1 = "RightFrontHatch";
+  public static String path2 = "GoBack";
 
 
   VictorSPX conveyor = new VictorSPX(10);
+
+  AutoHatch runAuto = new AutoHatch();
 
   /**
    * This function is run when the robot is first started up and should be
@@ -378,7 +384,12 @@ public class Robot extends TimedRobot  {
     Scheduler.getInstance().run();
     //System.out.println(lFrontEncoder.getPosition());
     if(leftFollower1.isFinished()||rightFollower2.isFinished()){
-      followerNotifier2.startPeriodic(leftTrajectory2.get(0).dt);
+      // runAuto.start();
+      // followerNotifier2.startPeriodic(leftTrajectory2.get(0).dt);
+      HatchSubsystem.moveHatch(true);
+      if(OI.controlPanel.getRawButton(9)){
+        HatchSubsystem.actuateHatch(true);
+      }
 
     }
   } 
