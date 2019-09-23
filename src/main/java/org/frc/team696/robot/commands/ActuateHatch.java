@@ -29,17 +29,17 @@ public class ActuateHatch extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    if(!Robot.hatchSubsystem.hatchPosition.get()){
+    // if(!Robot.hatchSubsystem.hatchPosition.get()){
     Robot.hatchSubsystem.actuate(bool);
-    }
+    // }
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    if(Robot.hatchSubsystem.hatchActuator.get()){
-      return true;
-    }
+    // if(Robot.hatchSubsystem.hatchActuator.get()){
+      // return true;
+    // }
     return false;
   }
 

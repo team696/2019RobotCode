@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 import org.frc.team696.robot.Robot;
 import org.frc.team696.robot.commands.ActuateHatch;
+import org.frc.team696.robot.commands.AutoHatch;
 import org.frc.team696.robot.commands.ClimberDumbClimb;
 import org.frc.team696.robot.commands.ClimberInit;
 import org.frc.team696.robot.commands.ClimberManualControl;
@@ -71,6 +72,9 @@ public class OI {
 
         hatchDeploy.toggleWhenPressed(new MoveHatch(true));
         hatchStow.toggleWhenPressed(new MoveHatch(false));
+
+ 
+        autoHatch.whenPressed(new AutoHatch());
 
     }
 
