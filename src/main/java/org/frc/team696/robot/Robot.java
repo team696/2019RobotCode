@@ -22,7 +22,9 @@ import java.io.IOException;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
+import org.frc.team696.robot.commands.ActuateHatch;
 import org.frc.team696.robot.commands.ConveyorCommand;
+import org.frc.team696.robot.commands.MoveHatch;
 import org.frc.team696.robot.states.ConveyorState;
 import org.frc.team696.robot.subsystems.ConveyorSubsystem;
 
@@ -59,11 +61,14 @@ import org.frc.team696.robot.subsystems.RampingSubsystem;
 // project root
 public class Robot extends TimedRobot {
 
-    public static String path1 = "path3";
-    public static String path2 = "path4";
+    public static String path1 = "FrontRightHatch";
+    public static String path2 = "GoBack";
 
 
     public static final Climber climber = new Climber();
+
+    public static ActuateHatch autoHatch;
+    public static MoveHatch moveHatch;
     // public static final Climber climber = null;
     // public ClimberModule testModule = new ClimberModule("Test Module");
     public static OI oi;
@@ -314,6 +319,8 @@ public class Robot extends TimedRobot {
         //}
 
         if(leftFollower1.isFinished()||rightFollower2.isFinished()){
+            new MoveHatch(true).start();
+            new ActuateHatch(true).start();
             followerNotifier2.startPeriodic(leftTrajectory2.get(0).dt);
       
           }
