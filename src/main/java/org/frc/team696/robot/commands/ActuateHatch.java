@@ -7,6 +7,7 @@
 
 package org.frc.team696.robot.commands;
 
+import org.frc.team696.robot.OI;
 import org.frc.team696.robot.Robot;
 
 import edu.wpi.first.wpilibj.command.Command;
@@ -29,9 +30,9 @@ public class ActuateHatch extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    // if(!Robot.hatchSubsystem.hatchPosition.get()){
+    if(Robot.hatchSubsystem.hatchActuator.get()==OI.operatorPanel.getRawButton(13)){
     Robot.hatchSubsystem.actuate(bool);
-    // }
+    }
   }
 
   // Make this return true when this Command no longer needs to run execute()

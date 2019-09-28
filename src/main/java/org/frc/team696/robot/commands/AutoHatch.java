@@ -14,8 +14,8 @@ public class AutoHatch extends CommandGroup {
    * Add your docs here.
    */
   public AutoHatch() {
-    addSequential(new MoveHatch(true));
-    addSequential(new ActuateHatch(false));
+    addSequential(new MoveHatch(false));
+    addSequential(new ActuateHatch(true));
     // Add Commands here:
     // e.g. addSequential(new Command1());
     // addSequential(new Command2());

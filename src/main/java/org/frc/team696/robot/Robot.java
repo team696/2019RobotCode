@@ -75,6 +75,8 @@ public class Robot extends TimedRobot {
     public double stick;
     public double wheel;
 
+    public int x = 0;
+
     public double leftSpeed;
     public double rightSpeed;
 
@@ -228,18 +230,18 @@ public class Robot extends TimedRobot {
         // driveTrainSubsystem.rightRear.set(0.3);
         // }
 
-        if (OI.operatorPanel.getRawButton(14)) {
-            conveyorSubsystem.tiltConveyor(ConveyorState.MID);
-            conveyorState = ConveyorState.MID;
-        }
-        if (OI.operatorPanel.getRawButton(13)) {
-            conveyorSubsystem.tiltConveyor(ConveyorState.LOW);
-            conveyorState = ConveyorState.LOW;
-        }
-        if (OI.operatorPanel.getRawButton(15)) {
-            conveyorSubsystem.tiltConveyor(ConveyorState.HIGH);
-            conveyorState = ConveyorState.HIGH;
-        }
+        // if (OI.operatorPanel.getRawButton(14)) {
+        //     conveyorSubsystem.tiltConveyor(ConveyorState.MID);
+        //     conveyorState = ConveyorState.MID;
+        // }
+        // if (OI.operatorPanel.getRawButton(13)) {
+        //     conveyorSubsystem.tiltConveyor(ConveyorState.LOW);
+        //     conveyorState = ConveyorState.LOW;
+        // }
+        // if (OI.operatorPanel.getRawButton(15)) {
+        //     conveyorSubsystem.tiltConveyor(ConveyorState.HIGH);
+        //     conveyorState = ConveyorState.HIGH;
+        // }
 
         if(OI.operatorPanel.getRawButton(9)){
             hatchSubsystem.actuate(true);
@@ -248,11 +250,58 @@ public class Robot extends TimedRobot {
             hatchSubsystem.actuate(false);
 
         }
-        // System.out.println("wheel: " + wheel);
-        System.out.println("Right side: " + pdp.getCurrent(0) + " " + pdp.getCurrent(1) + "    Left Side: " + pdp.getCurrent(15) + " " + pdp.getCurrent(14));
-        System.out.println(DriveTrainSubsystem.leftFront.getOutputCurrent() + " " + DriveTrainSubsystem.leftRear.getOutputCurrent() + " " + DriveTrainSubsystem.rightFront.getOutputCurrent() + " " + DriveTrainSubsystem.rightRear.getOutputCurrent());
 
+
+        if (OI.operatorPanel.getRawButton(13)){
+           hatchSubsystem.move(false);
+            // hatchSubsystem.move(false);
+
+            x++;
+
+            if(x>30){
+                hatchSubsystem.actuate(false);
+                x =0;
+
+            }
+            else{
+                hatchSubsystem.actuate(true);
+            }
+            
+        }
+        else{
+
+        }
+      
+        if (OI.operatorPanel.getRawButton(14)){
+             // hatchSubsystem.move(false);
+ 
+             x++;
+ 
+             if(x>60){
+                 hatchSubsystem.move(false);
+
+                if(x>90){
+                    x=0;
+                }
+             }
+             else{
+                 
+                 hatchSubsystem.actuate(true);
+                 if(x>30){
+                    hatchSubsystem.actuate(false);
+                    
+                 }
+             }
+             
+         }
+         else{
+ 
+         }
+       
+        // System.out.println("Hatch position"+hatchSubsystem.hatchPosition.get());
+        System.out.println("x is "+ x);
     }
+
 
     /**
      * This function is called periodically during test mode.

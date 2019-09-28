@@ -45,7 +45,7 @@ public class OI {
     public static Button dumbClimb = new JoystickButton(operatorPanel, 4);
     public static Button hatchDeploy = new JoystickButton(operatorPanel, 6);
     public static Button hatchStow = new JoystickButton(operatorPanel, 5);
-    public static Button autoHatch = new JoystickButton(operatorPanel, 7);
+    public static Button autoHatch = new JoystickButton(operatorPanel, 13);
     // public static Button semiAutoClimb = new JoystickButton(operatorPanel, 6);
     // public static Button reinit = new JoystickButton(operatorPanel, 2);
 
@@ -56,6 +56,7 @@ public class OI {
 
         climberArm.whenPressed(new ClimberSetState(ClimberState.MOVE_TO_ARMED));
         climberArm.whenReleased(new ClimberSetState(ClimberState.STOWED));
+
 
         dumbClimb.whenPressed(new ClimberSetState(ClimberState.CLIMBING));
         dumbClimb.whenReleased(new ClimberSetState(ClimberState.HOLD));
@@ -74,7 +75,7 @@ public class OI {
         hatchStow.toggleWhenPressed(new MoveHatch(false));
 
  
-        autoHatch.whenPressed(new AutoHatch());
+        // autoHatch.toggleWhenPressed(new AutoHatch());
 
     }
 

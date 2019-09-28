@@ -40,6 +40,7 @@ public class ClimberAutoclimb extends Command {
       case CLIMBING:
         if(Robot.climber.getMaximumPositionError() < Climber.atHeightError){
           Robot.climber.setState(ClimberState.AT_HEIGHT);
+          Robot.climber.setPusherPower(Climber.pusherPower);
         }
         break;
       case AT_HEIGHT:
