@@ -80,15 +80,11 @@ public class Robot extends TimedRobot {
     public double leftSpeed;
     public double rightSpeed;
 
-    double a = 0.170641; // 0.286095 0.170641
-    double h = -0.258475; // -0.243151 -0.258475
-    double k = 0.364407; // -0.130137 0.364407
+    // double a = 0.170641; // 0.286095 0.170641
+    // double h = -0.258475; // -0.243151 -0.258475
+    // double k = 0.364407; // -0.130137 0.364407
 
-    double speedTurnScale;
-
-    Timer autoTimer = new Timer();
-    double bookitTime = 1.7;
-
+  
     PowerDistributionPanel pdp = new PowerDistributionPanel(18);
 
     /**
@@ -112,7 +108,6 @@ public class Robot extends TimedRobot {
     @Override
     public void disabledInit() {
 
-        hatchSubsystem.actuate(false);
     }
 
     @Override
@@ -121,7 +116,6 @@ public class Robot extends TimedRobot {
         // System.out.println(Climber.fr.getCorrectedPosition());
         // Climber.fl.talon.setSensorPhase(false);
 
-        hatchSubsystem.actuate(false);
     }
 
     /**
@@ -152,7 +146,7 @@ public class Robot extends TimedRobot {
             autonomousCommand.start();
         }
 
-        autoTimer.start();
+        // autoTimer.start();
     }
 
     /**
@@ -190,7 +184,6 @@ public class Robot extends TimedRobot {
     public void teleopPeriodic() {
 
         Scheduler.getInstance().run();
-        // System.out.println(OI.operatorPanel.getRawAxis(3));
 
         if (OI.wheel.getRawButton(3)) {
             wheel = OI.xboxController.getRawAxis(1) * 0.75;
@@ -201,17 +194,9 @@ public class Robot extends TimedRobot {
             wheel = rampingSubsystem.speed;
         }
 
-        // speedTurnScale = a * (1 / ((stick * stick) - h)) + k;
-        speedTurnScale = 1;
-
-        // wheel = OI.xboxController.getRawAxis(Constants.turnAxisPort);
-
-        // rampingSubsystem.ramp(conveyorState);
-        // stick = -rampingSubsystem.wheel;
-        // wheel = rampingSubsystem.speed;
+   
 
 
-        // driveTrainSubsystem.runDrive(leftSpeed, rightSpeed);
         if (OI.operatorPanel.getRawButton(4)) {
             System.out.println("climbing, driver functionality disabled");
         } else {
@@ -254,7 +239,6 @@ public class Robot extends TimedRobot {
 
         if (OI.operatorPanel.getRawButton(13)){
            hatchSubsystem.move(false);
-            // hatchSubsystem.move(false);
 
             x++;
 
@@ -298,7 +282,6 @@ public class Robot extends TimedRobot {
  
          }
        
-        // System.out.println("Hatch position"+hatchSubsystem.hatchPosition.get());
         System.out.println("x is "+ x);
     }
 
