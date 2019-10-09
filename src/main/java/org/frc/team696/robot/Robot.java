@@ -169,6 +169,34 @@ public class Robot extends TimedRobot {
             leftSpeed = stick - wheel;
             rightSpeed = stick + wheel;
             driveTrainSubsystem.runDrive(leftSpeed, rightSpeed);
+
+            if(OI.operatorPanel.getRawButton(9)){
+                hatchSubsystem.actuate(true);
+            }else {
+    
+                hatchSubsystem.actuate(false);
+    
+            }
+    
+    
+            if (OI.operatorPanel.getRawButton(13)){
+               hatchSubsystem.move(false);
+    
+                x++;
+    
+                if(x>30){
+                    hatchSubsystem.actuate(false);
+                    x =0;
+    
+                }
+                else{
+                    hatchSubsystem.actuate(true);
+                }
+                
+            }
+            else{
+    
+            }
     }
 
     @Override
@@ -272,34 +300,33 @@ public class Robot extends TimedRobot {
 
         }
       
-        if (OI.operatorPanel.getRawButton(14)){
-             // hatchSubsystem.move(false);
+        // if (OI.operatorPanel.getRawButton(14)){
+        //      // hatchSubsystem.move(false);
  
-             x++;
+        //      x++;
  
-             if(x>60){
-                 hatchSubsystem.move(false);
+        //      if(x>60){
+        //          hatchSubsystem.move(false);
 
-                if(x>90){
-                    x=0;
-                }
-             }
-             else{
+        //         if(x>90){
+        //             x=0;
+        //         }
+        //      }
+        //      else{
                  
-                 hatchSubsystem.actuate(true);
-                 if(x>30){
-                    hatchSubsystem.actuate(false);
+        //          hatchSubsystem.actuate(true);
+        //          if(x>30){
+        //             hatchSubsystem.actuate(false);
                     
-                 }
-             }
+        //          }
+        //      }
              
-         }
-         else{
+        //  }
+        //  else{
  
-         }
+        //  }
        
-        // System.out.println("Hatch position"+hatchSubsystem.hatchPosition.get());
-        System.out.println("x is "+ x);
+        // System.out.println("x is "+ x);
     }
 
 
