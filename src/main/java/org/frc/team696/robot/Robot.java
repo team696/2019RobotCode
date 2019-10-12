@@ -180,13 +180,12 @@ public class Robot extends TimedRobot {
     
     
             if (OI.operatorPanel.getRawButton(13)){
-               hatchSubsystem.move(false);
+            //    hatchSubsystem.move(false);
     
-                x++;
     
                 if(x>30){
                     hatchSubsystem.actuate(false);
-                    x =0;
+                    x = 0;
     
                 }
                 else{
