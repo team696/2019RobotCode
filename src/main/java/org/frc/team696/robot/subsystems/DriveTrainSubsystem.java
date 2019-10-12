@@ -42,18 +42,18 @@ public class DriveTrainSubsystem extends Subsystem {
 
   public static DifferentialDrive drive;
 
-  private static NetworkTableEntry ntflcurrent;
-  private static NetworkTableEntry ntfrcurrent;
-  private static NetworkTableEntry ntrlcurrent;
-  private static NetworkTableEntry ntrrcurrent;
-  private static NetworkTableEntry ntflmotortemp;
-  private static NetworkTableEntry ntfrmotortemp;
-  private static NetworkTableEntry ntrlmotortemp;
-  private static NetworkTableEntry ntrrmotortemp;
+  // private static NetworkTableEntry ntflcurrent;
+  // private static NetworkTableEntry ntfrcurrent;
+  // private static NetworkTableEntry ntrlcurrent;
+  // private static NetworkTableEntry ntrrcurrent;
+  // private static NetworkTableEntry ntflmotortemp;
+  // private static NetworkTableEntry ntfrmotortemp;
+  // private static NetworkTableEntry ntrlmotortemp;
+  // private static NetworkTableEntry ntrrmotortemp;
 
   public DriveTrainSubsystem(int leftFrontPort, int leftMidPort, int leftRearPort, int rightRearPort, int rightMidPort, int rightFrontPort){
-    NetworkTableInstance inst = NetworkTableInstance.getDefault();
-    NetworkTable dtTable = inst.getTable("Drivetrain");
+    // NetworkTableInstance inst = NetworkTableInstance.getDefault();
+    // NetworkTable dtTable = inst.getTable("Drivetrain");
     
     leftFront = new CANSparkMax(leftFrontPort, MotorType.kBrushless);
     leftFrontEncoder = new CANEncoder(leftFront);
