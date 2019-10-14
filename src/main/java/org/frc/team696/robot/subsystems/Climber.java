@@ -62,18 +62,18 @@ public class Climber extends Subsystem {
   private static ClimberState state = ClimberState.UNINITIALIZED;
   public static boolean isManualControl = false;
 
-  private static NetworkTableEntry ntflpos;
-  private static NetworkTableEntry ntfrpos;
-  private static NetworkTableEntry ntrlpos;
-  private static NetworkTableEntry ntrrpos;
-  private static NetworkTableEntry ntflcurrent;
-  private static NetworkTableEntry ntfrcurrent;
-  private static NetworkTableEntry ntrlcurrent;
-  private static NetworkTableEntry ntrrcurrent;
-  private static NetworkTableEntry ntflpercent;
-  private static NetworkTableEntry ntfrpercent;
-  private static NetworkTableEntry ntrlpercent;
-  private static NetworkTableEntry ntrrpercent;
+  // private static NetworkTableEntry ntflpos;
+  // private static NetworkTableEntry ntfrpos;
+  // private static NetworkTableEntry ntrlpos;
+  // private static NetworkTableEntry ntrrpos;
+  // private static NetworkTableEntry ntflcurrent;
+  // private static NetworkTableEntry ntfrcurrent;
+  // private static NetworkTableEntry ntrlcurrent;
+  // private static NetworkTableEntry ntrrcurrent;
+  // private static NetworkTableEntry ntflpercent;
+  // private static NetworkTableEntry ntfrpercent;
+  // private static NetworkTableEntry ntrlpercent;
+  // private static NetworkTableEntry ntrrpercent;
 
   /**
    * Climber subsystem; responsible for coordinating the actions of the climber
@@ -82,20 +82,20 @@ public class Climber extends Subsystem {
   public Climber() {
     super("Climber");
 
-    NetworkTableInstance inst = NetworkTableInstance.getDefault();
-    NetworkTable climberTable = inst.getTable("Climber");
-    ntflpos = climberTable.getEntry("PosFL");
-    ntfrpos = climberTable.getEntry("PosFR");
-    ntrlpos = climberTable.getEntry("PosRL");
-    ntrrpos = climberTable.getEntry("PosRR");
-    ntflcurrent = climberTable.getEntry("CurrentFL");
-    ntfrcurrent = climberTable.getEntry("CurrentFR");
-    ntrlcurrent = climberTable.getEntry("CurrentRL");
-    ntrrcurrent = climberTable.getEntry("CurrentRR");
-    ntflpercent = climberTable.getEntry("PercentFL");
-    ntfrpercent = climberTable.getEntry("PercentFR");
-    ntrlpercent = climberTable.getEntry("PercentRL");
-    ntrrpercent = climberTable.getEntry("PercentRR");
+    // NetworkTableInstance inst = NetworkTableInstance.getDefault();
+    // NetworkTable climberTable = inst.getTable("Climber");
+    // ntflpos = climberTable.getEntry("PosFL");
+    // ntfrpos = climberTable.getEntry("PosFR");
+    // ntrlpos = climberTable.getEntry("PosRL");
+    // ntrrpos = climberTable.getEntry("PosRR");
+    // ntflcurrent = climberTable.getEntry("CurrentFL");
+    // ntfrcurrent = climberTable.getEntry("CurrentFR");
+    // ntrlcurrent = climberTable.getEntry("CurrentRL");
+    // ntrrcurrent = climberTable.getEntry("CurrentRR");
+    // ntflpercent = climberTable.getEntry("PercentFL");
+    // ntfrpercent = climberTable.getEntry("PercentFR");
+    // ntrlpercent = climberTable.getEntry("PercentRL");
+    // ntrrpercent = climberTable.getEntry("PercentRR");
 
     // Create talon objects
     TalonSRX fltalon = new TalonSRX(RobotMap.flClimberTalon);

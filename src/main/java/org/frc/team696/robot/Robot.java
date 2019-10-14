@@ -78,7 +78,7 @@ public class Robot extends TimedRobot {
     public int x = 0;
 
     public double leftSpeed;
-    public double rightSpeed;
+    public double   rightSpeed;
 
     double a = 0.170641; // 0.286095 0.170641
     double h = -0.258475; // -0.243151 -0.258475
@@ -180,7 +180,7 @@ public class Robot extends TimedRobot {
     
     
             if (OI.operatorPanel.getRawButton(13)){
-            //    hatchSubsystem.move(false);
+               hatchSubsystem.move(false);
     
     
                 if(x>30){
